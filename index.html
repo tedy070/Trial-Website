@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Globe Express – Travel & Holidays</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --white: #ffffff;
+    --white-70: rgba(255,255,255,0.7);
+    --white-50: rgba(255,255,255,0.5);
+    --white-20: rgba(255,255,255,0.2);
+    --white-10: rgba(255,255,255,0.1);
+    --dark: rgba(0,0,0,0.65);
+    --nav-h: 64px;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #0a0a0a;
+    overflow: hidden;
+    height: 100vh; width: 100vw;
+    color: #fff;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    position: relative;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    transition: all 1s ease;
+  }
+
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(105deg, rgba(0,0,0,0.72) 30%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.1) 100%);
+  }
+
+  .hero-overlay-top {
+    position: absolute; top: 0; left: 0; right: 0; height: 140px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+  }
+
+  /* ========== NAVBAR ========== */
+  nav {
+    position: relative; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: var(--nav-h);
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  }
+
+  .nav-logo-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .nav-logo-icon i { color: var(--gold); font-size: 15px; }
+
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none; color: var(--white-70);
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; position: relative; padding-bottom: 3px;
+    transition: color 0.25s;
+  }
+
+  .nav-links a:hover { color: #fff; }
+
+  .nav-links a.active {
+    color: #fff;
+  }
+
+  .nav-links a.active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
+    height: 1.5px; background: var(--gold);
+  }
+
+  .nav-actions {
+    display: flex; gap: 20px; align-items: center;
+  }
+
+  .nav-actions i {
+    color: var(--white-70); font-size: 19px; cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .nav-actions i:hover { color: #fff; }
+
+  /* ========== MAIN CONTENT ========== */
+  .hero-content {
+    position: relative; z-index: 10;
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 48px;
+    max-width: 520px;
+  }
+
+  .location-tag {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .location-tag::before {
+    content: ''; display: block;
+    width: 28px; height: 1.5px; background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .location-tag span {
+    color: var(--white-70); font-size: 12px; font-weight: 400;
+    letter-spacing: 1.2px;
+  }
+
+  .hero-title {
+    font-size: clamp(44px, 6vw, 78px);
+    font-weight: 900; line-height: 0.95;
+    text-transform: uppercase; letter-spacing: -1.5px;
+    text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+    margin-bottom: 18px;
+    transition: opacity 0.4s;
+  }
+
+  .hero-desc {
+    color: var(--white-50); font-size: 11px; line-height: 1.75;
+    max-width: 280px; margin-bottom: 30px;
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .btn-play {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--gold); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: transform 0.2s, background 0.2s;
+  }
+
+  .btn-play:hover { transform: scale(1.1); background: var(--gold-light); }
+  .btn-play i { color: #fff; font-size: 17px; margin-left: 2px; }
+
+  .btn-discover {
+    border: 1px solid rgba(255,255,255,0.45);
+    background: transparent; color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; padding: 12px 26px; border-radius: 3px;
+    cursor: pointer; transition: all 0.25s;
+  }
+
+  .btn-discover:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.8);
+  }
+
+  /* ========== BOTTOM SECTION ========== */
+  .hero-bottom {
+    position: relative; z-index: 10;
+    display: flex; align-items: flex-end;
+    padding: 0 48px 28px;
+    gap: 0;
+  }
+
+  /* Controls row */
+  .controls-col {
+    display: flex; flex-direction: column; gap: 16px;
+    margin-right: 28px; flex-shrink: 0;
+  }
+
+  .nav-arrows {
+    display: flex; gap: 10px;
+  }
+
+  .arrow-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .arrow-btn:hover {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.65);
+  }
+
+  .arrow-btn i { color: #fff; font-size: 14px; }
+
+  .progress-bar {
+    width: 160px; height: 2px;
+    background: rgba(255,255,255,0.18); border-radius: 2px; overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%; background: var(--gold);
+    border-radius: 2px; transition: width 0.6s ease;
+  }
+
+  /* ========== CARDS ========== */
+  .cards-row {
+    display: flex; gap: 10px; align-items: flex-end; flex: 1;
+  }
+
+  .dest-card {
+    width: 145px; height: 185px; border-radius: 12px;
+    overflow: hidden; position: relative;
+    cursor: pointer; flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s;
+  }
+
+  .dest-card:hover {
+    transform: translateY(-6px) scale(1.025);
+    border-color: rgba(255,255,255,0.35);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  }
+
+  .dest-card.active {
+    border-color: var(--gold);
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+  }
+
+  .card-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    filter: brightness(0.55);
+    transition: filter 0.3s;
+  }
+
+  .dest-card:hover .card-bg { filter: brightness(0.7); }
+  .dest-card.active .card-bg { filter: brightness(0.8); }
+
+  .card-shade {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.1) 100%);
+  }
+
+  .card-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 10px 12px;
+  }
+
+  .card-region {
+    color: rgba(255,255,255,0.6);
+    font-size: 8px; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .card-name {
+    color: #fff; font-size: 11.5px; font-weight: 800;
+    text-transform: uppercase; line-height: 1.2;
+  }
+
+  /* Slide number */
+  .slide-num {
+    position: absolute; bottom: 22px; right: 48px; z-index: 10;
+    color: rgba(255,255,255,0.4); font-size: 30px; font-weight: 800; letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .slide-num em { color: #fff; font-style: normal; }
+
+  /* Fade animation */
+  .fade-in { animation: fadeIn 0.6s ease forwards; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero" id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-overlay-top"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
+      GLOBE EXPRESS
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" class="active">HOME</a></li>
+      <li><a href="#">HOLIDAYS</a></li>
+      <li><a href="#">DESTINATIONS</a></li>
+      <li><a href="#">FLIGHTS</a></li>
+      <li><a href="#">OFFERS</a></li>
+      <li><a href="#">CONTACTS</a></li>
+    </ul>
+    <div class="nav-actions">
+      <i class="ti ti-search" title="Search"></i>
+      <i class="ti ti-user" title="Account"></i>
+    </div>
+  </nav>
+
+  <!-- HERO CONTENT -->
+  <div class="hero-content">
+    <div class="location-tag"><span id="heroRegion">Switzerland Alps</span></div>
+    <h1 class="hero-title" id="heroTitle">SAINT<br>ANTÖNIEN</h1>
+    <p class="hero-desc">Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.</p>
+    <div class="hero-actions">
+      <button class="btn-play" aria-label="Play video">
+        <i class="ti ti-player-play"></i>
+      </button>
+      <button class="btn-discover">DISCOVER LOCATION</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM: ARROWS + PROGRESS + CARDS -->
+  <div class="hero-bottom">
+    <div class="controls-col">
+      <div class="nav-arrows">
+        <button class="arrow-btn" id="btnPrev" aria-label="Previous">
+          <i class="ti ti-chevron-left"></i>
+        </button>
+        <button class="arrow-btn" id="btnNext" aria-label="Next">
+          <i class="ti ti-chevron-right"></i>
+        </button>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="cards-row" id="cardsRow"></div>
+  </div>
+
+  <div class="slide-num">0<em id="slideNum">1</em></div>
+</div>
+
+<script>
+const destinations = [
+  {
+    region: "Switzerland Alps",
+    line1: "SAINT",
+    line2: "ANTÖNIEN",
+    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
+    heroBg: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80",
+    cardBg: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80"
+  },
+  {
+    region: "Japan Alps",
+    line1: "NAGANO",
+    line2: "PREFECTURE",
+    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
+    heroBg: "https://images.unsplash.com/photo-1535082623926-b39c1c9f3e9d?w=1600&q=80",
+    cardBg: "https://images.unsplash.com/photo-1535082623926-b39c1c9f3e9d?w=400&q=80"
+  },
+  {
+    region: "Sahara Desert · Morocco",
+    line1: "MARRAKECH",
+    line2: "MERZOUGA",
+    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
+    heroBg: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80",
+    cardBg: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80"
+  },
+  {
+    region: "Sierra Nevada · United States",
+    line1: "YOSEMITE",
+    line2: "NATIONAL PARK",
+    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
+    heroBg: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80",
+    cardBg: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80"
+  },
+  {
+    region: "Tarifa · Spain",
+    line1: "LOS LANCES",
+    line2: "BEACH",
+    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
+    heroBg: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80",
+    cardBg: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80"
+  }
+];
+
+const TOTAL = destinations.length;
+let current = 0;
+let autoTimer = null;
+
+function update(animate = true) {
+  const dest = destinations[current];
+
+  // Background
+  document.getElementById('heroBg').style.backgroundImage = `url('${dest.heroBg}')`;
+
+  // Hero text
+  document.getElementById('heroRegion').textContent = dest.region;
+  const titleEl = document.getElementById('heroTitle');
+  titleEl.innerHTML = dest.line1 + '<br>' + dest.line2;
+  if (animate) {
+    titleEl.classList.remove('fade-in');
+    void titleEl.offsetWidth;
+    titleEl.classList.add('fade-in');
+  }
+
+  // Slide num & progress
+  document.getElementById('slideNum').textContent = current + 1;
+  document.getElementById('progressFill').style.width = ((current + 1) / TOTAL * 100) + '%';
+
+  // Cards: show next 4
+  const cardsRow = document.getElementById('cardsRow');
+  cardsRow.innerHTML = '';
+  for (let i = 1; i <= 4; i++) {
+    const idx = (current + i) % TOTAL;
+    const d = destinations[idx];
+
+    const card = document.createElement('div');
+    card.className = 'dest-card';
+    card.innerHTML = `
+      <div class="card-bg" style="background-image:url('${d.cardBg}')"></div>
+      <div class="card-shade"></div>
+      <div class="card-info">
+        <div class="card-region">${d.region}</div>
+        <div class="card-name">${d.line1}<br>${d.line2}</div>
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      current = idx;
+      update();
+      resetAuto();
+    });
+    cardsRow.appendChild(card);
+  }
+}
+
+function goNext() { current = (current + 1) % TOTAL; update(); }
+function goPrev() { current = (current - 1 + TOTAL) % TOTAL; update(); }
+
+function resetAuto() {
+  clearInterval(autoTimer);
+  autoTimer = setInterval(goNext, 5500);
+}
+
+document.getElementById('btnNext').addEventListener('click', () => { goNext(); resetAuto(); });
+document.getElementById('btnPrev').addEventListener('click', () => { goPrev(); resetAuto(); });
+
+update(false);
+resetAuto();
+</script>
+</body>
+</html>
