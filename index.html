@@ -5,315 +5,922 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Globe Express – Travel & Holidays</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  :root {
-    --gold: #c9a84c;
-    --gold-light: #e8c96a;
-    --white: #ffffff;
-    --white-70: rgba(255,255,255,0.7);
-    --white-50: rgba(255,255,255,0.5);
-    --white-20: rgba(255,255,255,0.2);
-    --white-10: rgba(255,255,255,0.1);
-    --dark: rgba(0,0,0,0.65);
-    --nav-h: 64px;
-  }
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8c96a;
+  --gold-dim: rgba(201,168,76,0.25);
+  --white: #ffffff;
+  --white-70: rgba(255,255,255,0.7);
+  --white-50: rgba(255,255,255,0.5);
+  --white-20: rgba(255,255,255,0.2);
+  --white-10: rgba(255,255,255,0.1);
+  --white-05: rgba(255,255,255,0.05);
+  --dark: #0a0a0a;
+  --dark-2: #111111;
+  --dark-3: #161616;
+  --nav-h: 64px;
+}
 
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: #0a0a0a;
-    overflow: hidden;
-    height: 100vh; width: 100vw;
-    color: #fff;
-  }
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--dark);
+  overflow: hidden;
+  height: 100vh; width: 100vw;
+  color: #fff;
+}
 
-  /* ========== HERO ========== */
-  .hero {
-    position: relative;
-    width: 100vw; height: 100vh;
-    overflow: hidden;
-    display: flex; flex-direction: column;
-  }
+/* ===== PAGE SYSTEM ===== */
+.page {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s ease;
+  overflow: hidden;
+}
+.page.active {
+  opacity: 1; pointer-events: all;
+}
 
-  .hero-bg {
-    position: absolute; inset: 0;
-    background-size: cover; background-position: center;
-    transition: all 1s ease;
-  }
+/* ===== SHARED NAV ===== */
+nav {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px;
+  height: var(--nav-h);
+  border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(12px);
+}
 
-  .hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(105deg, rgba(0,0,0,0.72) 30%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.1) 100%);
-  }
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: #fff;
+  font-size: 11px; font-weight: 700; letter-spacing: 3px; cursor: pointer;
+}
+.nav-logo-icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-logo-icon i { color: var(--gold); font-size: 15px; }
 
-  .hero-overlay-top {
-    position: absolute; top: 0; left: 0; right: 0; height: 140px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
-  }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  text-decoration: none; color: var(--white-70);
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; position: relative; padding-bottom: 3px;
+  transition: color 0.25s; cursor: pointer;
+}
+.nav-links a:hover { color: #fff; }
+.nav-links a.active { color: #fff; }
+.nav-links a.active::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
+  height: 1.5px; background: var(--gold);
+}
 
-  /* ========== NAVBAR ========== */
-  nav {
-    position: relative; z-index: 20;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 48px;
-    height: var(--nav-h);
-    border-bottom: 0.5px solid rgba(255,255,255,0.08);
-  }
+.nav-actions { display: flex; gap: 20px; align-items: center; }
+.nav-actions i {
+  color: var(--white-70); font-size: 19px; cursor: pointer;
+  transition: color 0.2s;
+}
+.nav-actions i:hover { color: #fff; }
 
-  .nav-logo {
-    display: flex; align-items: center; gap: 10px;
-    text-decoration: none;
-    color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 3px;
-  }
+/* ===== HOME PAGE ===== */
+#page-home {
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+}
 
-  .nav-logo-icon {
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 1.5px solid var(--gold);
-    display: flex; align-items: center; justify-content: center;
-  }
+.hero-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: all 1s ease;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(0,0,0,0.72) 30%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.1) 100%);
+}
+.hero-overlay-top {
+  position: absolute; top: 0; left: 0; right: 0; height: 140px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+}
 
-  .nav-logo-icon i { color: var(--gold); font-size: 15px; }
+.hero-content {
+  position: absolute; z-index: 10;
+  top: 50%; transform: translateY(-50%);
+  left: 48px;
+  max-width: 520px;
+}
 
-  .nav-links {
-    display: flex; gap: 32px; list-style: none;
-  }
+.location-tag {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 12px;
+}
+.location-tag::before {
+  content: ''; display: block;
+  width: 28px; height: 1.5px; background: var(--gold);
+  flex-shrink: 0;
+}
+.location-tag span {
+  color: var(--white-70); font-size: 12px; font-weight: 400;
+  letter-spacing: 1.2px;
+}
 
-  .nav-links a {
-    text-decoration: none; color: var(--white-70);
-    font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
-    text-transform: uppercase; position: relative; padding-bottom: 3px;
-    transition: color 0.25s;
-  }
+.hero-title {
+  font-size: clamp(44px, 6vw, 78px);
+  font-weight: 900; line-height: 0.95;
+  text-transform: uppercase; letter-spacing: -1.5px;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+  margin-bottom: 18px;
+  transition: opacity 0.4s;
+}
 
-  .nav-links a:hover { color: #fff; }
+.hero-desc {
+  color: var(--white-50); font-size: 11px; line-height: 1.75;
+  max-width: 280px; margin-bottom: 30px;
+}
 
-  .nav-links a.active {
-    color: #fff;
-  }
+.hero-actions { display: flex; align-items: center; gap: 16px; }
 
-  .nav-links a.active::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
-    height: 1.5px; background: var(--gold);
-  }
+.btn-play {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--gold); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: transform 0.2s, background 0.2s;
+}
+.btn-play:hover { transform: scale(1.1); background: var(--gold-light); }
+.btn-play i { color: #fff; font-size: 17px; margin-left: 2px; }
 
-  .nav-actions {
-    display: flex; gap: 20px; align-items: center;
-  }
+.btn-discover {
+  border: 1px solid rgba(255,255,255,0.45);
+  background: transparent; color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; padding: 12px 26px; border-radius: 3px;
+  cursor: pointer; transition: all 0.25s;
+}
+.btn-discover:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.8); }
 
-  .nav-actions i {
-    color: var(--white-70); font-size: 19px; cursor: pointer;
-    transition: color 0.2s;
-  }
+.hero-bottom {
+  position: absolute; bottom: 28px; left: 48px; right: 48px; z-index: 10;
+  display: flex; align-items: flex-end; gap: 0;
+}
 
-  .nav-actions i:hover { color: #fff; }
+.controls-col {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-right: 28px; flex-shrink: 0;
+}
+.nav-arrows { display: flex; gap: 10px; }
 
-  /* ========== MAIN CONTENT ========== */
-  .hero-content {
-    position: relative; z-index: 10;
-    flex: 1;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 0 48px;
-    max-width: 520px;
-  }
+.arrow-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.arrow-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.65); }
+.arrow-btn i { color: #fff; font-size: 14px; }
 
-  .location-tag {
-    display: flex; align-items: center; gap: 14px;
-    margin-bottom: 12px;
-  }
+.progress-bar {
+  width: 160px; height: 2px;
+  background: rgba(255,255,255,0.18); border-radius: 2px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--gold);
+  border-radius: 2px; transition: width 0.6s ease;
+}
 
-  .location-tag::before {
-    content: ''; display: block;
-    width: 28px; height: 1.5px; background: var(--gold);
-    flex-shrink: 0;
-  }
+.cards-row { display: flex; gap: 10px; align-items: flex-end; flex: 1; }
 
-  .location-tag span {
-    color: var(--white-70); font-size: 12px; font-weight: 400;
-    letter-spacing: 1.2px;
-  }
+.dest-card {
+  width: 145px; height: 185px; border-radius: 12px;
+  overflow: hidden; position: relative;
+  cursor: pointer; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s;
+}
+.dest-card:hover {
+  transform: translateY(-6px) scale(1.025);
+  border-color: rgba(255,255,255,0.35);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+}
+.dest-card.active {
+  border-color: var(--gold);
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+}
 
-  .hero-title {
-    font-size: clamp(44px, 6vw, 78px);
-    font-weight: 900; line-height: 0.95;
-    text-transform: uppercase; letter-spacing: -1.5px;
-    text-shadow: 0 2px 30px rgba(0,0,0,0.5);
-    margin-bottom: 18px;
-    transition: opacity 0.4s;
-  }
+.card-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: brightness(0.55);
+  transition: filter 0.3s;
+}
+.dest-card:hover .card-bg { filter: brightness(0.7); }
+.dest-card.active .card-bg { filter: brightness(0.8); }
 
-  .hero-desc {
-    color: var(--white-50); font-size: 11px; line-height: 1.75;
-    max-width: 280px; margin-bottom: 30px;
-  }
+.card-shade {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.1) 100%);
+}
+.card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 12px; }
+.card-region { color: rgba(255,255,255,0.6); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.card-name { color: #fff; font-size: 11.5px; font-weight: 800; text-transform: uppercase; line-height: 1.2; }
 
-  .hero-actions {
-    display: flex; align-items: center; gap: 16px;
-  }
+.slide-num {
+  position: absolute; bottom: 22px; right: 48px; z-index: 10;
+  color: rgba(255,255,255,0.4); font-size: 30px; font-weight: 800; letter-spacing: -1px;
+}
+.slide-num em { color: #fff; font-style: normal; }
 
-  .btn-play {
-    width: 46px; height: 46px; border-radius: 50%;
-    background: var(--gold); border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: transform 0.2s, background 0.2s;
-  }
+/* ===== SECTION SHARED STYLES ===== */
+.section-page {
+  width: 100vw; height: 100vh;
+  overflow-y: auto;
+  padding-top: var(--nav-h);
+}
 
-  .btn-play:hover { transform: scale(1.1); background: var(--gold-light); }
-  .btn-play i { color: #fff; font-size: 17px; margin-left: 2px; }
+.section-page::-webkit-scrollbar { width: 4px; }
+.section-page::-webkit-scrollbar-track { background: transparent; }
+.section-page::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
 
-  .btn-discover {
-    border: 1px solid rgba(255,255,255,0.45);
-    background: transparent; color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px; font-weight: 600; letter-spacing: 2px;
-    text-transform: uppercase; padding: 12px 26px; border-radius: 3px;
-    cursor: pointer; transition: all 0.25s;
-  }
+/* ===== HOLIDAYS PAGE ===== */
+#page-holidays {
+  background: var(--dark);
+  position: relative;
+}
 
-  .btn-discover:hover {
-    background: rgba(255,255,255,0.12);
-    border-color: rgba(255,255,255,0.8);
-  }
+.holidays-hero {
+  position: relative;
+  height: 55vh;
+  overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.holidays-hero-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80') center/cover;
+  transform: scale(1.05);
+  animation: slowZoom 20s ease infinite alternate;
+}
+@keyframes slowZoom { from { transform: scale(1.05); } to { transform: scale(1.12); } }
 
-  /* ========== BOTTOM SECTION ========== */
-  .hero-bottom {
-    position: relative; z-index: 10;
-    display: flex; align-items: flex-end;
-    padding: 0 48px 28px;
-    gap: 0;
-  }
+.holidays-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(10,10,10,0.85) 100%);
+}
+.holidays-hero-content {
+  position: relative; z-index: 2;
+  padding: 48px 64px;
+}
+.page-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--gold);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+}
+.page-label::before {
+  content: ''; width: 24px; height: 1px; background: var(--gold);
+}
+.holidays-hero h1 {
+  font-size: clamp(40px, 5vw, 68px);
+  font-weight: 900; text-transform: uppercase;
+  letter-spacing: -1px; line-height: 0.95;
+}
 
-  /* Controls row */
-  .controls-col {
-    display: flex; flex-direction: column; gap: 16px;
-    margin-right: 28px; flex-shrink: 0;
-  }
+/* Filter tabs */
+.filter-row {
+  display: flex; gap: 8px;
+  padding: 28px 64px 20px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.07);
+  flex-wrap: wrap;
+}
+.filter-tab {
+  padding: 8px 20px; border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent; color: var(--white-50);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; cursor: pointer;
+  transition: all 0.25s;
+}
+.filter-tab:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+.filter-tab.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
 
-  .nav-arrows {
-    display: flex; gap: 10px;
-  }
+/* Holiday Cards Grid */
+.holiday-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 28px 64px 60px;
+}
 
-  .arrow-btn {
-    width: 38px; height: 38px; border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.07);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s;
-  }
+.holiday-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--dark-3);
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s, border-color 0.4s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+.holiday-card:hover {
+  transform: translateY(-10px) rotateX(2deg) rotateY(-1deg);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.2);
+  border-color: rgba(201,168,76,0.3);
+}
+.holiday-card:hover .hcard-img { transform: scale(1.06); }
 
-  .arrow-btn:hover {
-    background: rgba(255,255,255,0.18);
-    border-color: rgba(255,255,255,0.65);
-  }
+.hcard-img-wrap { height: 200px; overflow: hidden; position: relative; }
+.hcard-img {
+  width: 100%; height: 100%;
+  object-fit: cover; background-size: cover; background-position: center;
+  transition: transform 0.6s ease;
+}
+.hcard-badge {
+  position: absolute; top: 14px; left: 14px;
+  padding: 5px 12px; border-radius: 20px;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+  font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold);
+  border: 0.5px solid rgba(201,168,76,0.3);
+}
+.hcard-save {
+  position: absolute; top: 14px; right: 14px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+  border: 0.5px solid rgba(255,255,255,0.15);
+}
+.hcard-save:hover { background: var(--gold); border-color: var(--gold); }
+.hcard-save i { font-size: 14px; color: #fff; }
 
-  .arrow-btn i { color: #fff; font-size: 14px; }
+.hcard-body { padding: 18px; }
+.hcard-region { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.hcard-name { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 8px; }
+.hcard-desc { font-size: 10px; color: var(--white-50); line-height: 1.7; margin-bottom: 14px; }
 
-  .progress-bar {
-    width: 160px; height: 2px;
-    background: rgba(255,255,255,0.18); border-radius: 2px; overflow: hidden;
-  }
+.hcard-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 0.5px solid rgba(255,255,255,0.08); padding-top: 14px;
+}
+.hcard-price-label { font-size: 8px; color: var(--white-50); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+.hcard-price { font-size: 20px; font-weight: 800; color: var(--gold); }
+.hcard-price span { font-size: 10px; font-weight: 400; color: var(--white-50); }
 
-  .progress-fill {
-    height: 100%; background: var(--gold);
-    border-radius: 2px; transition: width 0.6s ease;
-  }
+.hcard-meta { display: flex; align-items: center; gap: 10px; }
+.hcard-meta-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--white-50); }
+.hcard-meta-item i { font-size: 12px; color: var(--white-50); }
 
-  /* ========== CARDS ========== */
-  .cards-row {
-    display: flex; gap: 10px; align-items: flex-end; flex: 1;
-  }
+.btn-gold-sm {
+  padding: 9px 18px; border-radius: 4px;
+  background: var(--gold); border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--dark);
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-gold-sm:hover { background: var(--gold-light); transform: scale(1.03); }
 
-  .dest-card {
-    width: 145px; height: 185px; border-radius: 12px;
-    overflow: hidden; position: relative;
-    cursor: pointer; flex-shrink: 0;
-    border: 1.5px solid rgba(255,255,255,0.15);
-    transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s;
-  }
+/* ===== DESTINATIONS PAGE ===== */
+#page-destinations {
+  background: var(--dark);
+}
 
-  .dest-card:hover {
-    transform: translateY(-6px) scale(1.025);
-    border-color: rgba(255,255,255,0.35);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-  }
+.dest-fullpage {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  height: calc(100vh - var(--nav-h));
+}
 
-  .dest-card.active {
-    border-color: var(--gold);
-    transform: translateY(-8px) scale(1.04);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.55);
-  }
+.dest-map-area {
+  position: relative;
+  overflow: hidden;
+  background: #0d0d0d;
+}
 
-  .card-bg {
-    position: absolute; inset: 0;
-    background-size: cover; background-position: center;
-    filter: brightness(0.55);
-    transition: filter 0.3s;
-  }
+.dest-globe-visual {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
 
-  .dest-card:hover .card-bg { filter: brightness(0.7); }
-  .dest-card.active .card-bg { filter: brightness(0.8); }
+.globe-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80') center/cover;
+  opacity: 0.15;
+}
 
-  .card-shade {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.1) 100%);
-  }
+.globe-rings {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.1);
+  animation: rotateSlow 30s linear infinite;
+}
+.globe-rings:nth-child(2) { width: 450px; height: 450px; border-color: rgba(201,168,76,0.07); animation-duration: 22s; animation-direction: reverse; }
+.globe-rings:nth-child(3) { width: 300px; height: 300px; border-color: rgba(201,168,76,0.12); animation-duration: 16s; }
 
-  .card-info {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 10px 12px;
-  }
+@keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-  .card-region {
-    color: rgba(255,255,255,0.6);
-    font-size: 8px; letter-spacing: 1px;
-    text-transform: uppercase; margin-bottom: 4px;
-  }
+.dest-map-content {
+  position: relative; z-index: 5;
+  padding: 48px;
+  display: flex; flex-direction: column;
+}
 
-  .card-name {
-    color: #fff; font-size: 11.5px; font-weight: 800;
-    text-transform: uppercase; line-height: 1.2;
-  }
+.dest-map-content .page-label { margin-bottom: 12px; }
+.dest-map-content h1 { font-size: clamp(34px, 4vw, 56px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 20px; }
 
-  /* Slide number */
-  .slide-num {
-    position: absolute; bottom: 22px; right: 48px; z-index: 10;
-    color: rgba(255,255,255,0.4); font-size: 30px; font-weight: 800; letter-spacing: -1px;
-    line-height: 1;
-  }
+.dest-regions {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: auto;
+}
+.dest-region-btn {
+  padding: 10px 20px; border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: var(--white-70); font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; cursor: pointer;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.dest-region-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--gold); opacity: 0;
+  transition: opacity 0.3s;
+}
+.dest-region-btn:hover::before, .dest-region-btn.active::before { opacity: 1; }
+.dest-region-btn:hover, .dest-region-btn.active { color: var(--dark); border-color: var(--gold); }
+.dest-region-btn span { position: relative; z-index: 1; }
 
-  .slide-num em { color: #fff; font-style: normal; }
+/* Pin dots on visual */
+.dest-pin {
+  position: absolute; width: 12px; height: 12px; cursor: pointer;
+  z-index: 6;
+}
+.dest-pin-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.3), 0 0 0 6px rgba(201,168,76,0.1);
+  animation: pinPulse 2s ease-in-out infinite;
+}
+@keyframes pinPulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(201,168,76,0.3), 0 0 0 6px rgba(201,168,76,0.1); }
+  50% { box-shadow: 0 0 0 5px rgba(201,168,76,0.4), 0 0 0 10px rgba(201,168,76,0.15); }
+}
 
-  /* Fade animation */
-  .fade-in { animation: fadeIn 0.6s ease forwards; }
+/* Sidebar */
+.dest-sidebar {
+  border-left: 0.5px solid rgba(255,255,255,0.08);
+  overflow-y: auto;
+  padding: 32px 28px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.dest-sidebar::-webkit-scrollbar { width: 3px; }
+.dest-sidebar::-webkit-scrollbar-thumb { background: var(--gold-dim); }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+.dest-sidebar-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--white-50); margin-bottom: 4px;
+}
+
+.dest-item {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.07);
+  cursor: pointer; transition: all 0.3s;
+  background: rgba(255,255,255,0.02);
+  position: relative;
+}
+.dest-item:hover { border-color: rgba(201,168,76,0.3); transform: translateX(4px); }
+.dest-item.selected { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+
+.dest-item-img {
+  height: 100px; background-size: cover; background-position: center;
+  position: relative;
+}
+.dest-item-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8) 100%);
+}
+.dest-item-body { padding: 12px; }
+.dest-item-name { font-size: 13px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+.dest-item-country { font-size: 9px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+.dest-item-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.dest-item-stat { font-size: 8px; color: var(--white-50); }
+.dest-item-price { font-size: 14px; font-weight: 800; color: var(--gold); }
+
+/* ===== FLIGHTS PAGE ===== */
+#page-flights {
+  background: var(--dark);
+  overflow: hidden;
+}
+
+.flights-wrap {
+  height: calc(100vh - var(--nav-h));
+  display: flex; flex-direction: column;
+  position: relative;
+  overflow-y: auto;
+  padding: 40px 64px 60px;
+}
+.flights-wrap::-webkit-scrollbar { width: 4px; }
+.flights-wrap::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+.flights-header { margin-bottom: 36px; }
+.flights-header .page-label { margin-bottom: 12px; }
+.flights-header h1 { font-size: clamp(36px, 4.5vw, 62px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; }
+
+/* Search box */
+.search-box {
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.search-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.search-tabs { display: flex; gap: 4px; margin-bottom: 24px; }
+.search-tab {
+  padding: 6px 18px; border-radius: 30px;
+  border: none; background: transparent;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--white-50); cursor: pointer;
+  transition: all 0.2s;
+}
+.search-tab.active { background: var(--gold-dim); color: var(--gold); }
+
+.search-grid {
+  display: grid; grid-template-columns: 1fr 1fr 140px 140px 160px;
+  gap: 12px; align-items: end;
+}
+.search-field label {
+  display: block; font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+}
+.search-field input, .search-field select {
+  width: 100%; background: rgba(255,255,255,0.06);
+  border: 0.5px solid rgba(255,255,255,0.12);
+  border-radius: 8px; padding: 12px 14px;
+  color: #fff; font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 500;
+  outline: none; transition: border-color 0.2s;
+  appearance: none; -webkit-appearance: none;
+}
+.search-field input:focus, .search-field select:focus { border-color: var(--gold); }
+.search-field input::placeholder { color: var(--white-50); }
+.search-field select option { background: #1a1a1a; color: #fff; }
+
+.search-field .airport-code {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 16px; font-weight: 800; color: var(--gold);
+}
+.field-relative { position: relative; }
+
+.btn-search-flight {
+  width: 100%; padding: 13px;
+  background: var(--gold);
+  border: none; border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--dark);
+  cursor: pointer; transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-search-flight:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+/* Flight Results */
+.flights-results-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--white-50); margin-bottom: 16px;
+}
+
+.flight-list { display: flex; flex-direction: column; gap: 12px; }
+
+.flight-card {
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 20px 24px;
+  display: grid; grid-template-columns: 140px 1fr 140px;
+  align-items: center; gap: 20px;
+  cursor: pointer; transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.flight-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--gold); opacity: 0; transition: opacity 0.3s;
+}
+.flight-card:hover { border-color: rgba(201,168,76,0.25); transform: translateX(4px); }
+.flight-card:hover::before { opacity: 1; }
+.flight-card.featured { border-color: rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); }
+
+.airline-info { display: flex; align-items: center; gap: 12px; }
+.airline-logo {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 800; color: var(--gold);
+  letter-spacing: 0.5px; text-align: center; line-height: 1.2;
+  border: 0.5px solid rgba(201,168,76,0.2);
+}
+.airline-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.airline-num { font-size: 9px; color: var(--white-50); }
+
+.flight-route {
+  display: grid; grid-template-columns: 80px 1fr 80px;
+  align-items: center; gap: 8px;
+}
+.route-time { font-size: 22px; font-weight: 800; }
+.route-code { font-size: 9px; color: var(--white-50); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.route-line {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.route-line-bar {
+  display: flex; align-items: center; gap: 0; width: 100%;
+}
+.route-line-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--white-50); }
+.route-line-path {
+  flex: 1; height: 1px; background: rgba(255,255,255,0.2);
+  position: relative;
+}
+.route-line-path::after {
+  content: ''; position: absolute;
+  right: -3px; top: -4px;
+  border-left: 7px solid rgba(255,255,255,0.2);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.route-duration { font-size: 9px; color: var(--white-50); white-space: nowrap; }
+.route-stops { font-size: 8px; color: var(--gold); letter-spacing: 0.5px; }
+
+.flight-price-col { text-align: right; }
+.flight-price-label { font-size: 8px; color: var(--white-50); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.flight-price { font-size: 24px; font-weight: 900; color: var(--gold); margin-bottom: 8px; }
+.flight-price sup { font-size: 12px; font-weight: 400; }
+.flight-class { font-size: 8px; color: var(--white-50); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+.btn-select-flight {
+  padding: 8px 18px; border-radius: 6px;
+  background: transparent; border: 1px solid rgba(201,168,76,0.4);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold);
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-select-flight:hover { background: var(--gold); color: var(--dark); }
+
+.featured-tag {
+  position: absolute; top: 14px; right: 80px;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(201,168,76,0.15); border: 0.5px solid var(--gold);
+  font-size: 8px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--gold);
+}
+
+/* ===== OFFERS PAGE ===== */
+#page-offers { background: var(--dark); }
+
+.offers-wrap {
+  height: calc(100vh - var(--nav-h));
+  overflow-y: auto; padding: 48px 64px 60px;
+}
+.offers-wrap::-webkit-scrollbar { width: 4px; }
+.offers-wrap::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+.offers-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 36px; }
+.offers-header-left .page-label { margin-bottom: 10px; }
+.offers-header-left h1 { font-size: clamp(36px, 4.5vw, 60px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
+.offers-header-right { text-align: right; }
+.countdown-label { font-size: 8px; color: var(--white-50); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+.countdown { display: flex; gap: 12px; align-items: center; }
+.countdown-unit { text-align: center; }
+.countdown-num { font-size: 28px; font-weight: 800; color: var(--gold); line-height: 1; }
+.countdown-unit-label { font-size: 7px; color: var(--white-50); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
+.countdown-sep { font-size: 24px; font-weight: 300; color: var(--gold); margin-top: -6px; }
+
+/* Deals Hero */
+.deals-hero {
+  border-radius: 20px; overflow: hidden;
+  position: relative; height: 320px;
+  cursor: pointer; margin-bottom: 28px;
+  transition: transform 0.4s;
+}
+.deals-hero:hover { transform: scale(1.01); }
+.deals-hero-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1400&q=80') center/cover;
+  transition: transform 0.6s; filter: brightness(0.65);
+}
+.deals-hero:hover .deals-hero-bg { transform: scale(1.04); }
+.deals-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.8) 30%, transparent 75%);
+}
+.deals-hero-content { position: relative; z-index: 2; padding: 48px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+.deals-hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold); border-radius: 20px;
+  padding: 5px 14px; margin-bottom: 16px;
+  font-size: 8px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--dark); width: fit-content;
+}
+.deals-hero-title { font-size: 42px; font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 12px; }
+.deals-hero-sub { font-size: 11px; color: var(--white-70); margin-bottom: 20px; }
+.deals-hero-price { font-size: 36px; font-weight: 900; color: var(--gold); }
+.deals-hero-price span { font-size: 13px; font-weight: 400; color: var(--white-50); }
+
+/* Offers Grid */
+.offers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.offer-card {
+  border-radius: 16px; overflow: hidden;
+  position: relative; height: 260px; cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+}
+.offer-card:hover { transform: translateY(-8px) scale(1.02); }
+.offer-card:hover .offer-bg { transform: scale(1.08); filter: brightness(0.75); }
+.offer-card.tall { grid-row: span 2; height: 100%; }
+
+.offer-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: brightness(0.6); transition: all 0.5s ease;
+}
+.offer-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+}
+.offer-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; }
+.offer-discount {
+  display: inline-block; background: var(--gold);
+  padding: 4px 10px; border-radius: 4px;
+  font-size: 10px; font-weight: 800; color: var(--dark);
+  letter-spacing: 0.5px; margin-bottom: 8px;
+}
+.offer-name { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 4px; }
+.offer-details { font-size: 9px; color: var(--white-60, rgba(255,255,255,0.6)); }
+.offer-price { font-size: 22px; font-weight: 900; color: var(--gold); margin-top: 8px; }
+.offer-price del { font-size: 12px; color: var(--white-50); font-weight: 400; margin-right: 6px; }
+
+/* ===== CONTACTS PAGE ===== */
+#page-contacts { background: var(--dark); }
+
+.contacts-wrap {
+  height: calc(100vh - var(--nav-h));
+  display: grid; grid-template-columns: 1fr 500px;
+  overflow: hidden;
+}
+
+.contacts-left {
+  padding: 56px 64px;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  gap: 32px;
+}
+.contacts-left::-webkit-scrollbar { width: 4px; }
+.contacts-left::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+.contacts-left .page-label { margin-bottom: 10px; }
+.contacts-left h1 { font-size: clamp(34px, 4vw, 54px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 8px; }
+.contacts-intro { font-size: 11px; color: var(--white-50); line-height: 1.8; max-width: 380px; }
+
+.info-cards { display: flex; flex-direction: column; gap: 12px; }
+.info-card {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 20px; border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(255,255,255,0.08);
+  transition: border-color 0.3s;
+}
+.info-card:hover { border-color: rgba(201,168,76,0.25); }
+.info-card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--gold-dim); border: 0.5px solid rgba(201,168,76,0.3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.info-card-icon i { font-size: 20px; color: var(--gold); }
+.info-card-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.info-card-val { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.info-card-sub { font-size: 10px; color: var(--white-50); }
+
+.social-row { display: flex; gap: 10px; }
+.social-btn {
+  width: 42px; height: 42px; border-radius: 10px;
+  border: 0.5px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.social-btn:hover { border-color: var(--gold); background: var(--gold-dim); }
+.social-btn i { font-size: 18px; color: var(--white-70); }
+.social-btn:hover i { color: var(--gold); }
+
+/* Contact form */
+.contacts-right {
+  border-left: 0.5px solid rgba(255,255,255,0.07);
+  padding: 56px 48px;
+  overflow-y: auto;
+  position: relative;
+}
+.contacts-right::-webkit-scrollbar { width: 4px; }
+.contacts-right::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+.contacts-right::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  opacity: 0.3;
+}
+
+.form-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 6px; }
+.form-sub { font-size: 10px; color: var(--white-50); margin-bottom: 28px; line-height: 1.7; }
+
+.form-group { margin-bottom: 18px; }
+.form-group label {
+  display: block; font-size: 8px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 13px 16px;
+  color: #fff; font-family: 'Montserrat', sans-serif;
+  font-size: 12px; outline: none;
+  transition: border-color 0.2s;
+  resize: none; appearance: none;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+.form-group input::placeholder, .form-group textarea::placeholder { color: var(--white-50); }
+.form-group select option { background: #1a1a1a; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.btn-submit {
+  width: 100%; padding: 15px;
+  background: var(--gold); border: none; border-radius: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--dark);
+  cursor: pointer; transition: all 0.3s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin-top: 8px;
+}
+.btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(201,168,76,0.25); }
+
+/* ===== ANIMATIONS ===== */
+.fade-in { animation: fadeIn 0.6s ease forwards; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in-up { animation: slideInUp 0.7s cubic-bezier(0.23,1,0.32,1) forwards; }
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Staggered delays */
+.d1 { animation-delay: 0.05s; opacity: 0; }
+.d2 { animation-delay: 0.12s; opacity: 0; }
+.d3 { animation-delay: 0.19s; opacity: 0; }
+.d4 { animation-delay: 0.26s; opacity: 0; }
+.d5 { animation-delay: 0.33s; opacity: 0; }
+.d6 { animation-delay: 0.40s; opacity: 0; }
 </style>
 </head>
 <body>
 
-<div class="hero" id="hero">
+<!-- ==================== HOME ==================== -->
+<div class="page active" id="page-home">
   <div class="hero-bg" id="heroBg"></div>
   <div class="hero-overlay"></div>
   <div class="hero-overlay-top"></div>
 
-  <!-- NAV -->
   <nav>
-    <a href="#" class="nav-logo">
+    <div class="nav-logo" onclick="goHome()">
       <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
       GLOBE EXPRESS
-    </a>
-    <ul class="nav-links">
-      <li><a href="#" class="active">HOME</a></li>
-      <li><a href="#">HOLIDAYS</a></li>
-      <li><a href="#">DESTINATIONS</a></li>
-      <li><a href="#">FLIGHTS</a></li>
-      <li><a href="#">OFFERS</a></li>
-      <li><a href="#">CONTACTS</a></li>
+    </div>
+    <ul class="nav-links" id="mainNav">
+      <li><a onclick="navigateTo('home')" class="active" data-page="home">HOME</a></li>
+      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
+      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
+      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
+      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
     </ul>
     <div class="nav-actions">
       <i class="ti ti-search" title="Search"></i>
@@ -321,148 +928,645 @@
     </div>
   </nav>
 
-  <!-- HERO CONTENT -->
   <div class="hero-content">
     <div class="location-tag"><span id="heroRegion">Switzerland Alps</span></div>
     <h1 class="hero-title" id="heroTitle">SAINT<br>ANTÖNIEN</h1>
     <p class="hero-desc">Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.</p>
     <div class="hero-actions">
-      <button class="btn-play" aria-label="Play video">
-        <i class="ti ti-player-play"></i>
-      </button>
+      <button class="btn-play" aria-label="Play video"><i class="ti ti-player-play"></i></button>
       <button class="btn-discover">DISCOVER LOCATION</button>
     </div>
   </div>
 
-  <!-- BOTTOM: ARROWS + PROGRESS + CARDS -->
   <div class="hero-bottom">
     <div class="controls-col">
       <div class="nav-arrows">
-        <button class="arrow-btn" id="btnPrev" aria-label="Previous">
-          <i class="ti ti-chevron-left"></i>
-        </button>
-        <button class="arrow-btn" id="btnNext" aria-label="Next">
-          <i class="ti ti-chevron-right"></i>
-        </button>
+        <button class="arrow-btn" id="btnPrev"><i class="ti ti-chevron-left"></i></button>
+        <button class="arrow-btn" id="btnNext"><i class="ti ti-chevron-right"></i></button>
       </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </div>
-
     <div class="cards-row" id="cardsRow"></div>
   </div>
 
   <div class="slide-num">0<em id="slideNum">1</em></div>
 </div>
 
+<!-- ==================== HOLIDAYS ==================== -->
+<div class="page section-page" id="page-holidays">
+  <nav>
+    <div class="nav-logo" onclick="goHome()">
+      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
+      GLOBE EXPRESS
+    </div>
+    <ul class="nav-links">
+      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
+      <li><a onclick="navigateTo('holidays')" data-page="holidays" class="active">HOLIDAYS</a></li>
+      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
+      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
+      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
+    </ul>
+    <div class="nav-actions">
+      <i class="ti ti-search"></i><i class="ti ti-user"></i>
+    </div>
+  </nav>
+
+  <div class="holidays-hero">
+    <div class="holidays-hero-bg"></div>
+    <div class="holidays-hero-overlay"></div>
+    <div class="holidays-hero-content">
+      <div class="page-label">Curated Escapes</div>
+      <h1>HOLIDAY<br>PACKAGES</h1>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-tab active">ALL</button>
+    <button class="filter-tab">BEACH</button>
+    <button class="filter-tab">MOUNTAIN</button>
+    <button class="filter-tab">CULTURAL</button>
+    <button class="filter-tab">ADVENTURE</button>
+    <button class="filter-tab">LUXURY</button>
+    <button class="filter-tab">CITY BREAK</button>
+  </div>
+
+  <div class="holiday-grid" id="holidayGrid"></div>
+</div>
+
+<!-- ==================== DESTINATIONS ==================== -->
+<div class="page" id="page-destinations">
+  <nav>
+    <div class="nav-logo" onclick="goHome()">
+      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
+      GLOBE EXPRESS
+    </div>
+    <ul class="nav-links">
+      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
+      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
+      <li><a onclick="navigateTo('destinations')" data-page="destinations" class="active">DESTINATIONS</a></li>
+      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
+      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
+    </ul>
+    <div class="nav-actions">
+      <i class="ti ti-search"></i><i class="ti ti-user"></i>
+    </div>
+  </nav>
+
+  <div class="dest-fullpage" style="margin-top: var(--nav-h);">
+    <div class="dest-map-area">
+      <div class="dest-globe-visual">
+        <div class="globe-bg"></div>
+        <div class="globe-rings"></div>
+        <div class="globe-rings"></div>
+        <div class="globe-rings"></div>
+        <!-- Pins -->
+        <div class="dest-pin" style="left:32%;top:28%;" title="Swiss Alps"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:72%;top:35%;" title="Japan"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:44%;top:48%;" title="Morocco"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:20%;top:36%;" title="Yosemite"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:36%;top:33%;" title="Spain"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:80%;top:55%;" title="Bali"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:25%;top:55%;" title="Peru"><div class="dest-pin-dot"></div></div>
+      </div>
+
+      <div class="dest-map-content">
+        <div class="page-label">Explore The World</div>
+        <h1>DISCOVER<br>DESTINATIONS</h1>
+        <p style="font-size:11px; color:rgba(255,255,255,0.5); max-width:340px; line-height:1.8; margin-top:10px;">
+          From alpine peaks to tropical shores — explore 200+ curated destinations across 6 continents.
+        </p>
+        <div class="dest-regions" style="margin-top:auto; padding-top:40px;">
+          <button class="dest-region-btn active"><span>🌍 All</span></button>
+          <button class="dest-region-btn"><span>🇪🇺 Europe</span></button>
+          <button class="dest-region-btn"><span>🌏 Asia</span></button>
+          <button class="dest-region-btn"><span>🌎 Americas</span></button>
+          <button class="dest-region-btn"><span>🌍 Africa</span></button>
+          <button class="dest-region-btn"><span>🌊 Pacific</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dest-sidebar" id="destSidebar">
+      <div class="dest-sidebar-label">Popular Destinations</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FLIGHTS ==================== -->
+<div class="page section-page" id="page-flights">
+  <nav>
+    <div class="nav-logo" onclick="goHome()">
+      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
+      GLOBE EXPRESS
+    </div>
+    <ul class="nav-links">
+      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
+      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
+      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
+      <li><a onclick="navigateTo('flights')" data-page="flights" class="active">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
+      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
+    </ul>
+    <div class="nav-actions">
+      <i class="ti ti-search"></i><i class="ti ti-user"></i>
+    </div>
+  </nav>
+
+  <div class="flights-wrap">
+    <div class="flights-header">
+      <div class="page-label">Book Your Journey</div>
+      <h1>FIND BEST<br>FLIGHTS</h1>
+    </div>
+
+    <div class="search-box">
+      <div class="search-tabs">
+        <button class="search-tab active">Round Trip</button>
+        <button class="search-tab">One Way</button>
+        <button class="search-tab">Multi-City</button>
+      </div>
+      <div class="search-grid">
+        <div class="search-field">
+          <label><i class="ti ti-plane-departure" style="font-size:10px;margin-right:4px;"></i>From</label>
+          <div class="field-relative">
+            <input type="text" placeholder="Jakarta, Indonesia">
+          </div>
+        </div>
+        <div class="search-field">
+          <label><i class="ti ti-plane-arrival" style="font-size:10px;margin-right:4px;"></i>To</label>
+          <input type="text" placeholder="Paris, France">
+        </div>
+        <div class="search-field">
+          <label>Depart</label>
+          <input type="date" value="2025-08-15">
+        </div>
+        <div class="search-field">
+          <label>Return</label>
+          <input type="date" value="2025-08-28">
+        </div>
+        <div class="search-field">
+          <label>Passengers</label>
+          <button class="btn-search-flight"><i class="ti ti-search" style="font-size:14px;"></i> SEARCH</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flights-results-label">12 FLIGHTS FOUND · JKT → CDG · 15 AUG 2025</div>
+    <div class="flight-list" id="flightList"></div>
+  </div>
+</div>
+
+<!-- ==================== OFFERS ==================== -->
+<div class="page section-page" id="page-offers">
+  <nav>
+    <div class="nav-logo" onclick="goHome()">
+      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
+      GLOBE EXPRESS
+    </div>
+    <ul class="nav-links">
+      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
+      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
+      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
+      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('offers')" data-page="offers" class="active">OFFERS</a></li>
+      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
+    </ul>
+    <div class="nav-actions">
+      <i class="ti ti-search"></i><i class="ti ti-user"></i>
+    </div>
+  </nav>
+
+  <div class="offers-wrap">
+    <div class="offers-header">
+      <div class="offers-header-left">
+        <div class="page-label">Limited Time</div>
+        <h1>EXCLUSIVE<br>DEALS</h1>
+      </div>
+      <div class="offers-header-right">
+        <div class="countdown-label">Flash Sale Ends In</div>
+        <div class="countdown">
+          <div class="countdown-unit"><div class="countdown-num" id="cdDays">02</div><div class="countdown-unit-label">DAYS</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cdHours">14</div><div class="countdown-unit-label">HRS</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cdMins">37</div><div class="countdown-unit-label">MIN</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><div class="countdown-num" id="cdSecs">22</div><div class="countdown-unit-label">SEC</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deals-hero">
+      <div class="deals-hero-bg"></div>
+      <div class="deals-hero-overlay"></div>
+      <div class="deals-hero-content">
+        <div class="deals-hero-tag"><i class="ti ti-bolt" style="font-size:11px;"></i> FLASH DEAL</div>
+        <div class="deals-hero-title">MALDIVES<br>ALL INCLUSIVE</div>
+        <div class="deals-hero-sub">7 Nights · Private Villa · Full Board · Seaplane Transfer</div>
+        <div class="deals-hero-price">
+          <del style="font-size:18px; color:rgba(255,255,255,0.4);">$4,200</del>
+          &nbsp;$2,499 <span>/ person</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="offers-grid" id="offersGrid"></div>
+  </div>
+</div>
+
+<!-- ==================== CONTACTS ==================== -->
+<div class="page" id="page-contacts">
+  <nav>
+    <div class="nav-logo" onclick="goHome()">
+      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
+      GLOBE EXPRESS
+    </div>
+    <ul class="nav-links">
+      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
+      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
+      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
+      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
+      <li><a onclick="navigateTo('contacts')" data-page="contacts" class="active">CONTACTS</a></li>
+    </ul>
+    <div class="nav-actions">
+      <i class="ti ti-search"></i><i class="ti ti-user"></i>
+    </div>
+  </nav>
+
+  <div class="contacts-wrap" style="margin-top: var(--nav-h);">
+    <div class="contacts-left">
+      <div>
+        <div class="page-label">Get In Touch</div>
+        <h1>LET'S PLAN<br>YOUR TRIP</h1>
+        <p class="contacts-intro" style="margin-top:14px;">
+          Our travel experts are ready to craft your perfect journey. Reach out and we'll create an itinerary tailored to your dreams.
+        </p>
+      </div>
+
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-card-icon"><i class="ti ti-map-pin"></i></div>
+          <div>
+            <div class="info-card-title">Office</div>
+            <div class="info-card-val">Sudirman Central Business District</div>
+            <div class="info-card-sub">Jl. Jend. Sudirman Kav. 52–53, Jakarta 12190</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon"><i class="ti ti-phone"></i></div>
+          <div>
+            <div class="info-card-title">Phone</div>
+            <div class="info-card-val">+62 21 5788 9900</div>
+            <div class="info-card-sub">Mon–Fri 09:00 – 18:00 WIB</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon"><i class="ti ti-mail"></i></div>
+          <div>
+            <div class="info-card-title">Email</div>
+            <div class="info-card-val">hello@globeexpress.id</div>
+            <div class="info-card-sub">We reply within 24 hours</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon"><i class="ti ti-headset"></i></div>
+          <div>
+            <div class="info-card-title">24/7 Hotline</div>
+            <div class="info-card-val">+62 812 0000 9900</div>
+            <div class="info-card-sub">Emergency travel support anytime</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:12px;">FOLLOW US</div>
+        <div class="social-row">
+          <div class="social-btn"><i class="ti ti-brand-instagram"></i></div>
+          <div class="social-btn"><i class="ti ti-brand-facebook"></i></div>
+          <div class="social-btn"><i class="ti ti-brand-twitter"></i></div>
+          <div class="social-btn"><i class="ti ti-brand-tiktok"></i></div>
+          <div class="social-btn"><i class="ti ti-brand-youtube"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contacts-right">
+      <div class="form-title">Send a Message</div>
+      <div class="form-sub">Fill out the form and our team will get back to you within one business day.</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="John">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Doe">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="john@example.com">
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="+62 812 0000 0000">
+      </div>
+      <div class="form-group">
+        <label>Inquiry Type</label>
+        <select>
+          <option>Holiday Package</option>
+          <option>Flight Booking</option>
+          <option>Custom Itinerary</option>
+          <option>Group Travel</option>
+          <option>Honeymoon Package</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Destination of Interest</label>
+        <input type="text" placeholder="e.g. Santorini, Maldives, Swiss Alps...">
+      </div>
+      <div class="form-group">
+        <label>Your Message</label>
+        <textarea rows="4" placeholder="Tell us about your dream trip..."></textarea>
+      </div>
+      <button class="btn-submit">
+        <i class="ti ti-send" style="font-size:16px;"></i>
+        SEND MESSAGE
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
+// ===== DATA =====
 const destinations = [
-  {
-    region: "Switzerland Alps",
-    line1: "SAINT",
-    line2: "ANTÖNIEN",
-    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
-    heroBg: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80",
-    cardBg: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80"
-  },
-  {
-    region: "Japan Alps",
-    line1: "NAGANO",
-    line2: "PREFECTURE",
-    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
-    heroBg: "https://images.unsplash.com/photo-1535082623926-b39c1c9f3e9d?w=1600&q=80",
-    cardBg: "https://images.unsplash.com/photo-1535082623926-b39c1c9f3e9d?w=400&q=80"
-  },
-  {
-    region: "Sahara Desert · Morocco",
-    line1: "MARRAKECH",
-    line2: "MERZOUGA",
-    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
-    heroBg: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80",
-    cardBg: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80"
-  },
-  {
-    region: "Sierra Nevada · United States",
-    line1: "YOSEMITE",
-    line2: "NATIONAL PARK",
-    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
-    heroBg: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80",
-    cardBg: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80"
-  },
-  {
-    region: "Tarifa · Spain",
-    line1: "LOS LANCES",
-    line2: "BEACH",
-    desc: "Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.",
-    heroBg: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80",
-    cardBg: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80"
-  }
+  { region:"Switzerland Alps", line1:"SAINT", line2:"ANTÖNIEN", heroBg:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80" },
+  { region:"Japan Alps", line1:"NAGANO", line2:"PREFECTURE", heroBg:"https://images.unsplash.com/photo-1535082623926-b39c1c9f3e9d?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1535082623926-b39c1c9f3e9d?w=400&q=80" },
+  { region:"Sahara Desert · Morocco", line1:"MARRAKECH", line2:"MERZOUGA", heroBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80" },
+  { region:"Sierra Nevada · USA", line1:"YOSEMITE", line2:"NATIONAL PARK", heroBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80" },
+  { region:"Tarifa · Spain", line1:"LOS LANCES", line2:"BEACH", heroBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" }
 ];
 
+const holidays = [
+  { region:"Maldives", name:"NORTH MALÉ ATOLL", desc:"Overwater bungalows, crystal lagoons, and world-class diving reefs await.", img:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=600&q=80", price:"$3,299", nights:"7 nights", type:"Beach", rating:"4.9" },
+  { region:"Switzerland", name:"GRINDELWALD PEAKS", desc:"Iconic alpine village below the North Face with glaciers and cable cars.", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80", price:"$2,899", nights:"6 nights", type:"Mountain", rating:"4.8" },
+  { region:"Japan", name:"KYOTO IMPERIAL", desc:"Cherry blossom temples, kaiseki dining, and centuries of living culture.", img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80", price:"$3,499", nights:"8 nights", type:"Cultural", rating:"5.0" },
+  { region:"Morocco", name:"SAHARA MERZOUGA", desc:"Camel treks at sunset, luxury desert camps under a billion stars.", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&q=80", price:"$1,899", nights:"5 nights", type:"Adventure", rating:"4.7" },
+  { region:"French Riviera", name:"CÔTE D'AZUR", desc:"Glamorous promenades, azure seas, Michelin dining and yacht culture.", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=80", price:"$4,199", nights:"7 nights", type:"Luxury", rating:"4.9" },
+  { region:"Bali, Indonesia", name:"UBUD HIGHLANDS", desc:"Rice terraces, jungle spa retreats, and Balinese temple ceremonies.", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80", price:"$1,499", nights:"5 nights", type:"Cultural", rating:"4.8" }
+];
+
+const flights = [
+  { airline:"SINGAPORE AIRLINES", code:"SQ 722", from:"CGK", to:"CDG", dep:"08:45", arr:"19:20", duration:"14h 35m", stops:"Direct", price:"$1,245", cls:"Business", featured:true },
+  { airline:"QATAR AIRWAYS", code:"QR 956", from:"CGK", to:"CDG", dep:"10:15", arr:"22:05", duration:"15h 50m", stops:"1 Stop", price:"$987", cls:"Economy", featured:false },
+  { airline:"EMIRATES", code:"EK 358", from:"CGK", to:"CDG", dep:"23:50", arr:"13:40+1", duration:"17h 50m", stops:"1 Stop", price:"$876", cls:"Economy", featured:false },
+  { airline:"AIR FRANCE", code:"AF 257", from:"CGK", to:"CDG", dep:"06:30", arr:"14:55", duration:"16h 25m", stops:"1 Stop", price:"$1,099", cls:"Premium", featured:false },
+  { airline:"GARUDA INDONESIA", code:"GA 870", from:"CGK", to:"CDG", dep:"17:25", arr:"05:30+1", duration:"18h 05m", stops:"1 Stop", price:"$799", cls:"Economy", featured:false }
+];
+
+const offers = [
+  { name:"SANTORINI SUNSET", discount:"40% OFF", price:"$1,299", old:"$2,190", details:"7 Nights · Couples Package", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80" },
+  { name:"BALI PARADISE", discount:"35% OFF", price:"$899", old:"$1,380", details:"5 Nights · Villa Stay", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" },
+  { name:"TOKYO EXPLORER", discount:"25% OFF", price:"$2,199", old:"$2,930", details:"10 Nights · City Tour", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80" },
+  { name:"SWISS ALPS LODGE", discount:"30% OFF", price:"$2,499", old:"$3,560", details:"8 Nights · Ski Package", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80" },
+  { name:"AMALFI COAST", discount:"20% OFF", price:"$1,799", old:"$2,240", details:"6 Nights · Coastal Drive", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=80" }
+];
+
+const destItems = [
+  { name:"PARIS", country:"France", img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400&q=80", price:"$1,890", stat:"248 packages" },
+  { name:"BALI", country:"Indonesia", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80", price:"$899", stat:"186 packages" },
+  { name:"TOKYO", country:"Japan", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80", price:"$2,100", stat:"142 packages" },
+  { name:"SANTORINI", country:"Greece", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&q=80", price:"$1,650", stat:"95 packages" },
+  { name:"MARRAKECH", country:"Morocco", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80", price:"$890", stat:"78 packages" },
+  { name:"NEW YORK", country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80", price:"$1,420", stat:"116 packages" }
+];
+
+// ===== NAV =====
+let currentPage = 'home';
+
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  currentPage = page;
+
+  if (page === 'home') return;
+  if (page === 'holidays') renderHolidays();
+  if (page === 'destinations') renderDestinations();
+  if (page === 'flights') renderFlights();
+  if (page === 'offers') renderOffers();
+}
+
+function goHome() { navigateTo('home'); }
+
+// ===== HOME SLIDER =====
 const TOTAL = destinations.length;
 let current = 0;
 let autoTimer = null;
 
 function update(animate = true) {
   const dest = destinations[current];
-
-  // Background
   document.getElementById('heroBg').style.backgroundImage = `url('${dest.heroBg}')`;
-
-  // Hero text
   document.getElementById('heroRegion').textContent = dest.region;
   const titleEl = document.getElementById('heroTitle');
   titleEl.innerHTML = dest.line1 + '<br>' + dest.line2;
-  if (animate) {
-    titleEl.classList.remove('fade-in');
-    void titleEl.offsetWidth;
-    titleEl.classList.add('fade-in');
-  }
-
-  // Slide num & progress
+  if (animate) { titleEl.classList.remove('fade-in'); void titleEl.offsetWidth; titleEl.classList.add('fade-in'); }
   document.getElementById('slideNum').textContent = current + 1;
   document.getElementById('progressFill').style.width = ((current + 1) / TOTAL * 100) + '%';
 
-  // Cards: show next 4
   const cardsRow = document.getElementById('cardsRow');
   cardsRow.innerHTML = '';
   for (let i = 1; i <= 4; i++) {
     const idx = (current + i) % TOTAL;
     const d = destinations[idx];
-
     const card = document.createElement('div');
     card.className = 'dest-card';
-    card.innerHTML = `
-      <div class="card-bg" style="background-image:url('${d.cardBg}')"></div>
-      <div class="card-shade"></div>
-      <div class="card-info">
-        <div class="card-region">${d.region}</div>
-        <div class="card-name">${d.line1}<br>${d.line2}</div>
-      </div>
-    `;
-    card.addEventListener('click', () => {
-      current = idx;
-      update();
-      resetAuto();
-    });
+    card.innerHTML = `<div class="card-bg" style="background-image:url('${d.cardBg}')"></div><div class="card-shade"></div><div class="card-info"><div class="card-region">${d.region}</div><div class="card-name">${d.line1}<br>${d.line2}</div></div>`;
+    card.addEventListener('click', () => { current = idx; update(); resetAuto(); });
     cardsRow.appendChild(card);
   }
 }
 
 function goNext() { current = (current + 1) % TOTAL; update(); }
 function goPrev() { current = (current - 1 + TOTAL) % TOTAL; update(); }
-
-function resetAuto() {
-  clearInterval(autoTimer);
-  autoTimer = setInterval(goNext, 5500);
-}
+function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(goNext, 5500); }
 
 document.getElementById('btnNext').addEventListener('click', () => { goNext(); resetAuto(); });
 document.getElementById('btnPrev').addEventListener('click', () => { goPrev(); resetAuto(); });
 
 update(false);
 resetAuto();
+
+// ===== RENDER HOLIDAYS =====
+function renderHolidays() {
+  const grid = document.getElementById('holidayGrid');
+  if (grid.innerHTML.trim()) return;
+  holidays.forEach((h, i) => {
+    const card = document.createElement('div');
+    card.className = 'holiday-card slide-in-up d' + (i + 1);
+    card.innerHTML = `
+      <div class="hcard-img-wrap">
+        <div class="hcard-img" style="background-image:url('${h.img}');"></div>
+        <div class="hcard-badge">${h.type}</div>
+        <div class="hcard-save"><i class="ti ti-heart"></i></div>
+      </div>
+      <div class="hcard-body">
+        <div class="hcard-region">${h.region}</div>
+        <div class="hcard-name">${h.name}</div>
+        <div class="hcard-desc">${h.desc}</div>
+        <div class="hcard-footer">
+          <div>
+            <div class="hcard-price-label">From</div>
+            <div class="hcard-price">${h.price} <span>/ person</span></div>
+          </div>
+          <div>
+            <div class="hcard-meta">
+              <div class="hcard-meta-item"><i class="ti ti-moon"></i>${h.nights}</div>
+              <div class="hcard-meta-item"><i class="ti ti-star-filled" style="color:#c9a84c;"></i>${h.rating}</div>
+            </div>
+            <button class="btn-gold-sm" style="margin-top:10px;">BOOK NOW</button>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  document.querySelectorAll('.filter-tab').forEach(t => {
+    t.addEventListener('click', function() {
+      document.querySelectorAll('.filter-tab').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+// ===== RENDER DESTINATIONS =====
+function renderDestinations() {
+  const sidebar = document.getElementById('destSidebar');
+  if (sidebar.children.length > 1) return;
+  destItems.forEach((d, i) => {
+    const item = document.createElement('div');
+    item.className = 'dest-item slide-in-up d' + Math.min(i + 1, 6);
+    if (i === 0) item.classList.add('selected');
+    item.innerHTML = `
+      <div class="dest-item-img" style="background-image:url('${d.img}');"></div>
+      <div class="dest-item-body">
+        <div class="dest-item-name">${d.name}</div>
+        <div class="dest-item-country">${d.country}</div>
+        <div class="dest-item-row">
+          <div class="dest-item-stat">${d.stat}</div>
+          <div class="dest-item-price">${d.price}</div>
+        </div>
+      </div>`;
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.dest-item').forEach(x => x.classList.remove('selected'));
+      item.classList.add('selected');
+    });
+    sidebar.appendChild(item);
+  });
+
+  document.querySelectorAll('.dest-region-btn').forEach(b => {
+    b.addEventListener('click', function() {
+      document.querySelectorAll('.dest-region-btn').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+// ===== RENDER FLIGHTS =====
+function renderFlights() {
+  const list = document.getElementById('flightList');
+  if (list.innerHTML.trim()) return;
+  flights.forEach((f, i) => {
+    const card = document.createElement('div');
+    card.className = 'flight-card slide-in-up d' + Math.min(i + 1, 5) + (f.featured ? ' featured' : '');
+    card.innerHTML = `
+      ${f.featured ? '<div class="featured-tag">BEST VALUE</div>' : ''}
+      <div class="airline-info">
+        <div class="airline-logo">${f.airline.split(' ').map(w => w[0]).join('').slice(0,3)}</div>
+        <div>
+          <div class="airline-name">${f.airline}</div>
+          <div class="airline-num">${f.code}</div>
+        </div>
+      </div>
+      <div class="flight-route">
+        <div>
+          <div class="route-time">${f.dep}</div>
+          <div class="route-code">${f.from}</div>
+        </div>
+        <div class="route-line">
+          <div class="route-duration">${f.duration}</div>
+          <div class="route-line-bar">
+            <div class="route-line-dot"></div>
+            <div class="route-line-path"></div>
+            <div class="route-line-dot"></div>
+          </div>
+          <div class="route-stops">${f.stops}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="route-time">${f.arr}</div>
+          <div class="route-code">${f.to}</div>
+        </div>
+      </div>
+      <div class="flight-price-col">
+        <div class="flight-price-label">From</div>
+        <div class="flight-price">${f.price}</div>
+        <div class="flight-class">${f.cls} Class</div>
+        <button class="btn-select-flight">SELECT</button>
+      </div>`;
+    list.appendChild(card);
+  });
+
+  document.querySelectorAll('.search-tab').forEach(t => {
+    t.addEventListener('click', function() {
+      document.querySelectorAll('.search-tab').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+// ===== RENDER OFFERS =====
+function renderOffers() {
+  const grid = document.getElementById('offersGrid');
+  if (grid.innerHTML.trim()) return;
+  offers.forEach((o, i) => {
+    const card = document.createElement('div');
+    card.className = 'offer-card slide-in-up d' + Math.min(i + 1, 5);
+    card.innerHTML = `
+      <div class="offer-bg" style="background-image:url('${o.img}');"></div>
+      <div class="offer-overlay"></div>
+      <div class="offer-content">
+        <div class="offer-discount">${o.discount}</div>
+        <div class="offer-name">${o.name}</div>
+        <div class="offer-details">${o.details}</div>
+        <div class="offer-price"><del>${o.old}</del>${o.price}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ===== COUNTDOWN =====
+let saleEnd = new Date();
+saleEnd.setDate(saleEnd.getDate() + 2);
+saleEnd.setHours(saleEnd.getHours() + 14);
+saleEnd.setMinutes(saleEnd.getMinutes() + 37);
+saleEnd.setSeconds(saleEnd.getSeconds() + 22);
+
+function updateCountdown() {
+  const diff = saleEnd - new Date();
+  if (diff <= 0) return;
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cdDays').textContent = String(d).padStart(2, '0');
+  document.getElementById('cdHours').textContent = String(h).padStart(2, '0');
+  document.getElementById('cdMins').textContent = String(m).padStart(2, '0');
+  document.getElementById('cdSecs').textContent = String(s).padStart(2, '0');
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
 </script>
 </body>
 </html>
