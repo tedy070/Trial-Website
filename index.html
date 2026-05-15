@@ -423,14 +423,14 @@ body.light .hgmi { color: rgba(26,18,8,0.50); }
 
 .dest-info {
   position: relative; z-index: 5; padding: 48px; height: 100%;
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: column; justify-content: space-between;
   background: linear-gradient(105deg, rgba(0,0,0,0.76) 35%, rgba(0,0,0,0.18) 100%);
 }
 .dest-info h1 { font-size: clamp(32px, 4vw, 54px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 10px; }
 .dest-info p { font-size: 11px; color: var(--w50); max-width: 330px; line-height: 1.80; margin-top: 8px; }
 
 .dest-card-info {
-  margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.48);
+  padding: 20px; background: rgba(0,0,0,0.48);
   border: 0.5px solid rgba(201,168,76,0.28); border-radius: 12px; backdrop-filter: blur(10px);
 }
 .dci-name { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 4px; }
@@ -440,15 +440,6 @@ body.light .hgmi { color: rgba(26,18,8,0.50); }
 .dci-val { font-size: 18px; font-weight: 800; color: var(--gold); }
 .dci-lbl { font-size: 8px; color: var(--w50); letter-spacing: 1px; text-transform: uppercase; }
 
-.dest-regions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 40px; }
-.dreg-btn {
-  padding: 10px 18px; border-radius: 30px;
-  border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05);
-  color: var(--w70); font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1px;
-  cursor: pointer; transition: all 0.25s;
-}
-.dreg-btn:hover { border-color: rgba(201,168,76,0.40); color: var(--gold); }
-.dreg-btn.on { background: var(--gold); border-color: var(--gold); color: #1a1208; }
 
 .dest-sidebar {
   background: rgba(7,7,7,0.97); border-left: 0.5px solid rgba(255,255,255,0.07);
@@ -742,7 +733,7 @@ body.light .fgrp select option { background: #ddd5c8; color: #1a1208; }
 .btn-send:hover { background: var(--gold-lt); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(201,168,76,0.25); }
 
 /* ══════════════════════════════════════════
-   FOOTER
+   FOOTER — single copyright line
 ══════════════════════════════════════════ */
 footer {
   background: #040404;
@@ -755,55 +746,12 @@ footer::before {
 }
 body.light footer { background: #1a1208; }
 
-.foot-inner { max-width: 1280px; margin: 0 auto; padding: 60px 64px 28px; }
-
-.foot-top { display: grid; grid-template-columns: 280px 1fr; gap: 60px; margin-bottom: 48px; }
-
-.foot-brand { display: flex; flex-direction: column; gap: 16px; }
-.foot-logo { display: flex; align-items: center; gap: 10px; }
-.foot-logo-ring {
-  width: 36px; height: 36px; border-radius: 50%;
-  border: 1.5px solid var(--gold);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+.foot-simple {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 20px 24px;
+  font-size: 11px; color: rgba(255,255,255,0.35);
 }
-.foot-logo-ring i { color: var(--gold); font-size: 17px; }
-.foot-logo span { font-size: 12px; font-weight: 700; letter-spacing: 3px; color: #fff; }
-.foot-tagline { font-size: 11px; color: rgba(255,255,255,0.40); line-height: 1.75; max-width: 240px; }
-
-.foot-links { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; }
-.foot-col { display: flex; flex-direction: column; gap: 11px; }
-.foot-col-t { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
-.foot-col a {
-  font-size: 11px; color: rgba(255,255,255,0.40); text-decoration: none; cursor: pointer;
-  transition: color 0.2s; line-height: 1.4;
-}
-.foot-col a:hover { color: rgba(255,255,255,0.80); }
-
-.foot-soc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-.foot-soc-btn {
-  width: 36px; height: 36px; border-radius: 9px; cursor: pointer;
-  border: 0.5px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
-  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-}
-.foot-soc-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.14); }
-.foot-soc-btn i { font-size: 16px; color: rgba(255,255,255,0.55); }
-.foot-soc-btn:hover i { color: var(--gold); }
-
-.foot-divider { height: 0.5px; background: rgba(255,255,255,0.07); margin-bottom: 26px; }
-
-.foot-bottom {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 14px;
-}
-.foot-copy { display: flex; align-items: center; gap: 7px; font-size: 11px; color: rgba(255,255,255,0.30); }
-.foot-copy i { font-size: 13px; }
-.foot-blinks { display: flex; align-items: center; gap: 12px; }
-.foot-blinks a {
-  font-size: 10px; color: rgba(255,255,255,0.30); text-decoration: none;
-  cursor: pointer; letter-spacing: 0.5px; transition: color 0.2s;
-}
-.foot-blinks a:hover { color: rgba(255,255,255,0.65); }
-.foot-dot { color: rgba(255,255,255,0.22); }
+.foot-simple i { font-size: 13px; }
 
 /* ══════════════════════════════════════════
    ANIMATIONS
@@ -889,18 +837,13 @@ body.light .mobile-drawer ul li a { color: rgba(26,18,8,0.55); border-bottom-col
   .con-right { padding: 32px 20px; border-left: none; border-top: 0.5px solid rgba(255,255,255,0.07); }
   .contacts-wrap { grid-template-columns: 1fr; }
   .dest-info { padding: 24px 20px; }
-  .dest-regions { padding-top: 20px; }
   .hero-txt { left: 20px; }
   .hero-bot { left: 20px; right: 20px; }
   .slide-num { right: 20px; }
-  .foot-inner { padding: 40px 20px 24px; }
-  .foot-top { grid-template-columns: 1fr; gap: 32px; }
-  .foot-links { grid-template-columns: 1fr 1fr; }
   .hgrid { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .offers-grid { grid-template-columns: 1fr; }
-  .foot-links { grid-template-columns: 1fr; }
   .fcard { min-width: 220px; height: 300px; }
 }
 </style>
@@ -1036,7 +979,6 @@ body.light .mobile-drawer ul li a { color: rgba(26,18,8,0.55); border-bottom-col
             </div>
           </div>
         </div>
-        <div class="dest-regions" id="destRegions"></div>
       </div>
     </div>
     <div class="dest-sidebar" id="destSidebar">
@@ -1155,59 +1097,10 @@ body.light .mobile-drawer ul li a { color: rgba(26,18,8,0.55); border-bottom-col
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="foot-inner">
-    <div class="foot-top">
-      <div class="foot-brand">
-        <div class="foot-logo">
-          <div class="foot-logo-ring"><i class="ti ti-world"></i></div>
-          <span>GLOBE EXPRESS</span>
-        </div>
-        <p class="foot-tagline" id="ft-tagline"></p>
-      </div>
-      <div class="foot-links">
-        <div class="foot-col">
-          <div class="foot-col-t" id="ft-menu"></div>
-          <a onclick="goTo('home')"         id="ft-home"></a>
-          <a onclick="goTo('holidays')"     id="ft-holidays"></a>
-          <a onclick="goTo('destinations')" id="ft-destinations"></a>
-          <a onclick="goTo('food')"         id="ft-food"></a>
-          <a onclick="goTo('offers')"       id="ft-offers"></a>
-          <a onclick="goTo('contacts')"     id="ft-contacts"></a>
-        </div>
-        <div class="foot-col">
-          <div class="foot-col-t" id="ft-contact-t"></div>
-          <a>hello@globeexpress.id</a>
-          <a>+62 21 5788 9900</a>
-          <a>+62 812 0000 9900</a>
-          <a>Jakarta, Indonesia</a>
-        </div>
-        <div class="foot-col">
-          <div class="foot-col-t" id="ft-follow"></div>
-          <div class="foot-soc">
-            <div class="foot-soc-btn"><i class="ti ti-brand-instagram"></i></div>
-            <div class="foot-soc-btn"><i class="ti ti-brand-facebook"></i></div>
-            <div class="foot-soc-btn"><i class="ti ti-brand-twitter"></i></div>
-            <div class="foot-soc-btn"><i class="ti ti-brand-tiktok"></i></div>
-            <div class="foot-soc-btn"><i class="ti ti-brand-youtube"></i></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="foot-divider"></div>
-    <div class="foot-bottom">
-      <div class="foot-copy">
-        <i class="ti ti-copyright"></i>
-        <span id="footYear"></span>
-        <span id="ft-copy"></span>
-      </div>
-      <div class="foot-blinks">
-        <a id="ft-privacy"></a>
-        <span class="foot-dot">·</span>
-        <a id="ft-terms"></a>
-        <span class="foot-dot">·</span>
-        <a id="ft-sitemap"></a>
-      </div>
-    </div>
+  <div class="foot-simple">
+    <i class="ti ti-copyright"></i>
+    <span id="footYear"></span>
+    <span id="ft-copy"></span>
   </div>
 </footer>
 
@@ -1402,7 +1295,6 @@ function applyLang(l) {
   document.getElementById('dciStatLbl').textContent = t.dStatLbl;
   document.getElementById('dciRatingLbl').textContent = t.dRatLbl;
   document.getElementById('ds-label').textContent  = t.dSideLabel;
-  buildDestRegions();
   // Food
   document.getElementById('f-plabel').textContent = t.fLabel;
   document.getElementById('f-title').innerHTML    = t.fTitle;
@@ -1450,20 +1342,7 @@ function applyLang(l) {
   document.getElementById('c-msg-ph').placeholder   = t.cMsgPh;
   document.getElementById('c-send-t').textContent   = t.cSend;
   // Footer
-  document.getElementById('ft-tagline').textContent    = t.ftTagline;
-  document.getElementById('ft-menu').textContent       = t.ftMenu;
-  document.getElementById('ft-contact-t').textContent  = t.ftContact;
-  document.getElementById('ft-follow').textContent     = t.ftFollow;
-  document.getElementById('ft-home').textContent       = t.ftHome;
-  document.getElementById('ft-holidays').textContent   = t.ftHolidays;
-  document.getElementById('ft-destinations').textContent = t.ftDest;
-  document.getElementById('ft-food').textContent       = t.ftFood;
-  document.getElementById('ft-offers').textContent     = t.ftOffers;
-  document.getElementById('ft-contacts').textContent   = t.ftContacts;
-  document.getElementById('ft-copy').textContent       = t.ftCopy;
-  document.getElementById('ft-privacy').textContent    = t.ftPrivacy;
-  document.getElementById('ft-terms').textContent      = t.ftTerms;
-  document.getElementById('ft-sitemap').textContent    = t.ftSitemap;
+  document.getElementById('ft-copy').textContent = t.ftCopy;
   // Lang globe label
   const langLbl = document.getElementById('langLbl');
   if (langLbl) langLbl.textContent = l.toUpperCase();
@@ -1611,20 +1490,6 @@ function buildHolidays() {
 /* ════════════════════════════════════
    DESTINATIONS
 ════════════════════════════════════ */
-function buildDestRegions() {
-  const t = T[lang];
-  const cont = document.getElementById('destRegions');
-  const active = cont.querySelector('.on')?.textContent;
-  cont.innerHTML = '';
-  t.dRegs.forEach((lbl,i) => {
-    const b = document.createElement('button');
-    b.className = 'dreg-btn'+(i===0?' on':'');
-    b.textContent = lbl;
-    b.addEventListener('click',()=>{ cont.querySelectorAll('.dreg-btn').forEach(x=>x.classList.remove('on')); b.classList.add('on'); });
-    cont.appendChild(b);
-  });
-}
-
 function buildDestinations() {
   const sb = document.getElementById('destSidebar');
   if(sb.children.length > 1) return;
@@ -1650,7 +1515,6 @@ function buildDestinations() {
     });
     sb.appendChild(item);
   });
-  buildDestRegions();
 }
 
 /* ════════════════════════════════════
