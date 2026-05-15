@@ -8,348 +8,460 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
+/* ══════════════════════════════════════════
+   RESET & ROOT
+══════════════════════════════════════════ */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --gold: #c9a84c;
-  --gold-light: #e8c96a;
-  --gold-dim: rgba(201,168,76,0.25);
-  --white-70: rgba(255,255,255,0.7);
-  --white-50: rgba(255,255,255,0.5);
-  --dark: #0a0a0a;
-  --dark-3: #161616;
+  --gold:      #c9a84c;
+  --gold-lt:   #e8c96a;
+  --gold-dim:  rgba(201,168,76,0.22);
+  --w70:  rgba(255,255,255,0.70);
+  --w50:  rgba(255,255,255,0.50);
+  --w10:  rgba(255,255,255,0.10);
+  --dark:  #0a0a0a;
+  --dark2: #111111;
+  --dark3: #161616;
   --nav-h: 64px;
 }
 
-/* ===== UPDATE 2: Full page scroll from Home down through Contacts ===== */
-html {
-  scroll-behavior: smooth;
-}
-html, body {
+/* ══════════════════════════════════════════
+   BASE
+══════════════════════════════════════════ */
+html { scroll-behavior: smooth; }
+
+body {
   font-family: 'Montserrat', sans-serif;
   background: var(--dark);
   color: #fff;
-  width: 100%;
   overflow-x: hidden;
+  transition: background 0.4s, color 0.4s;
 }
 
-/* Each section is a full-screen panel stacked vertically */
-.section {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
+/* LIGHT MODE */
+body.light {
+  --dark:  #f0ece4;
+  --dark2: #e8e0d6;
+  --dark3: #ddd5c8;
+  background: #f0ece4;
+  color: #1a1208;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
 
-/* ===== STICKY NAV ===== */
-nav {
-  position: sticky; top: 0; z-index: 200;
+/* ══════════════════════════════════════════
+   NAV — fixed, transparent on hero
+══════════════════════════════════════════ */
+#mainNav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  height: var(--nav-h);
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 48px; height: var(--nav-h);
-  border-bottom: 0.5px solid rgba(255,255,255,0.08);
-  background: rgba(5,5,5,0.85);
-  backdrop-filter: blur(18px);
+  padding: 0 48px;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
 }
+#mainNav.solid {
+  background: rgba(6,6,6,0.85);
+  border-bottom-color: rgba(255,255,255,0.07);
+  backdrop-filter: blur(20px);
+}
+body.light #mainNav.solid {
+  background: rgba(240,236,228,0.90);
+  border-bottom-color: rgba(26,18,8,0.10);
+}
+
+/* Logo */
 .nav-logo {
   display: flex; align-items: center; gap: 10px;
-  text-decoration: none; color: #fff;
-  font-size: 11px; font-weight: 700; letter-spacing: 3px; cursor: pointer;
+  color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 3px; cursor: pointer;
+  text-decoration: none; flex-shrink: 0;
+  transition: color 0.3s;
 }
-.nav-logo-icon {
+body.light .nav-logo { color: #1a1208; }
+.nav-logo-ring {
   width: 32px; height: 32px; border-radius: 50%;
   border: 1.5px solid var(--gold);
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.nav-logo-icon i { color: var(--gold); font-size: 15px; }
+.nav-logo-ring i { color: var(--gold); font-size: 15px; }
 
-.nav-links { display: flex; gap: 32px; list-style: none; }
+/* Links */
+.nav-links { display: flex; gap: 30px; list-style: none; }
 .nav-links a {
-  text-decoration: none; color: var(--white-70);
-  font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
-  text-transform: uppercase; position: relative; padding-bottom: 3px;
-  transition: color 0.25s; cursor: pointer;
+  color: rgba(255,255,255,0.78); font-size: 10px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none;
+  position: relative; padding-bottom: 3px; cursor: pointer; transition: color 0.25s;
 }
 .nav-links a:hover { color: #fff; }
 .nav-links a.active { color: #fff; }
 .nav-links a.active::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
-  height: 1.5px; background: var(--gold);
+  height: 1.5px; background: var(--gold); border-radius: 1px;
 }
-.nav-actions { display: flex; gap: 20px; align-items: center; }
-.nav-actions i { color: var(--white-70); font-size: 19px; cursor: pointer; transition: color 0.2s; }
-.nav-actions i:hover { color: #fff; }
+body.light .nav-links a { color: rgba(26,18,8,0.60); }
+body.light .nav-links a:hover,
+body.light .nav-links a.active { color: #1a1208; }
 
-/* ===== HOME SECTION ===== */
+/* Actions */
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+
+/* Dark mode btn */
+.btn-dm {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: border-color 0.25s, background 0.25s;
+  flex-shrink: 0;
+}
+.btn-dm:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+.btn-dm i { font-size: 16px; color: rgba(255,255,255,0.80); position: absolute; transition: opacity 0.3s, transform 0.3s; }
+.btn-dm .ic-moon { opacity: 1; transform: scale(1) rotate(0deg); }
+.btn-dm .ic-sun  { opacity: 0; transform: scale(0.4) rotate(90deg); }
+body.light .btn-dm .ic-moon { opacity: 0; transform: scale(0.4) rotate(-90deg); }
+body.light .btn-dm .ic-sun  { opacity: 1; transform: scale(1) rotate(0deg); }
+body.light .btn-dm { border-color: rgba(26,18,8,0.18); background: rgba(26,18,8,0.06); }
+body.light .btn-dm i { color: rgba(26,18,8,0.70); }
+body.light .btn-dm:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+
+/* Language pills */
+.lang-pill {
+  display: flex; border-radius: 20px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.06);
+}
+.lang-btn {
+  padding: 7px 14px; border: none; background: transparent; cursor: pointer;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.55);
+  transition: color 0.2s, background 0.2s;
+}
+.lang-btn.on { background: var(--gold); color: #1a1208; }
+.lang-btn:not(.on):hover { color: #fff; background: rgba(255,255,255,0.10); }
+body.light .lang-pill { border-color: rgba(26,18,8,0.16); background: rgba(26,18,8,0.05); }
+body.light .lang-btn { color: rgba(26,18,8,0.45); }
+body.light .lang-btn.on { background: var(--gold); color: #1a1208; }
+body.light .lang-btn:not(.on):hover { color: #1a1208; background: rgba(26,18,8,0.08); }
+
+/* ══════════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════════ */
+.sec { position: relative; width: 100%; min-height: 100vh; }
+/* all sections except home get top padding for fixed nav */
+.sec + .sec { padding-top: var(--nav-h); }
+
+/* shared page-label */
+.plabel {
+  font-size: 9px; font-weight: 700; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--gold);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+}
+.plabel::before { content: ''; width: 24px; height: 1px; background: var(--gold); flex-shrink: 0; }
+
+/* shared filter tabs */
+.filter-row {
+  display: flex; gap: 8px; padding: 22px 64px 18px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.07); flex-wrap: wrap;
+}
+body.light .filter-row { border-bottom-color: rgba(26,18,8,0.08); }
+
+.ftab {
+  padding: 8px 20px; border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.14); background: transparent;
+  color: var(--w50); font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.22s;
+}
+.ftab:hover { border-color: rgba(255,255,255,0.38); color: #fff; }
+.ftab.on { background: var(--gold); border-color: var(--gold); color: #1a1208; }
+body.light .ftab { border-color: rgba(26,18,8,0.14); color: rgba(26,18,8,0.50); }
+body.light .ftab:hover { border-color: rgba(26,18,8,0.38); color: #1a1208; }
+
+/* ══════════════════════════════════════════
+   HOME
+══════════════════════════════════════════ */
 #sec-home {
   height: 100vh; overflow: hidden;
   display: flex; flex-direction: column;
 }
-.home-wrap {
-  position: relative; flex: 1;
-}
+.home-wrap { position: relative; flex: 1; }
+
 .hero-bg {
   position: absolute; inset: 0;
   background-size: cover; background-position: center;
-  transition: background-image 1s ease;
+  transition: background-image 0.9s ease;
 }
-.hero-overlay {
+.hero-ov {
   position: absolute; inset: 0;
-  background: linear-gradient(105deg, rgba(0,0,0,0.72) 30%, rgba(0,0,0,0.2) 70%);
+  background: linear-gradient(105deg, rgba(0,0,0,0.72) 30%, rgba(0,0,0,0.18) 70%);
 }
-.hero-content {
+
+.hero-txt {
   position: absolute; z-index: 10;
   top: 50%; transform: translateY(-50%);
-  left: 48px; max-width: 520px;
+  left: 48px; max-width: 500px;
 }
-.location-tag {
+.loc-tag {
   display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
 }
-.location-tag::before {
-  content: ''; display: block; width: 28px; height: 1.5px; background: var(--gold); flex-shrink: 0;
+.loc-tag::before {
+  content: ''; width: 28px; height: 1.5px; background: var(--gold); flex-shrink: 0;
 }
-.location-tag span { color: var(--white-70); font-size: 12px; letter-spacing: 1.2px; }
+.loc-tag span { color: var(--w70); font-size: 12px; letter-spacing: 1.2px; }
+
 .hero-title {
   font-size: clamp(44px, 6vw, 78px); font-weight: 900; line-height: 0.95;
   text-transform: uppercase; letter-spacing: -1.5px;
   text-shadow: 0 2px 30px rgba(0,0,0,0.5); margin-bottom: 18px;
 }
-.hero-desc { color: var(--white-50); font-size: 11px; line-height: 1.75; max-width: 280px; margin-bottom: 30px; }
+.hero-desc { color: var(--w50); font-size: 11px; line-height: 1.75; max-width: 280px; margin-bottom: 28px; }
+
 .hero-actions { display: flex; align-items: center; gap: 16px; }
 .btn-play {
   width: 46px; height: 46px; border-radius: 50%;
   background: var(--gold); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.2s, background 0.2s;
+  transition: transform 0.2s, background 0.2s; flex-shrink: 0;
 }
-.btn-play:hover { transform: scale(1.1); background: var(--gold-light); }
+.btn-play:hover { transform: scale(1.1); background: var(--gold-lt); }
 .btn-play i { color: #fff; font-size: 17px; margin-left: 2px; }
-.btn-discover {
-  border: 1px solid rgba(255,255,255,0.45); background: transparent; color: #fff;
+
+.btn-disc {
+  border: 1px solid rgba(255,255,255,0.42); background: transparent; color: #fff;
   font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600;
   letter-spacing: 2px; text-transform: uppercase; padding: 12px 26px; border-radius: 3px;
   cursor: pointer; transition: all 0.25s;
 }
-.btn-discover:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.8); }
+.btn-disc:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.80); }
 
-.hero-bottom {
+/* Bottom controls */
+.hero-bot {
   position: absolute; bottom: 28px; left: 48px; right: 48px; z-index: 10;
-  display: flex; align-items: flex-end;
+  display: flex; align-items: flex-end; gap: 0;
 }
-.controls-col { display: flex; flex-direction: column; gap: 16px; margin-right: 28px; flex-shrink: 0; }
-.nav-arrows { display: flex; gap: 10px; }
-.arrow-btn {
+.ctrl-col { display: flex; flex-direction: column; gap: 14px; margin-right: 28px; flex-shrink: 0; }
+.arr-row { display: flex; gap: 10px; }
+.arr-btn {
   width: 38px; height: 38px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.28); background: rgba(255,255,255,0.07);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: all 0.2s;
 }
-.arrow-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.65); }
-.arrow-btn i { color: #fff; font-size: 14px; }
-.progress-bar { width: 160px; height: 2px; background: rgba(255,255,255,0.18); border-radius: 2px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.6s ease; }
+.arr-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.65); }
+.arr-btn i { color: #fff; font-size: 14px; }
+.prog-bar { width: 150px; height: 2px; background: rgba(255,255,255,0.18); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.6s ease; }
+
 .cards-row { display: flex; gap: 10px; align-items: flex-end; flex: 1; }
-.dest-card {
+.hcard {
   width: 145px; height: 185px; border-radius: 12px; overflow: hidden; position: relative;
-  cursor: pointer; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.15);
+  cursor: pointer; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.14);
   transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s;
 }
-.dest-card:hover { transform: translateY(-6px) scale(1.025); border-color: rgba(255,255,255,0.35); box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
-.dest-card.active { border-color: var(--gold); transform: translateY(-8px) scale(1.04); }
-.card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.55); transition: filter 0.3s; }
-.dest-card:hover .card-bg { filter: brightness(0.7); }
-.card-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.1) 100%); }
-.card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 12px; }
-.card-region { color: rgba(255,255,255,0.6); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-.card-name { color: #fff; font-size: 11.5px; font-weight: 800; text-transform: uppercase; line-height: 1.2; }
-.slide-num { position: absolute; bottom: 22px; right: 48px; z-index: 10; color: rgba(255,255,255,0.4); font-size: 30px; font-weight: 800; }
-.slide-num em { color: #fff; font-style: normal; }
+.hcard:hover { transform: translateY(-6px) scale(1.025); border-color: rgba(255,255,255,0.34); box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
+.hcard.on { border-color: var(--gold); transform: translateY(-8px) scale(1.04); }
+.hcard-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.55); transition: filter 0.3s; }
+.hcard:hover .hcard-bg { filter: brightness(0.70); }
+.hcard-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 40%, transparent 100%); }
+.hcard-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 12px; }
+.hcard-reg { color: rgba(255,255,255,0.58); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.hcard-name { color: #fff; font-size: 11.5px; font-weight: 800; text-transform: uppercase; line-height: 1.2; }
 
-/* Down arrow hint */
+.slide-num { position: absolute; bottom: 22px; right: 48px; z-index: 10; color: rgba(255,255,255,0.38); font-size: 30px; font-weight: 800; }
+.slide-num b { color: #fff; font-weight: 800; }
+
 .scroll-hint {
-  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 10;
-  display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;
-  animation: bounce 2s ease infinite;
+  position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer; z-index: 10; animation: shBounce 2s ease infinite;
 }
-.scroll-hint span { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--white-50); }
+.scroll-hint span { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--w50); }
 .scroll-hint i { font-size: 18px; color: var(--gold); }
-@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(6px);} }
-
-/* ===== SHARED SECTION STYLES ===== */
-.page-label {
-  font-size: 9px; font-weight: 700; letter-spacing: 4px;
-  text-transform: uppercase; color: var(--gold);
-  display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+@keyframes shBounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(7px); }
 }
-.page-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
-.section-header { padding: 64px 64px 0; }
-.section-header h1 { font-size: clamp(40px, 5vw, 68px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
 
-/* ===== HOLIDAYS SECTION ===== */
+/* ══════════════════════════════════════════
+   HOLIDAYS
+══════════════════════════════════════════ */
 #sec-holidays { background: var(--dark); }
 
-.holidays-hero {
-  position: relative; height: 55vh; min-height: 320px;
+.hhero {
+  position: relative; height: 54vh; min-height: 320px;
   overflow: hidden; display: flex; align-items: flex-end;
 }
-.holidays-hero-bg {
+.hhero-bg {
   position: absolute; inset: 0; background-size: cover; background-position: center;
   transform: scale(1.05); animation: slowZoom 20s ease infinite alternate;
-  transition: background-image 0.8s ease;
+  transition: background-image 0.75s ease;
 }
-@keyframes slowZoom { from { transform: scale(1.05); } to { transform: scale(1.12); } }
-.holidays-hero-overlay {
+@keyframes slowZoom { from { transform:scale(1.05); } to { transform:scale(1.12); } }
+.hhero-ov {
   position: absolute; inset: 0;
   background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(10,10,10,0.88) 100%);
 }
-.holidays-hero-content { position: relative; z-index: 2; padding: 48px 64px; }
-.holidays-hero h1 { font-size: clamp(40px, 5vw, 68px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
+.hhero-txt { position: relative; z-index: 2; padding: 48px 64px; }
+.hhero-txt h1 { font-size: clamp(40px, 5vw, 68px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
 
-.holiday-active-label {
-  position: absolute; top: 84px; right: 28px; z-index: 5;
+.hhero-tag {
+  position: absolute; top: 80px; right: 28px; z-index: 3;
   background: rgba(201,168,76,0.12); border: 0.5px solid var(--gold);
   padding: 6px 14px; border-radius: 20px;
   font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold);
 }
 
-.filter-row {
-  display: flex; gap: 8px; padding: 24px 64px 20px;
-  border-bottom: 0.5px solid rgba(255,255,255,0.07); flex-wrap: wrap;
-}
-.filter-tab {
-  padding: 8px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15);
-  background: transparent; color: var(--white-50);
-  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 600;
-  letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.25s;
-}
-.filter-tab:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
-.filter-tab.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
-
-.holiday-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+.hgrid {
+  display: grid; grid-template-columns: repeat(3,1fr);
   gap: 20px; padding: 24px 64px 80px;
 }
-.holiday-card {
-  border-radius: 16px; overflow: hidden; background: var(--dark-3);
+.hgcard {
+  border-radius: 16px; overflow: hidden; background: var(--dark3);
   border: 1px solid rgba(255,255,255,0.08); cursor: pointer;
   transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s, border-color 0.4s;
 }
-.holiday-card:hover {
+body.light .hgcard { background: var(--dark2); border-color: rgba(26,18,8,0.10); }
+.hgcard:hover {
   transform: translateY(-10px) rotateX(2deg);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.2);
-  border-color: rgba(201,168,76,0.3);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.20);
+  border-color: rgba(201,168,76,0.30);
 }
-.holiday-card:hover .hcard-img { transform: scale(1.06); }
-.holiday-card.h-active { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
-.hcard-img-wrap { height: 200px; overflow: hidden; position: relative; }
-.hcard-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.6s ease; }
-.hcard-badge {
-  position: absolute; top: 14px; left: 14px; padding: 5px 12px; border-radius: 20px;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+.hgcard:hover .hgimg { transform: scale(1.06); }
+.hgcard.sel { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+
+.hgimg-w { height: 200px; overflow: hidden; position: relative; }
+.hgimg { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.6s ease; }
+.hgbadge {
+  position: absolute; top: 14px; left: 14px;
+  padding: 5px 12px; border-radius: 20px; background: rgba(0,0,0,0.70); backdrop-filter: blur(10px);
   font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold);
-  border: 0.5px solid rgba(201,168,76,0.3);
+  border: 0.5px solid rgba(201,168,76,0.30);
 }
-.hcard-save {
-  position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%;
-  background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s; border: 0.5px solid rgba(255,255,255,0.15);
+.hgsave {
+  position: absolute; top: 14px; right: 14px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,0.58); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: 0.5px solid rgba(255,255,255,0.14); transition: all 0.2s;
 }
-.hcard-save:hover { background: var(--gold); }
-.hcard-save i { font-size: 14px; color: #fff; }
-.hcard-body { padding: 18px; }
-.hcard-region { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-.hcard-name { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 8px; }
-.hcard-desc { font-size: 10px; color: var(--white-50); line-height: 1.7; margin-bottom: 14px; }
-.hcard-footer { display: flex; align-items: center; justify-content: space-between; border-top: 0.5px solid rgba(255,255,255,0.08); padding-top: 14px; }
-.hcard-meta { display: flex; align-items: center; gap: 10px; }
-.hcard-meta-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--white-50); }
-.hcard-meta-item i { font-size: 12px; }
-.btn-gold-sm {
+.hgsave:hover { background: var(--gold); }
+.hgsave i { font-size: 14px; color: #fff; }
+
+.hgbody { padding: 18px; }
+.hgreg { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.hgname { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 8px; }
+body.light .hgname { color: #1a1208; }
+.hgdesc { font-size: 10px; color: var(--w50); line-height: 1.7; margin-bottom: 14px; }
+body.light .hgdesc { color: rgba(26,18,8,0.50); }
+.hgfoot {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 0.5px solid rgba(255,255,255,0.08); padding-top: 14px;
+}
+body.light .hgfoot { border-top-color: rgba(26,18,8,0.08); }
+.hgmeta { display: flex; align-items: center; gap: 10px; }
+.hgmi { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--w50); }
+body.light .hgmi { color: rgba(26,18,8,0.50); }
+.hgmi i { font-size: 12px; }
+.btn-gold {
   padding: 9px 18px; border-radius: 4px; background: var(--gold); border: none;
   font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
-  letter-spacing: 1.5px; text-transform: uppercase; color: var(--dark); cursor: pointer; transition: all 0.2s;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--dark);
+  cursor: pointer; transition: all 0.2s;
 }
-.btn-gold-sm:hover { background: var(--gold-light); transform: scale(1.03); }
+.btn-gold:hover { background: var(--gold-lt); transform: scale(1.03); }
 
-/* ===== DESTINATIONS SECTION ===== */
+/* ══════════════════════════════════════════
+   DESTINATIONS
+══════════════════════════════════════════ */
 #sec-destinations { background: var(--dark); }
+.dest-wrap { display: grid; grid-template-columns: 1fr 380px; min-height: calc(100vh - var(--nav-h)); }
 
-.dest-fullpage {
-  display: grid; grid-template-columns: 1fr 380px;
-  min-height: calc(100vh - var(--nav-h));
-}
-.dest-map-area { position: relative; overflow: hidden; min-height: calc(100vh - var(--nav-h)); }
-.dest-display-bg {
+.dest-left { position: relative; overflow: hidden; }
+.dest-img {
   position: absolute; inset: 0; background-size: cover; background-position: center;
   filter: brightness(0.42); transition: background-image 0.7s ease;
 }
-.dest-globe-visual {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden;
+.dest-rings { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.10); animation: ringSpin 30s linear infinite;
+  width: 600px; height: 600px;
 }
-.globe-rings {
-  position: absolute; width: 600px; height: 600px; border-radius: 50%;
-  border: 1px solid rgba(201,168,76,0.1); animation: rotateSlow 30s linear infinite;
-}
-.globe-rings:nth-child(2) { width: 450px; height: 450px; border-color: rgba(201,168,76,0.07); animation-duration: 22s; animation-direction: reverse; }
-.globe-rings:nth-child(3) { width: 300px; height: 300px; border-color: rgba(201,168,76,0.12); animation-duration: 16s; }
-@keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.ring:nth-child(2) { width: 440px; height: 440px; border-color: rgba(201,168,76,0.07); animation-duration: 22s; animation-direction: reverse; }
+.ring:nth-child(3) { width: 280px; height: 280px; border-color: rgba(201,168,76,0.12); animation-duration: 16s; }
+@keyframes ringSpin { to { transform: rotate(360deg); } }
+
 .dest-pin { position: absolute; cursor: pointer; z-index: 6; }
-.dest-pin-dot {
+.dest-dot {
   width: 12px; height: 12px; border-radius: 50%;
-  background: var(--gold); border: 2px solid rgba(255,255,255,0.8);
-  box-shadow: 0 0 0 4px rgba(201,168,76,0.3); animation: pinPulse 2s ease infinite;
+  background: var(--gold); border: 2px solid rgba(255,255,255,0.80);
+  box-shadow: 0 0 0 4px rgba(201,168,76,0.28); animation: dotPulse 2s ease infinite;
 }
-@keyframes pinPulse { 0%,100%{box-shadow:0 0 0 4px rgba(201,168,76,0.3);} 50%{box-shadow:0 0 0 8px rgba(201,168,76,0.15);} }
-.dest-map-content {
-  position: relative; z-index: 5; padding: 48px; display: flex; flex-direction: column; height: 100%;
-  background: linear-gradient(105deg, rgba(0,0,0,0.75) 35%, rgba(0,0,0,0.2) 100%);
+@keyframes dotPulse { 0%,100%{box-shadow:0 0 0 4px rgba(201,168,76,0.28);} 50%{box-shadow:0 0 0 8px rgba(201,168,76,0.12);} }
+
+.dest-info {
+  position: relative; z-index: 5; padding: 48px; height: 100%;
+  display: flex; flex-direction: column;
+  background: linear-gradient(105deg, rgba(0,0,0,0.76) 35%, rgba(0,0,0,0.18) 100%);
 }
-.dest-map-content h1 { font-size: clamp(34px, 4vw, 56px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 20px; }
-.dest-active-info {
-  margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.5);
-  border: 0.5px solid rgba(201,168,76,0.3); border-radius: 12px; backdrop-filter: blur(10px);
+.dest-info h1 { font-size: clamp(32px, 4vw, 54px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 10px; }
+.dest-info p { font-size: 11px; color: var(--w50); max-width: 330px; line-height: 1.80; margin-top: 8px; }
+
+.dest-card-info {
+  margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.48);
+  border: 0.5px solid rgba(201,168,76,0.28); border-radius: 12px; backdrop-filter: blur(10px);
 }
-.dest-active-name { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 4px; }
-.dest-active-country { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
-.dest-active-stats { display: flex; gap: 24px; }
-.dest-active-stat-item { display: flex; flex-direction: column; gap: 2px; }
-.dest-active-stat-val { font-size: 18px; font-weight: 800; color: var(--gold); }
-.dest-active-stat-label { font-size: 8px; color: var(--white-50); letter-spacing: 1px; text-transform: uppercase; }
+.dci-name { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 4px; }
+.dci-country { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+.dci-stats { display: flex; gap: 24px; }
+.dci-stat { display: flex; flex-direction: column; gap: 2px; }
+.dci-val { font-size: 18px; font-weight: 800; color: var(--gold); }
+.dci-lbl { font-size: 8px; color: var(--w50); letter-spacing: 1px; text-transform: uppercase; }
+
 .dest-regions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 40px; }
-.dest-region-btn {
-  padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.05); color: var(--white-70);
-  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1px;
+.dreg-btn {
+  padding: 10px 18px; border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05);
+  color: var(--w70); font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1px;
   cursor: pointer; transition: all 0.25s;
 }
-.dest-region-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
-.dest-region-btn.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
+.dreg-btn:hover { border-color: rgba(201,168,76,0.40); color: var(--gold); }
+.dreg-btn.on { background: var(--gold); border-color: var(--gold); color: #1a1208; }
+
 .dest-sidebar {
-  background: rgba(8,8,8,0.97); border-left: 0.5px solid rgba(255,255,255,0.07);
-  padding: 28px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
-  min-height: calc(100vh - var(--nav-h));
+  background: rgba(7,7,7,0.97); border-left: 0.5px solid rgba(255,255,255,0.07);
+  padding: 28px 18px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 14px;
 }
+body.light .dest-sidebar { background: rgba(220,212,200,0.97); border-left-color: rgba(26,18,8,0.08); }
 .dest-sidebar::-webkit-scrollbar { width: 3px; }
 .dest-sidebar::-webkit-scrollbar-thumb { background: var(--gold-dim); }
-.dest-sidebar-label { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--white-50); margin-bottom: 4px; }
-.dest-item {
-  border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07);
-  cursor: pointer; transition: all 0.3s; background: rgba(255,255,255,0.02);
-}
-.dest-item:hover { border-color: rgba(201,168,76,0.3); transform: translateX(4px); }
-.dest-item.selected { border-color: var(--gold); background: rgba(201,168,76,0.05); }
-.dest-item-img { height: 100px; background-size: cover; background-position: center; position: relative; }
-.dest-item-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8) 100%); }
-.dest-item-body { padding: 12px; }
-.dest-item-name { font-size: 13px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
-.dest-item-country { font-size: 9px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
-/* UPDATE 1: removed price from dest-item-row, only stat remains */
-.dest-item-stat { font-size: 8px; color: var(--white-50); margin-top: 8px; }
+.ds-label { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--w50); margin-bottom: 4px; }
+body.light .ds-label { color: rgba(26,18,8,0.42); }
 
-/* ===== FOOD SECTION ===== */
+.ditem {
+  border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07);
+  cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.3s;
+}
+body.light .ditem { background: rgba(26,18,8,0.03); border-color: rgba(26,18,8,0.08); }
+.ditem:hover { border-color: rgba(201,168,76,0.30); transform: translateX(4px); }
+.ditem.on { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+.ditem-img { height: 100px; background-size: cover; background-position: center; position: relative; }
+.ditem-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.80) 100%); }
+.ditem-body { padding: 12px; }
+.ditem-name { font-size: 13px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+body.light .ditem-name { color: #1a1208; }
+.ditem-country { font-size: 9px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+.ditem-stat { font-size: 8px; color: var(--w50); margin-top: 8px; }
+body.light .ditem-stat { color: rgba(26,18,8,0.45); }
+
+/* ══════════════════════════════════════════
+   FOOD
+══════════════════════════════════════════ */
 #sec-food { background: var(--dark); }
 
 .food-hero {
@@ -361,798 +473,1119 @@ nav {
   background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80') center/cover;
   animation: slowZoom 25s ease infinite alternate;
 }
-.food-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(10,10,10,0.92) 100%); }
-.food-hero-content { position: relative; z-index: 2; padding: 48px 64px; }
-.food-hero-content h1 { font-size: clamp(40px, 5vw, 68px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
-.food-filter-row {
-  display: flex; gap: 8px; padding: 24px 64px 20px;
-  flex-wrap: wrap; border-bottom: 0.5px solid rgba(255,255,255,0.07);
-}
-.food-section-title {
-  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--white-50);
+.food-hero-ov { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(10,10,10,0.92) 100%); }
+.food-hero-txt { position: relative; z-index: 2; padding: 48px 64px; }
+.food-hero-txt h1 { font-size: clamp(40px,5vw,68px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
+
+.food-sec-title {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--w50);
   display: flex; align-items: center; gap: 14px; padding: 32px 64px 0;
 }
-.food-section-title::after { content: ''; flex: 1; height: 0.5px; background: rgba(255,255,255,0.1); }
+.food-sec-title::after { content: ''; flex: 1; height: 0.5px; background: rgba(255,255,255,0.10); }
+body.light .food-sec-title { color: rgba(26,18,8,0.40); }
+body.light .food-sec-title::after { background: rgba(26,18,8,0.08); }
 
-/* UPDATE 5: 3D food cards — photo fills full card, SVG removed */
-.food-3d-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 20px; padding: 20px 64px 40px;
-}
-.food-3d-card {
-  position: relative; border-radius: 20px; overflow: hidden; cursor: pointer;
-  height: 340px; border: 1px solid rgba(255,255,255,0.07);
+/* 4-col photo cards */
+.fg4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; padding: 20px 64px 40px; }
+.fcard {
+  position: relative; border-radius: 20px; overflow: hidden; cursor: pointer; height: 340px;
+  border: 1px solid rgba(255,255,255,0.07);
   transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), box-shadow 0.5s;
 }
-.food-3d-card:hover {
+body.light .fcard { border-color: rgba(26,18,8,0.10); }
+.fcard:hover {
   transform: translateY(-16px) rotateX(4deg) rotateY(-2deg) scale(1.03);
-  box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.3);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.68), 0 0 0 1px rgba(201,168,76,0.30);
 }
-/* UPDATE 5: Photo takes full card, no dim SVG overlay */
-.food-photo {
+.fcard-photo {
   position: absolute; inset: 0; background-size: cover; background-position: center;
   filter: brightness(0.72); transition: filter 0.5s, transform 0.5s;
 }
-.food-3d-card:hover .food-photo { filter: brightness(0.9); transform: scale(1.05); }
-.food-photo-overlay {
+.fcard:hover .fcard-photo { filter: brightness(0.88); transform: scale(1.05); }
+.fcard-ov {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.88) 35%, rgba(0,0,0,0.05) 75%);
+  background: linear-gradient(to top, rgba(0,0,0,0.90) 32%, rgba(0,0,0,0.04) 72%);
 }
-/* Steam stays for ambience */
-.food-3d-steam {
+.fcard-steam {
   position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
   display: flex; gap: 10px; opacity: 0; transition: opacity 0.4s;
 }
-.food-3d-card:hover .food-3d-steam { opacity: 1; }
-.steam-line {
+.fcard:hover .fcard-steam { opacity: 1; }
+.steam {
   width: 3px; height: 32px; border-radius: 3px;
-  background: linear-gradient(to top, transparent, rgba(255,255,255,0.35));
-  animation: steamRise 1.6s ease-in-out infinite;
+  background: linear-gradient(to top, transparent, rgba(255,255,255,0.32));
+  animation: steamUp 1.6s ease-in-out infinite;
 }
-.steam-line:nth-child(2) { animation-delay: 0.35s; height: 24px; }
-.steam-line:nth-child(3) { animation-delay: 0.7s; height: 30px; }
-@keyframes steamRise { 0%{transform:translateY(0) scaleX(1);opacity:0.6;} 100%{transform:translateY(-22px) scaleX(2);opacity:0;} }
-.food-3d-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 18px 20px; }
-.food-3d-origin { font-size: 8px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
-.food-3d-name { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 7px; line-height: 1.1; }
-.food-3d-desc { font-size: 9px; color: var(--white-50); line-height: 1.55; }
+.steam:nth-child(2) { animation-delay: 0.35s; height: 24px; }
+.steam:nth-child(3) { animation-delay: 0.70s; height: 30px; }
+@keyframes steamUp { 0%{transform:translateY(0) scaleX(1);opacity:0.6;} 100%{transform:translateY(-22px) scaleX(2);opacity:0;} }
+.fcard-txt { position: absolute; bottom: 0; left: 0; right: 0; padding: 18px 20px; }
+.fcard-origin { font-size: 8px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+.fcard-name { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 7px; line-height: 1.1; }
+.fcard-desc { font-size: 9px; color: var(--w50); line-height: 1.55; }
 
-.food-wide-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px 64px 80px; }
-.food-wide-card {
-  border-radius: 16px; overflow: hidden; position: relative; height: 230px;
+/* 2-col wide cards */
+.fg2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; padding: 20px 64px 80px; }
+.fwcard {
+  border-radius: 16px; overflow: hidden; height: 230px;
   cursor: pointer; border: 1px solid rgba(255,255,255,0.07);
   transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
-  background: var(--dark-3); display: flex;
+  background: var(--dark3); display: flex;
 }
-.food-wide-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 24px 60px rgba(0,0,0,0.6); }
-.food-wide-card:hover .fwcard-img { transform: scale(1.06); }
-.fwcard-img-wrap { width: 230px; flex-shrink: 0; overflow: hidden; }
-.fwcard-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.5s ease; }
-.fwcard-body { padding: 26px; display: flex; flex-direction: column; justify-content: center; }
-.fwcard-origin { font-size: 8px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
-.fwcard-name { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 10px; }
-.fwcard-desc { font-size: 10px; color: var(--white-50); line-height: 1.7; margin-bottom: 16px; }
-.fwcard-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.fwcard-tag {
+body.light .fwcard { background: var(--dark2); border-color: rgba(26,18,8,0.10); }
+.fwcard:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 24px 60px rgba(0,0,0,0.55); }
+.fwcard:hover .fwimg { transform: scale(1.06); }
+.fwimg-w { width: 230px; flex-shrink: 0; overflow: hidden; }
+.fwimg { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.5s ease; }
+.fwbody { padding: 26px; display: flex; flex-direction: column; justify-content: center; }
+.fworigin { font-size: 8px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.fwname { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 10px; }
+body.light .fwname { color: #1a1208; }
+.fwdesc { font-size: 10px; color: var(--w50); line-height: 1.70; margin-bottom: 16px; }
+body.light .fwdesc { color: rgba(26,18,8,0.50); }
+.fwtags { display: flex; flex-wrap: wrap; gap: 6px; }
+.fwtag {
   padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05);
-  border: 0.5px solid rgba(255,255,255,0.12); font-size: 8px; color: var(--white-50);
+  border: 0.5px solid rgba(255,255,255,0.12); font-size: 8px; color: var(--w50);
 }
+body.light .fwtag { background: rgba(26,18,8,0.04); border-color: rgba(26,18,8,0.12); color: rgba(26,18,8,0.45); }
 
-/* ===== OFFERS SECTION ===== */
+/* ══════════════════════════════════════════
+   OFFERS
+══════════════════════════════════════════ */
 #sec-offers { background: var(--dark); }
-.offers-wrap { padding: 48px 64px 80px; }
-.offers-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 36px; }
-.offers-header-left .page-label { margin-bottom: 10px; }
-.offers-header-left h1 { font-size: clamp(36px, 4.5vw, 60px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
-.offers-header-right { text-align: right; }
+.offers-pad { padding: 48px 64px 80px; }
+.offers-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 36px; }
+.offers-head-l .plabel { margin-bottom: 10px; }
+.offers-head-l h1 { font-size: clamp(36px,4.5vw,60px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
+body.light .offers-head-l h1 { color: #1a1208; }
+.offers-head-r { text-align: right; }
 
-/* UPDATE 4: Live clock display */
-.clock-label { font-size: 8px; color: var(--white-50); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-.live-clock { display: flex; gap: 0; align-items: baseline; }
-.clock-part { text-align: center; }
-.clock-num { font-size: 32px; font-weight: 800; color: var(--gold); line-height: 1; font-variant-numeric: tabular-nums; }
-.clock-unit-label { font-size: 7px; color: var(--white-50); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; }
-.clock-sep { font-size: 28px; font-weight: 300; color: var(--gold); margin: 0 4px; padding-bottom: 4px; }
-.clock-date { font-size: 10px; color: var(--white-50); margin-top: 8px; letter-spacing: 0.5px; }
+.clk-lbl { font-size: 8px; color: var(--w50); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+body.light .clk-lbl { color: rgba(26,18,8,0.45); }
+.clk-row { display: flex; align-items: baseline; }
+.clk-part { text-align: center; }
+.clk-num { font-size: 32px; font-weight: 800; color: var(--gold); line-height: 1; font-variant-numeric: tabular-nums; }
+.clk-ulbl { font-size: 7px; color: var(--w50); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; }
+body.light .clk-ulbl { color: rgba(26,18,8,0.45); }
+.clk-sep { font-size: 28px; font-weight: 300; color: var(--gold); margin: 0 4px; padding-bottom: 4px; }
+.clk-date { font-size: 10px; color: var(--w50); margin-top: 8px; letter-spacing: 0.5px; }
+body.light .clk-date { color: rgba(26,18,8,0.45); }
 
-.deals-hero {
+.deal-banner {
   border-radius: 20px; overflow: hidden; position: relative; height: 300px;
   cursor: pointer; margin-bottom: 28px; transition: transform 0.4s;
 }
-.deals-hero:hover { transform: scale(1.01); }
-.deals-hero-bg {
+.deal-banner:hover { transform: scale(1.01); }
+.deal-bg {
   position: absolute; inset: 0;
   background: url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1400&q=80') center/cover;
   filter: brightness(0.62); transition: transform 0.6s;
 }
-.deals-hero:hover .deals-hero-bg { transform: scale(1.04); }
-.deals-hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.8) 30%, transparent 75%); }
-.deals-hero-content { position: relative; z-index: 2; padding: 48px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
-.deals-hero-tag {
+.deal-banner:hover .deal-bg { transform: scale(1.04); }
+.deal-ov { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.80) 30%, transparent 75%); }
+.deal-txt { position: relative; z-index: 2; padding: 48px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+.deal-tag {
   display: inline-flex; align-items: center; gap: 8px; background: var(--gold);
   border-radius: 20px; padding: 5px 14px; margin-bottom: 14px;
-  font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--dark); width: fit-content;
+  font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #1a1208; width: fit-content;
 }
-.deals-hero-title { font-size: 40px; font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 10px; }
-.deals-hero-sub { font-size: 11px; color: var(--white-70); }
+.deal-title { font-size: 40px; font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 10px; }
+.deal-sub { font-size: 11px; color: var(--w70); }
 
-.offers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.offer-card {
-  border-radius: 16px; overflow: hidden; position: relative; height: 260px; cursor: pointer;
-  transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+.offers-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.ocard {
+  border-radius: 16px; overflow: hidden; position: relative; height: 260px;
+  cursor: pointer; transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
 }
-.offer-card:hover { transform: translateY(-8px) scale(1.02); }
-.offer-card:hover .offer-bg { transform: scale(1.08); filter: brightness(0.75); }
-.offer-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.6); transition: all 0.5s ease; }
-.offer-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 60%); }
-.offer-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; }
-/* UPDATE 1: removed discount badge and price from offers */
-.offer-name { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 4px; }
-.offer-details { font-size: 9px; color: rgba(255,255,255,0.6); }
+.ocard:hover { transform: translateY(-8px) scale(1.02); }
+.ocard:hover .ocard-bg { transform: scale(1.08); filter: brightness(0.75); }
+.ocard-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.60); transition: all 0.5s; }
+.ocard-ov { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 60%); }
+.ocard-txt { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; }
+.ocard-name { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 4px; }
+.ocard-det { font-size: 9px; color: rgba(255,255,255,0.58); }
 
-/* ===== CONTACTS SECTION ===== */
+/* ══════════════════════════════════════════
+   CONTACTS
+══════════════════════════════════════════ */
 #sec-contacts { background: var(--dark); }
-.contacts-wrap { display: grid; grid-template-columns: 1fr 500px; min-height: 100vh; }
-.contacts-left { padding: 64px; display: flex; flex-direction: column; gap: 32px; }
-.contacts-left h1 { font-size: clamp(34px, 4vw, 54px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 8px; }
-.contacts-intro { font-size: 11px; color: var(--white-50); line-height: 1.8; max-width: 380px; }
-.info-cards { display: flex; flex-direction: column; gap: 12px; }
-.info-card {
+.contacts-wrap { display: grid; grid-template-columns: 1fr 500px; min-height: calc(100vh - var(--nav-h)); }
+
+.con-left { padding: 64px; display: flex; flex-direction: column; gap: 32px; }
+.con-left h1 { font-size: clamp(34px,4vw,54px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 8px; }
+body.light .con-left h1 { color: #1a1208; }
+.con-intro { font-size: 11px; color: var(--w50); line-height: 1.80; max-width: 370px; margin-top: 14px; }
+body.light .con-intro { color: rgba(26,18,8,0.50); }
+
+.icard-list { display: flex; flex-direction: column; gap: 12px; }
+.icard {
   display: flex; align-items: flex-start; gap: 16px; padding: 20px; border-radius: 12px;
   background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.08); transition: border-color 0.3s;
 }
-.info-card:hover { border-color: rgba(201,168,76,0.25); }
-.info-card-icon {
+body.light .icard { background: rgba(26,18,8,0.03); border-color: rgba(26,18,8,0.08); }
+.icard:hover { border-color: rgba(201,168,76,0.25); }
+.icard-icon {
   width: 44px; height: 44px; border-radius: 12px; background: var(--gold-dim);
-  border: 0.5px solid rgba(201,168,76,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  border: 0.5px solid rgba(201,168,76,0.28); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.info-card-icon i { font-size: 20px; color: var(--gold); }
-.info-card-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
-.info-card-val { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-.info-card-sub { font-size: 10px; color: var(--white-50); }
+.icard-icon i { font-size: 20px; color: var(--gold); }
+.icard-t { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.icard-v { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+body.light .icard-v { color: #1a1208; }
+.icard-s { font-size: 10px; color: var(--w50); }
+body.light .icard-s { color: rgba(26,18,8,0.50); }
+
 .social-row { display: flex; gap: 10px; }
-.social-btn {
-  width: 42px; height: 42px; border-radius: 10px; border: 0.5px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s;
+.soc-btn {
+  width: 42px; height: 42px; border-radius: 10px;
+  border: 0.5px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
 }
-.social-btn:hover { border-color: var(--gold); background: var(--gold-dim); }
-.social-btn i { font-size: 18px; color: var(--white-70); }
-.social-btn:hover i { color: var(--gold); }
-.contacts-right {
-  border-left: 0.5px solid rgba(255,255,255,0.07);
-  padding: 64px 48px; position: relative;
+body.light .soc-btn { border-color: rgba(26,18,8,0.12); background: rgba(26,18,8,0.04); }
+.soc-btn:hover { border-color: var(--gold); background: var(--gold-dim); }
+.soc-btn i { font-size: 18px; color: var(--w70); transition: color 0.2s; }
+body.light .soc-btn i { color: rgba(26,18,8,0.50); }
+.soc-btn:hover i { color: var(--gold); }
+
+.con-right {
+  border-left: 0.5px solid rgba(255,255,255,0.07); padding: 64px 48px;
+  position: relative; overflow-y: auto;
 }
-.contacts-right::before {
+body.light .con-right { border-left-color: rgba(26,18,8,0.08); }
+.con-right::before {
   content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 1px;
-  background: linear-gradient(to bottom, transparent, var(--gold), transparent); opacity: 0.3;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent); opacity: 0.30;
 }
 .form-title { font-size: 18px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
-.form-sub { font-size: 10px; color: var(--white-50); margin-bottom: 28px; line-height: 1.7; }
-.form-group { margin-bottom: 18px; }
-.form-group label { display: block; font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%; background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.1);
-  border-radius: 10px; padding: 13px 16px; color: #fff; font-family: 'Montserrat', sans-serif;
-  font-size: 12px; outline: none; transition: border-color 0.2s; resize: none; appearance: none;
+body.light .form-title { color: #1a1208; }
+.form-sub { font-size: 10px; color: var(--w50); margin-bottom: 28px; line-height: 1.70; }
+body.light .form-sub { color: rgba(26,18,8,0.50); }
+
+.fgrp { margin-bottom: 18px; }
+.fgrp label {
+  display: block; font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
 }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); background: rgba(201,168,76,0.04); }
-.form-group input::placeholder, .form-group textarea::placeholder { color: var(--white-50); }
-.form-group select option { background: #1a1a1a; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.btn-submit {
+.fgrp input, .fgrp select, .fgrp textarea {
+  width: 100%; background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.10);
+  border-radius: 10px; padding: 13px 16px; color: #fff;
+  font-family: 'Montserrat', sans-serif; font-size: 12px; outline: none;
+  transition: border-color 0.2s; resize: none; appearance: none;
+}
+body.light .fgrp input,
+body.light .fgrp select,
+body.light .fgrp textarea {
+  background: rgba(26,18,8,0.05); border-color: rgba(26,18,8,0.14); color: #1a1208;
+}
+.fgrp input:focus, .fgrp select:focus, .fgrp textarea:focus { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+.fgrp input::placeholder, .fgrp textarea::placeholder { color: var(--w50); }
+body.light .fgrp input::placeholder,
+body.light .fgrp textarea::placeholder { color: rgba(26,18,8,0.35); }
+.fgrp select option { background: #1a1a1a; }
+body.light .fgrp select option { background: #ddd5c8; color: #1a1208; }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.btn-send {
   width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px;
-  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--dark); cursor: pointer; transition: all 0.3s;
+  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase; color: #1a1208;
+  cursor: pointer; transition: all 0.3s;
   display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px;
 }
-.btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(201,168,76,0.25); }
+.btn-send:hover { background: var(--gold-lt); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(201,168,76,0.25); }
 
-/* ===== ANIMATIONS ===== */
-.fade-in { animation: fadeIn 0.6s ease forwards; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
-.slide-in-up { animation: slideInUp 0.7s cubic-bezier(0.23,1,0.32,1) forwards; }
-@keyframes slideInUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer {
+  background: #040404;
+  border-top: 0.5px solid rgba(201,168,76,0.18);
+  position: relative;
+}
+footer::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.35;
+}
+body.light footer { background: #1a1208; }
+
+.foot-inner { max-width: 1280px; margin: 0 auto; padding: 60px 64px 28px; }
+
+.foot-top { display: grid; grid-template-columns: 280px 1fr; gap: 60px; margin-bottom: 48px; }
+
+.foot-brand { display: flex; flex-direction: column; gap: 16px; }
+.foot-logo { display: flex; align-items: center; gap: 10px; }
+.foot-logo-ring {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.foot-logo-ring i { color: var(--gold); font-size: 17px; }
+.foot-logo span { font-size: 12px; font-weight: 700; letter-spacing: 3px; color: #fff; }
+.foot-tagline { font-size: 11px; color: rgba(255,255,255,0.40); line-height: 1.75; max-width: 240px; }
+
+.foot-links { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; }
+.foot-col { display: flex; flex-direction: column; gap: 11px; }
+.foot-col-t { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.foot-col a {
+  font-size: 11px; color: rgba(255,255,255,0.40); text-decoration: none; cursor: pointer;
+  transition: color 0.2s; line-height: 1.4;
+}
+.foot-col a:hover { color: rgba(255,255,255,0.80); }
+
+.foot-soc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.foot-soc-btn {
+  width: 36px; height: 36px; border-radius: 9px; cursor: pointer;
+  border: 0.5px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.foot-soc-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.14); }
+.foot-soc-btn i { font-size: 16px; color: rgba(255,255,255,0.55); }
+.foot-soc-btn:hover i { color: var(--gold); }
+
+.foot-divider { height: 0.5px; background: rgba(255,255,255,0.07); margin-bottom: 26px; }
+
+.foot-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 14px;
+}
+.foot-copy { display: flex; align-items: center; gap: 7px; font-size: 11px; color: rgba(255,255,255,0.30); }
+.foot-copy i { font-size: 13px; }
+.foot-blinks { display: flex; align-items: center; gap: 12px; }
+.foot-blinks a {
+  font-size: 10px; color: rgba(255,255,255,0.30); text-decoration: none;
+  cursor: pointer; letter-spacing: 0.5px; transition: color 0.2s;
+}
+.foot-blinks a:hover { color: rgba(255,255,255,0.65); }
+.foot-dot { color: rgba(255,255,255,0.22); }
+
+/* ══════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════ */
+.fade-up { animation: fadeUp 0.65s cubic-bezier(0.23,1,0.32,1) forwards; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
 .d1{animation-delay:0.05s;opacity:0;} .d2{animation-delay:0.12s;opacity:0;} .d3{animation-delay:0.19s;opacity:0;}
 .d4{animation-delay:0.26s;opacity:0;} .d5{animation-delay:0.33s;opacity:0;} .d6{animation-delay:0.40s;opacity:0;}
 </style>
 </head>
 <body>
 
-<!-- ===== SINGLE STICKY NAV ===== -->
+<!-- ═══ FIXED NAV ═══ -->
 <nav id="mainNav">
-  <div class="nav-logo" onclick="scrollToSection('home')">
-    <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
+  <div class="nav-logo" onclick="goTo('home')">
+    <div class="nav-logo-ring"><i class="ti ti-world"></i></div>
     GLOBE EXPRESS
   </div>
   <ul class="nav-links">
-    <li><a class="active" data-sec="home" onclick="scrollToSection('home')">HOME</a></li>
-    <li><a data-sec="holidays" onclick="scrollToSection('holidays')">HOLIDAYS</a></li>
-    <li><a data-sec="destinations" onclick="scrollToSection('destinations')">DESTINATIONS</a></li>
-    <li><a data-sec="food" onclick="scrollToSection('food')">FOOD</a></li>
-    <li><a data-sec="offers" onclick="scrollToSection('offers')">OFFERS</a></li>
-    <li><a data-sec="contacts" onclick="scrollToSection('contacts')">CONTACTS</a></li>
+    <li><a class="active" data-sec="home"         onclick="goTo('home')"         id="nl-home"></a></li>
+    <li><a                data-sec="holidays"     onclick="goTo('holidays')"     id="nl-holidays"></a></li>
+    <li><a                data-sec="destinations" onclick="goTo('destinations')" id="nl-destinations"></a></li>
+    <li><a                data-sec="food"         onclick="goTo('food')"         id="nl-food"></a></li>
+    <li><a                data-sec="offers"       onclick="goTo('offers')"       id="nl-offers"></a></li>
+    <li><a                data-sec="contacts"     onclick="goTo('contacts')"     id="nl-contacts"></a></li>
   </ul>
   <div class="nav-actions">
-    <i class="ti ti-search" title="Search"></i>
-    <i class="ti ti-user" title="Account"></i>
+    <button class="btn-dm" id="btnDm" title="Toggle dark/light">
+      <i class="ti ti-moon ic-moon"></i>
+      <i class="ti ti-sun  ic-sun"></i>
+    </button>
+    <div class="lang-pill">
+      <button class="lang-btn on" id="btnId">ID</button>
+      <button class="lang-btn"   id="btnEn">EN</button>
+    </div>
   </div>
 </nav>
 
-<!-- ==================== HOME ==================== -->
-<section class="section" id="sec-home">
-  <div class="home-wrap" style="height:calc(100vh - var(--nav-h));">
+<!-- ═══ HOME ═══ -->
+<section class="sec" id="sec-home">
+  <div class="home-wrap">
     <div class="hero-bg" id="heroBg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="location-tag"><span id="heroRegion">Switzerland Alps</span></div>
-      <h1 class="hero-title" id="heroTitle">SAINT<br>ANTÖNIEN</h1>
-      <p class="hero-desc">Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.</p>
+    <div class="hero-ov"></div>
+    <div class="hero-txt">
+      <div class="loc-tag"><span id="heroReg"></span></div>
+      <h1 class="hero-title" id="heroTitle"></h1>
+      <p class="hero-desc" id="heroDesc"></p>
       <div class="hero-actions">
-        <button class="btn-play" aria-label="Play video"><i class="ti ti-player-play"></i></button>
-        <button class="btn-discover" onclick="scrollToSection('holidays')">DISCOVER LOCATION</button>
+        <button class="btn-play"><i class="ti ti-player-play"></i></button>
+        <button class="btn-disc" id="btnDisc" onclick="goTo('holidays')"></button>
       </div>
     </div>
-    <div class="hero-bottom">
-      <div class="controls-col">
-        <div class="nav-arrows">
-          <button class="arrow-btn" id="btnPrev"><i class="ti ti-chevron-left"></i></button>
-          <button class="arrow-btn" id="btnNext"><i class="ti ti-chevron-right"></i></button>
+    <div class="hero-bot">
+      <div class="ctrl-col">
+        <div class="arr-row">
+          <button class="arr-btn" id="btnPrev"><i class="ti ti-chevron-left"></i></button>
+          <button class="arr-btn" id="btnNext"><i class="ti ti-chevron-right"></i></button>
         </div>
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
       </div>
       <div class="cards-row" id="cardsRow"></div>
     </div>
-    <div class="slide-num">0<em id="slideNum">1</em></div>
-    <div class="scroll-hint" onclick="scrollToSection('holidays')">
-      <span>Scroll</span>
+    <div class="slide-num">0<b id="slideN">1</b></div>
+    <div class="scroll-hint" onclick="goTo('holidays')">
+      <span id="shScroll">Gulir</span>
       <i class="ti ti-chevrons-down"></i>
     </div>
   </div>
 </section>
 
-<!-- ==================== HOLIDAYS ==================== -->
-<section class="section" id="sec-holidays">
-  <div class="holidays-hero" id="holidaysHero">
-    <div class="holidays-hero-bg" id="holidaysHeroBg" style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80');"></div>
-    <div class="holidays-hero-overlay"></div>
-    <div class="holidays-hero-content">
-      <div class="page-label">Curated Escapes</div>
-      <h1 id="holidaysHeroTitle">HOLIDAY<br>PACKAGES</h1>
+<!-- ═══ HOLIDAYS ═══ -->
+<section class="sec" id="sec-holidays">
+  <div class="hhero" id="hhero">
+    <div class="hhero-bg" id="hheroBg" style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80');"></div>
+    <div class="hhero-ov"></div>
+    <div class="hhero-txt">
+      <div class="plabel" id="hh-plabel"></div>
+      <h1 id="hh-title"></h1>
     </div>
-    <div class="holiday-active-label" id="holidayActiveLabel">Click a card to preview</div>
+    <div class="hhero-tag" id="hhTag"></div>
   </div>
-  <div class="filter-row" id="holidayFilterRow">
-    <button class="filter-tab active" data-filter="ALL">ALL</button>
-    <button class="filter-tab" data-filter="Beach">BEACH</button>
-    <button class="filter-tab" data-filter="Mountain">MOUNTAIN</button>
-    <button class="filter-tab" data-filter="Cultural">CULTURAL</button>
-    <button class="filter-tab" data-filter="Adventure">ADVENTURE</button>
-    <button class="filter-tab" data-filter="Luxury">LUXURY</button>
-  </div>
-  <div class="holiday-grid" id="holidayGrid"></div>
+  <div class="filter-row" id="hFilterRow"></div>
+  <div class="hgrid" id="hGrid"></div>
 </section>
 
-<!-- ==================== DESTINATIONS ==================== -->
-<section class="section" id="sec-destinations">
-  <div class="dest-fullpage">
-    <div class="dest-map-area">
-      <div class="dest-display-bg" id="destDisplayBg" style="background-image:url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&q=80');"></div>
-      <div class="dest-globe-visual">
-        <div class="globe-rings"></div><div class="globe-rings"></div><div class="globe-rings"></div>
-        <div class="dest-pin" style="left:32%;top:28%;"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:72%;top:35%;"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:44%;top:48%;"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:20%;top:36%;"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:36%;top:33%;"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:80%;top:55%;"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:25%;top:55%;"><div class="dest-pin-dot"></div></div>
+<!-- ═══ DESTINATIONS ═══ -->
+<section class="sec" id="sec-destinations">
+  <div class="dest-wrap">
+    <div class="dest-left">
+      <div class="dest-img" id="destImg" style="background-image:url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&q=80');"></div>
+      <div class="dest-rings">
+        <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+        <div class="dest-pin" style="left:32%;top:28%;"><div class="dest-dot"></div></div>
+        <div class="dest-pin" style="left:72%;top:35%;"><div class="dest-dot"></div></div>
+        <div class="dest-pin" style="left:44%;top:48%;"><div class="dest-dot"></div></div>
+        <div class="dest-pin" style="left:20%;top:36%;"><div class="dest-dot"></div></div>
+        <div class="dest-pin" style="left:36%;top:33%;"><div class="dest-dot"></div></div>
+        <div class="dest-pin" style="left:80%;top:55%;"><div class="dest-dot"></div></div>
       </div>
-      <div class="dest-map-content">
-        <div class="page-label">Explore The World</div>
-        <h1>DISCOVER<br>DESTINATIONS</h1>
-        <p style="font-size:11px; color:rgba(255,255,255,0.5); max-width:340px; line-height:1.8; margin-top:10px;">
-          From alpine peaks to tropical shores — explore 200+ curated destinations across 6 continents.
-        </p>
-        <div class="dest-active-info" id="destActiveInfo">
-          <div class="dest-active-name" id="destActiveName">PARIS</div>
-          <div class="dest-active-country" id="destActiveCountry">France</div>
-          <div class="dest-active-stats">
-            <div class="dest-active-stat-item">
-              <div class="dest-active-stat-val" id="destActiveStat">248</div>
-              <div class="dest-active-stat-label">Packages Available</div>
+      <div class="dest-info">
+        <div class="plabel" id="d-plabel"></div>
+        <h1 id="d-title"></h1>
+        <p id="d-desc"></p>
+        <div class="dest-card-info">
+          <div class="dci-name" id="dciName">PARIS</div>
+          <div class="dci-country" id="dciCountry">France</div>
+          <div class="dci-stats">
+            <div class="dci-stat">
+              <div class="dci-val" id="dciStat">248</div>
+              <div class="dci-lbl" id="dciStatLbl"></div>
             </div>
-            <div class="dest-active-stat-item">
-              <div class="dest-active-stat-val" id="destActiveRating">4.9 ★</div>
-              <div class="dest-active-stat-label">Avg. Rating</div>
+            <div class="dci-stat">
+              <div class="dci-val" id="dciRating">4.9 ★</div>
+              <div class="dci-lbl" id="dciRatingLbl"></div>
             </div>
           </div>
         </div>
-        <div class="dest-regions">
-          <button class="dest-region-btn active">🌍 All</button>
-          <button class="dest-region-btn">🇪🇺 Europe</button>
-          <button class="dest-region-btn">🌏 Asia</button>
-          <button class="dest-region-btn">🌎 Americas</button>
-          <button class="dest-region-btn">🌍 Africa</button>
-          <button class="dest-region-btn">🌊 Pacific</button>
-        </div>
+        <div class="dest-regions" id="destRegions"></div>
       </div>
     </div>
     <div class="dest-sidebar" id="destSidebar">
-      <div class="dest-sidebar-label">Popular Destinations</div>
+      <div class="ds-label" id="ds-label"></div>
     </div>
   </div>
 </section>
 
-<!-- ==================== FOOD ==================== -->
-<section class="section" id="sec-food">
+<!-- ═══ FOOD ═══ -->
+<section class="sec" id="sec-food">
   <div class="food-hero">
     <div class="food-hero-bg"></div>
-    <div class="food-hero-overlay"></div>
-    <div class="food-hero-content">
-      <div class="page-label">Taste The World</div>
-      <h1>LOCAL<br>CUISINE</h1>
+    <div class="food-hero-ov"></div>
+    <div class="food-hero-txt">
+      <div class="plabel" id="f-plabel"></div>
+      <h1 id="f-title"></h1>
     </div>
   </div>
-  <div class="food-filter-row" id="foodFilterRow">
-    <button class="filter-tab active">ALL</button>
-    <button class="filter-tab">🇯🇵 JAPAN</button>
-    <button class="filter-tab">🇮🇩 INDONESIA</button>
-    <button class="filter-tab">🇮🇹 ITALY</button>
-    <button class="filter-tab">🇲🇦 MOROCCO</button>
-    <button class="filter-tab">🇫🇷 FRANCE</button>
-    <button class="filter-tab">🇮🇳 INDIA</button>
-    <button class="filter-tab">🇲🇽 MEXICO</button>
-  </div>
-  <div class="food-section-title">SIGNATURE DISHES</div>
-  <div class="food-3d-grid" id="food3dGrid"></div>
-  <div class="food-section-title" style="margin-top:0;">REGIONAL SPECIALTIES</div>
-  <div class="food-wide-grid" id="foodWideGrid"></div>
+  <div class="filter-row" id="fFilterRow"></div>
+  <div class="food-sec-title" id="f-sig"></div>
+  <div class="fg4" id="fg4"></div>
+  <div class="food-sec-title" id="f-reg" style="margin-top:0;"></div>
+  <div class="fg2" id="fg2"></div>
 </section>
 
-<!-- ==================== OFFERS ==================== -->
-<section class="section" id="sec-offers">
-  <div class="offers-wrap">
-    <div class="offers-header">
-      <div class="offers-header-left">
-        <div class="page-label">Featured Packages</div>
-        <h1>EXCLUSIVE<br>DEALS</h1>
+<!-- ═══ OFFERS ═══ -->
+<section class="sec" id="sec-offers">
+  <div class="offers-pad">
+    <div class="offers-head">
+      <div class="offers-head-l">
+        <div class="plabel" id="o-plabel"></div>
+        <h1 id="o-title"></h1>
       </div>
-      <!-- UPDATE 4: Realtime clock -->
-      <div class="offers-header-right">
-        <div class="clock-label">Current Time · WIB</div>
-        <div class="live-clock">
-          <div class="clock-part">
-            <div class="clock-num" id="clkHour">00</div>
-            <div class="clock-unit-label">HOUR</div>
-          </div>
-          <div class="clock-sep">:</div>
-          <div class="clock-part">
-            <div class="clock-num" id="clkMin">00</div>
-            <div class="clock-unit-label">MIN</div>
-          </div>
-          <div class="clock-sep">:</div>
-          <div class="clock-part">
-            <div class="clock-num" id="clkSec">00</div>
-            <div class="clock-unit-label">SEC</div>
-          </div>
+      <div class="offers-head-r">
+        <div class="clk-lbl" id="clkLbl"></div>
+        <div class="clk-row">
+          <div class="clk-part"><div class="clk-num" id="clkH">00</div><div class="clk-ulbl" id="clkHLbl"></div></div>
+          <div class="clk-sep">:</div>
+          <div class="clk-part"><div class="clk-num" id="clkM">00</div><div class="clk-ulbl" id="clkMLbl"></div></div>
+          <div class="clk-sep">:</div>
+          <div class="clk-part"><div class="clk-num" id="clkS">00</div><div class="clk-ulbl" id="clkSLbl"></div></div>
         </div>
-        <div class="clock-date" id="clkDate"></div>
+        <div class="clk-date" id="clkDate"></div>
       </div>
     </div>
-
-    <div class="deals-hero">
-      <div class="deals-hero-bg"></div>
-      <div class="deals-hero-overlay"></div>
-      <div class="deals-hero-content">
-        <div class="deals-hero-tag"><i class="ti ti-bolt" style="font-size:11px;"></i> FEATURED</div>
-        <div class="deals-hero-title">MALDIVES<br>ALL INCLUSIVE</div>
-        <div class="deals-hero-sub">7 Nights · Private Villa · Full Board · Seaplane Transfer</div>
+    <div class="deal-banner">
+      <div class="deal-bg"></div>
+      <div class="deal-ov"></div>
+      <div class="deal-txt">
+        <div class="deal-tag"><i class="ti ti-bolt" style="font-size:11px;"></i><span id="o-feat"></span></div>
+        <div class="deal-title" id="o-maldives"></div>
+        <div class="deal-sub" id="o-maldives-sub"></div>
       </div>
     </div>
-
     <div class="offers-grid" id="offersGrid"></div>
   </div>
 </section>
 
-<!-- ==================== CONTACTS ==================== -->
-<section class="section" id="sec-contacts">
+<!-- ═══ CONTACTS ═══ -->
+<section class="sec" id="sec-contacts">
   <div class="contacts-wrap">
-    <div class="contacts-left">
+    <div class="con-left">
       <div>
-        <div class="page-label">Get In Touch</div>
-        <h1>CONTACT<br>US</h1>
-        <p class="contacts-intro" style="margin-top:14px;">
-          Our travel experts are ready to craft your perfect journey. Reach out and we'll create an itinerary tailored to your dreams.
-        </p>
+        <div class="plabel" id="c-plabel"></div>
+        <h1 id="c-title"></h1>
+        <p class="con-intro" id="c-intro"></p>
       </div>
-      <div class="info-cards">
-        <div class="info-card">
-          <div class="info-card-icon"><i class="ti ti-map-pin"></i></div>
-          <div>
-            <div class="info-card-title">Office</div>
-            <div class="info-card-val">Sudirman Central Business District</div>
-            <div class="info-card-sub">Jl. Jend. Sudirman Kav. 52–53, Jakarta 12190</div>
-          </div>
+      <div class="icard-list">
+        <div class="icard">
+          <div class="icard-icon"><i class="ti ti-map-pin"></i></div>
+          <div><div class="icard-t" id="c-office-t"></div><div class="icard-v">Sudirman Central Business District</div><div class="icard-s">Jl. Jend. Sudirman Kav. 52–53, Jakarta 12190</div></div>
         </div>
-        <div class="info-card">
-          <div class="info-card-icon"><i class="ti ti-phone"></i></div>
-          <div>
-            <div class="info-card-title">Phone</div>
-            <div class="info-card-val">+62 21 5788 9900</div>
-            <div class="info-card-sub">Mon–Fri 09:00 – 18:00 WIB</div>
-          </div>
+        <div class="icard">
+          <div class="icard-icon"><i class="ti ti-phone"></i></div>
+          <div><div class="icard-t" id="c-phone-t"></div><div class="icard-v">+62 21 5788 9900</div><div class="icard-s" id="c-phone-s"></div></div>
         </div>
-        <div class="info-card">
-          <div class="info-card-icon"><i class="ti ti-mail"></i></div>
-          <div>
-            <div class="info-card-title">Email</div>
-            <div class="info-card-val">hello@globeexpress.id</div>
-            <div class="info-card-sub">We reply within 24 hours</div>
-          </div>
+        <div class="icard">
+          <div class="icard-icon"><i class="ti ti-mail"></i></div>
+          <div><div class="icard-t" id="c-email-t"></div><div class="icard-v">hello@globeexpress.id</div><div class="icard-s" id="c-email-s"></div></div>
         </div>
-        <div class="info-card">
-          <div class="info-card-icon"><i class="ti ti-headset"></i></div>
-          <div>
-            <div class="info-card-title">24/7 Hotline</div>
-            <div class="info-card-val">+62 812 0000 9900</div>
-            <div class="info-card-sub">Emergency travel support anytime</div>
-          </div>
+        <div class="icard">
+          <div class="icard-icon"><i class="ti ti-headset"></i></div>
+          <div><div class="icard-t" id="c-hotline-t"></div><div class="icard-v">+62 812 0000 9900</div><div class="icard-s" id="c-hotline-s"></div></div>
         </div>
       </div>
       <div>
-        <div style="font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:12px;">FOLLOW US</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.30);margin-bottom:12px;" id="c-follow"></div>
         <div class="social-row">
-          <div class="social-btn"><i class="ti ti-brand-instagram"></i></div>
-          <div class="social-btn"><i class="ti ti-brand-facebook"></i></div>
-          <div class="social-btn"><i class="ti ti-brand-twitter"></i></div>
-          <div class="social-btn"><i class="ti ti-brand-tiktok"></i></div>
-          <div class="social-btn"><i class="ti ti-brand-youtube"></i></div>
+          <div class="soc-btn"><i class="ti ti-brand-instagram"></i></div>
+          <div class="soc-btn"><i class="ti ti-brand-facebook"></i></div>
+          <div class="soc-btn"><i class="ti ti-brand-twitter"></i></div>
+          <div class="soc-btn"><i class="ti ti-brand-tiktok"></i></div>
+          <div class="soc-btn"><i class="ti ti-brand-youtube"></i></div>
         </div>
       </div>
     </div>
-    <div class="contacts-right">
-      <div class="form-title">Send a Message</div>
-      <div class="form-sub">Fill out the form and our team will get back to you within one business day.</div>
-      <div class="form-row">
-        <div class="form-group"><label>First Name</label><input type="text" placeholder="John"></div>
-        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+    <div class="con-right">
+      <div class="form-title" id="c-form-title"></div>
+      <div class="form-sub"   id="c-form-sub"></div>
+      <div class="frow">
+        <div class="fgrp"><label id="c-fname"></label><input type="text" id="c-fname-ph"></div>
+        <div class="fgrp"><label id="c-lname"></label><input type="text" id="c-lname-ph"></div>
       </div>
-      <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@example.com"></div>
-      <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+62 812 0000 0000"></div>
-      <div class="form-group">
-        <label>Inquiry Type</label>
-        <select>
-          <option>Holiday Package</option><option>Custom Itinerary</option>
-          <option>Group Travel</option><option>Honeymoon Package</option><option>Other</option>
-        </select>
+      <div class="fgrp"><label id="c-email-l"></label><input type="email" id="c-email-ph"></div>
+      <div class="fgrp"><label id="c-phone-l"></label><input type="tel"   id="c-phone-ph"></div>
+      <div class="fgrp">
+        <label id="c-inq-l"></label>
+        <select id="c-inq-sel"></select>
       </div>
-      <div class="form-group"><label>Destination of Interest</label><input type="text" placeholder="e.g. Santorini, Maldives, Swiss Alps..."></div>
-      <div class="form-group"><label>Your Message</label><textarea rows="4" placeholder="Tell us about your dream trip..."></textarea></div>
-      <button class="btn-submit"><i class="ti ti-send" style="font-size:16px;"></i>SEND MESSAGE</button>
+      <div class="fgrp"><label id="c-dest-l"></label><input type="text" id="c-dest-ph"></div>
+      <div class="fgrp"><label id="c-msg-l"></label><textarea rows="4" id="c-msg-ph"></textarea></div>
+      <button class="btn-send" id="c-send"><i class="ti ti-send" style="font-size:16px;"></i><span id="c-send-t"></span></button>
     </div>
   </div>
 </section>
 
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="foot-logo">
+          <div class="foot-logo-ring"><i class="ti ti-world"></i></div>
+          <span>GLOBE EXPRESS</span>
+        </div>
+        <p class="foot-tagline" id="ft-tagline"></p>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <div class="foot-col-t" id="ft-menu"></div>
+          <a onclick="goTo('home')"         id="ft-home"></a>
+          <a onclick="goTo('holidays')"     id="ft-holidays"></a>
+          <a onclick="goTo('destinations')" id="ft-destinations"></a>
+          <a onclick="goTo('food')"         id="ft-food"></a>
+          <a onclick="goTo('offers')"       id="ft-offers"></a>
+          <a onclick="goTo('contacts')"     id="ft-contacts"></a>
+        </div>
+        <div class="foot-col">
+          <div class="foot-col-t" id="ft-contact-t"></div>
+          <a>hello@globeexpress.id</a>
+          <a>+62 21 5788 9900</a>
+          <a>+62 812 0000 9900</a>
+          <a>Jakarta, Indonesia</a>
+        </div>
+        <div class="foot-col">
+          <div class="foot-col-t" id="ft-follow"></div>
+          <div class="foot-soc">
+            <div class="foot-soc-btn"><i class="ti ti-brand-instagram"></i></div>
+            <div class="foot-soc-btn"><i class="ti ti-brand-facebook"></i></div>
+            <div class="foot-soc-btn"><i class="ti ti-brand-twitter"></i></div>
+            <div class="foot-soc-btn"><i class="ti ti-brand-tiktok"></i></div>
+            <div class="foot-soc-btn"><i class="ti ti-brand-youtube"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot-divider"></div>
+    <div class="foot-bottom">
+      <div class="foot-copy">
+        <i class="ti ti-copyright"></i>
+        <span id="footYear"></span>
+        <span id="ft-copy"></span>
+      </div>
+      <div class="foot-blinks">
+        <a id="ft-privacy"></a>
+        <span class="foot-dot">·</span>
+        <a id="ft-terms"></a>
+        <span class="foot-dot">·</span>
+        <a id="ft-sitemap"></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
 <script>
-/* ===== DATA — UPDATE 1: All prices, discounts, money references removed ===== */
-const destinations = [
-  { region:"Switzerland Alps", line1:"SAINT", line2:"ANTÖNIEN",
+/* ════════════════════════════════════
+   DATA
+════════════════════════════════════ */
+const DESTS = [
+  { region:"Switzerland Alps", l1:"SAINT",    l2:"ANTÖNIEN",
     heroBg:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80" },
-  { region:"Japan Alps", line1:"NAGANO", line2:"PREFECTURE",
+  { region:"Japan Alps",       l1:"NAGANO",   l2:"PREFECTURE",
     heroBg:"https://images.unsplash.com/photo-1480796927426-f609979314bd?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1480796927426-f609979314bd?w=400&q=80" },
-  { region:"Sahara Desert · Morocco", line1:"MARRAKECH", line2:"MERZOUGA",
+  { region:"Sahara · Morocco", l1:"MARRAKECH",l2:"MERZOUGA",
     heroBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80" },
-  { region:"Sierra Nevada · USA", line1:"YOSEMITE", line2:"NATIONAL PARK",
+  { region:"Sierra Nevada · USA", l1:"YOSEMITE", l2:"NATIONAL PARK",
     heroBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80" },
-  { region:"Tarifa · Spain", line1:"LOS LANCES", line2:"BEACH",
+  { region:"Tarifa · Spain",   l1:"LOS LANCES", l2:"BEACH",
     heroBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" }
 ];
 
-const holidays = [
-  { region:"Maldives", name:"NORTH MALÉ ATOLL", desc:"Overwater bungalows, crystal lagoons, and world-class diving reefs await.", img:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80", nights:"7 nights", type:"Beach", rating:"4.9" },
-  { region:"Switzerland", name:"GRINDELWALD PEAKS", desc:"Iconic alpine village below the North Face with glaciers and cable cars.", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80", nights:"6 nights", type:"Mountain", rating:"4.8" },
-  { region:"Japan", name:"KYOTO IMPERIAL", desc:"Cherry blossom temples, kaiseki dining, and centuries of living culture.", img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80", nights:"8 nights", type:"Cultural", rating:"5.0" },
-  { region:"Morocco", name:"SAHARA MERZOUGA", desc:"Camel treks at sunset, luxury desert camps under a billion stars.", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", nights:"5 nights", type:"Adventure", rating:"4.7" },
-  { region:"French Riviera", name:"CÔTE D'AZUR", desc:"Glamorous promenades, azure seas, Michelin dining and yacht culture.", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800&q=80", nights:"7 nights", type:"Luxury", rating:"4.9" },
-  { region:"Bali, Indonesia", name:"UBUD HIGHLANDS", desc:"Rice terraces, jungle spa retreats, and Balinese temple ceremonies.", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", nights:"5 nights", type:"Cultural", rating:"4.8" }
+const HOLIDAYS = [
+  { reg:"Maldives",       name:"NORTH MALÉ ATOLL",  desc:"Overwater bungalows, crystal lagoons, and world-class diving reefs.", img:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80", nights:"7", type:"Beach",    rating:"4.9" },
+  { reg:"Switzerland",    name:"GRINDELWALD PEAKS",  desc:"Iconic alpine village below the North Face with glaciers and cable cars.", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80", nights:"6", type:"Mountain",  rating:"4.8" },
+  { reg:"Japan",          name:"KYOTO IMPERIAL",     desc:"Cherry blossom temples, kaiseki dining, and centuries of living culture.", img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80", nights:"8", type:"Cultural",  rating:"5.0" },
+  { reg:"Morocco",        name:"SAHARA MERZOUGA",    desc:"Camel treks at sunset, luxury desert camps under a billion stars.", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", nights:"5", type:"Adventure", rating:"4.7" },
+  { reg:"French Riviera", name:"CÔTE D'AZUR",        desc:"Glamorous promenades, azure seas, Michelin dining and yacht culture.", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800&q=80", nights:"7", type:"Luxury",    rating:"4.9" },
+  { reg:"Bali, Indonesia",name:"UBUD HIGHLANDS",     desc:"Rice terraces, jungle spa retreats, and Balinese temple ceremonies.", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", nights:"5", type:"Cultural",  rating:"4.8" }
 ];
 
-/* UPDATE 1: destItems — no price field */
-const destItems = [
-  { name:"PARIS", country:"France", img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80", stat:"248 packages", rating:"4.9" },
-  { name:"BALI", country:"Indonesia", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", stat:"186 packages", rating:"4.8" },
-  { name:"TOKYO", country:"Japan", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80", stat:"142 packages", rating:"4.9" },
-  { name:"SANTORINI", country:"Greece", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80", stat:"95 packages", rating:"5.0" },
-  { name:"MARRAKECH", country:"Morocco", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", stat:"78 packages", rating:"4.7" },
-  { name:"NEW YORK", country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80", stat:"116 packages", rating:"4.8" }
+const DEST_ITEMS = [
+  { name:"PARIS",     country:"France",        img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80", stat:"248", rating:"4.9" },
+  { name:"BALI",      country:"Indonesia",     img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", stat:"186", rating:"4.8" },
+  { name:"TOKYO",     country:"Japan",         img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80", stat:"142", rating:"4.9" },
+  { name:"SANTORINI", country:"Greece",        img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80", stat:"95",  rating:"5.0" },
+  { name:"MARRAKECH", country:"Morocco",       img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", stat:"78",  rating:"4.7" },
+  { name:"NEW YORK",  country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80", stat:"116", rating:"4.8" }
 ];
 
-/* UPDATE 1: offers — no discount or price */
-const offers = [
-  { name:"SANTORINI SUNSET", details:"7 Nights · Couples Package", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80" },
-  { name:"BALI PARADISE", details:"5 Nights · Villa Stay", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" },
-  { name:"TOKYO EXPLORER", details:"10 Nights · City Tour", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80" },
-  { name:"SWISS ALPS LODGE", details:"8 Nights · Ski Package", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80" },
-  { name:"AMALFI COAST", details:"6 Nights · Coastal Drive", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=80" }
+const OFFERS = [
+  { name:"SANTORINI SUNSET", det:"7 Nights · Couples Package", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80" },
+  { name:"BALI PARADISE",    det:"5 Nights · Villa Stay",      img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" },
+  { name:"TOKYO EXPLORER",   det:"10 Nights · City Tour",      img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80" },
+  { name:"SWISS ALPS LODGE", det:"8 Nights · Ski Package",     img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80" },
+  { name:"AMALFI COAST",     det:"6 Nights · Coastal Drive",   img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=80" }
 ];
 
-/* UPDATE 5: food 3D cards use real photos only, no SVG overlay */
-const foods3d = [
-  { origin:"Japan · Tokyo", name:"RAMEN", desc:"Rich tonkotsu broth, chashu pork, soft-boiled egg & bamboo shoots",
-    photo:"https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80" },
-  { origin:"Italy · Naples", name:"PIZZA NAPOLETANA", desc:"Wood-fired sourdough crust, San Marzano tomato, buffalo mozzarella",
-    photo:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80" },
-  { origin:"Morocco · Marrakech", name:"TAGINE", desc:"Slow-cooked lamb with preserved lemon, olives, saffron & spices",
-    photo:"https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&q=80" },
-  { origin:"Indonesia · Bali", name:"NASI GORENG", desc:"Wok-fried rice with shrimp paste, kecap manis & fried egg",
-    photo:"https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" }
+const FOODS4 = [
+  { origin:"Japan · Tokyo",       name:"RAMEN",            desc:"Rich tonkotsu broth, chashu pork, soft-boiled egg & bamboo shoots.", photo:"https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80" },
+  { origin:"Italy · Naples",      name:"PIZZA NAPOLETANA", desc:"Wood-fired sourdough crust, San Marzano tomato, fresh buffalo mozzarella.", photo:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80" },
+  { origin:"Morocco · Marrakech", name:"TAGINE",            desc:"Slow-cooked lamb with preserved lemon, olives, saffron & aromatic spices.", photo:"https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&q=80" },
+  { origin:"Indonesia · Bali",    name:"NASI GORENG",       desc:"Wok-fried rice with shrimp paste, kecap manis, prawn crackers & fried egg.", photo:"https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" }
 ];
 
-const foodsWide = [
-  { origin:"France · Paris", name:"BOEUF BOURGUIGNON", desc:"Classic French braised beef slow-cooked in Burgundy wine with mushrooms, pearl onions, and lardons.", img:"https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600&q=80", tags:["Slow-cooked","Wine braised","Heritage recipe"] },
-  { origin:"India · Mumbai", name:"BUTTER CHICKEN", desc:"Tender chicken tikka in rich tomato-cream curry, fragrant with garam masala and fresh ginger.", img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80", tags:["Spiced","Creamy","North Indian"] },
-  { origin:"Mexico · Oaxaca", name:"MOLE NEGRO", desc:"Complex dark mole sauce with over 30 ingredients including chillies, chocolate and turkey.", img:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80", tags:["Complex","Chocolate-infused","Traditional"] },
-  { origin:"Spain · Valencia", name:"PAELLA VALENCIANA", desc:"Saffron-scented Bomba rice with rabbit, chicken, green beans, and the essential socarrat crust.", img:"https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=600&q=80", tags:["Saffron","Socarrat crust","Wood-fired"] }
+const FOODS2 = [
+  { origin:"France · Paris",  name:"BOEUF BOURGUIGNON",  desc:"Classic French braised beef in Burgundy wine with mushrooms, pearl onions, and lardons.", img:"https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600&q=80", tags:["Slow-cooked","Wine braised","Heritage"] },
+  { origin:"India · Mumbai",  name:"BUTTER CHICKEN",     desc:"Tender chicken tikka in rich tomato-cream curry, fragrant with garam masala and ginger.", img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80", tags:["Spiced","Creamy","North Indian"] },
+  { origin:"Mexico · Oaxaca", name:"MOLE NEGRO",         desc:"Complex dark mole with 30+ ingredients: chillies, chocolate, spices, and turkey.", img:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80", tags:["Complex","Chocolate-infused","Traditional"] },
+  { origin:"Spain · Valencia",name:"PAELLA VALENCIANA",  desc:"Saffron Bomba rice with rabbit, chicken, green beans, and the essential socarrat crust.", img:"https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=600&q=80", tags:["Saffron","Socarrat crust","Wood-fired"] }
 ];
 
-/* ===== UPDATE 2: Scroll-based navigation ===== */
-const sections = ['home','holidays','destinations','food','offers','contacts'];
+/* ════════════════════════════════════
+   i18n
+════════════════════════════════════ */
+const T = {
+  id: {
+    nl:['BERANDA','LIBURAN','DESTINASI','KULINER','PENAWARAN','KONTAK'],
+    heroDesc:"Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar.",
+    heroBtn:"JELAJAHI LOKASI", scroll:"Gulir",
+    hhLabel:"Pelarian Pilihan", hhTitle:"PAKET<br>LIBURAN", hhTag:"Klik kartu untuk pratinjau",
+    hFilters:["SEMUA","PANTAI","GUNUNG","BUDAYA","PETUALANGAN","MEWAH"],
+    hExplore:"JELAJAHI", hNights:"malam",
+    dLabel:"Jelajahi Dunia", dTitle:"TEMUKAN<br>DESTINASI",
+    dDesc:"Dari puncak pegunungan hingga pantai tropis — jelajahi 200+ destinasi di 6 benua.",
+    dStatLbl:"Paket Tersedia", dRatLbl:"Rating Rata-rata",
+    dSideLabel:"Destinasi Populer",
+    dRegs:["🌍 Semua","🇪🇺 Eropa","🌏 Asia","🌎 Amerika","🌍 Afrika","🌊 Pasifik"],
+    fLabel:"Rasakan Dunia", fTitle:"KULINER<br>LOKAL",
+    fFilters:["SEMUA","🇯🇵 JEPANG","🇮🇩 INDONESIA","🇮🇹 ITALIA","🇲🇦 MAROKO","🇫🇷 PRANCIS","🇮🇳 INDIA","🇲🇽 MEKSIKO"],
+    fSig:"HIDANGAN KHAS", fReg:"SPESIALITAS REGIONAL",
+    oLabel:"Paket Unggulan", oTitle:"PENAWARAN<br>EKSKLUSIF",
+    oClkLbl:"Waktu Saat Ini · WIB", oH:"JAM", oM:"MENIT", oS:"DETIK",
+    oFeat:"UNGGULAN", oMaldives:"MALADEWA<br>ALL INCLUSIVE", oMaldivesSub:"7 Malam · Vila Pribadi · Makan Penuh · Transfer Seaplane",
+    cLabel:"Hubungi Kami", cTitle:"KONTAK<br>KAMI",
+    cIntro:"Para ahli perjalanan kami siap merancang perjalanan sempurna Anda. Hubungi kami dan kami akan membuat itinerary sesuai impian Anda.",
+    cOffice:"Kantor", cPhone:"Telepon", cPhoneSub:"Sen–Jum 09:00–18:00 WIB",
+    cEmail:"Email", cEmailSub:"Kami membalas dalam 24 jam",
+    cHotline:"Hotline 24/7", cHotlineSub:"Dukungan perjalanan darurat kapan saja",
+    cFollow:"IKUTI KAMI",
+    cFormTitle:"Kirim Pesan", cFormSub:"Isi formulir dan tim kami akan menghubungi Anda dalam satu hari kerja.",
+    cFname:"Nama Depan", cFnamePh:"Budi",
+    cLname:"Nama Belakang", cLnamePh:"Santoso",
+    cEmailL:"Alamat Email", cEmailPh:"budi@example.com",
+    cPhoneL:"Nomor Telepon", cPhonePh:"+62 812 0000 0000",
+    cInq:"Jenis Pertanyaan", cInqOpts:["Paket Liburan","Itinerary Kustom","Perjalanan Grup","Paket Bulan Madu","Lainnya"],
+    cDest:"Destinasi yang Diminati", cDestPh:"mis. Santorini, Maladewa...",
+    cMsg:"Pesan Anda", cMsgPh:"Ceritakan tentang perjalanan impian Anda...",
+    cSend:"KIRIM PESAN",
+    ftTagline:"Jelajahi dunia dengan pengalaman perjalanan tak terlupakan bersama Globe Express.",
+    ftMenu:"Menu", ftContact:"Kontak", ftFollow:"Ikuti Kami",
+    ftHome:"Beranda", ftHolidays:"Liburan", ftDest:"Destinasi", ftFood:"Kuliner", ftOffers:"Penawaran", ftContacts:"Kontak",
+    ftCopy:"Globe Express. Hak Cipta Dilindungi Undang-Undang.",
+    ftPrivacy:"Kebijakan Privasi", ftTerms:"Syarat & Ketentuan", ftSitemap:"Peta Situs"
+  },
+  en: {
+    nl:['HOME','HOLIDAYS','DESTINATIONS','FOOD','OFFERS','CONTACTS'],
+    heroDesc:"Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar.",
+    heroBtn:"DISCOVER LOCATION", scroll:"Scroll",
+    hhLabel:"Curated Escapes", hhTitle:"HOLIDAY<br>PACKAGES", hhTag:"Click a card to preview",
+    hFilters:["ALL","BEACH","MOUNTAIN","CULTURAL","ADVENTURE","LUXURY"],
+    hExplore:"EXPLORE", hNights:"nights",
+    dLabel:"Explore The World", dTitle:"DISCOVER<br>DESTINATIONS",
+    dDesc:"From alpine peaks to tropical shores — explore 200+ curated destinations across 6 continents.",
+    dStatLbl:"Packages Available", dRatLbl:"Avg. Rating",
+    dSideLabel:"Popular Destinations",
+    dRegs:["🌍 All","🇪🇺 Europe","🌏 Asia","🌎 Americas","🌍 Africa","🌊 Pacific"],
+    fLabel:"Taste The World", fTitle:"LOCAL<br>CUISINE",
+    fFilters:["ALL","🇯🇵 JAPAN","🇮🇩 INDONESIA","🇮🇹 ITALY","🇲🇦 MOROCCO","🇫🇷 FRANCE","🇮🇳 INDIA","🇲🇽 MEXICO"],
+    fSig:"SIGNATURE DISHES", fReg:"REGIONAL SPECIALTIES",
+    oLabel:"Featured Packages", oTitle:"EXCLUSIVE<br>DEALS",
+    oClkLbl:"Current Time · WIB", oH:"HOUR", oM:"MIN", oS:"SEC",
+    oFeat:"FEATURED", oMaldives:"MALDIVES<br>ALL INCLUSIVE", oMaldivesSub:"7 Nights · Private Villa · Full Board · Seaplane Transfer",
+    cLabel:"Get In Touch", cTitle:"CONTACT<br>US",
+    cIntro:"Our travel experts are ready to craft your perfect journey. Reach out and we'll create an itinerary tailored to your dreams.",
+    cOffice:"Office", cPhone:"Phone", cPhoneSub:"Mon–Fri 09:00–18:00 WIB",
+    cEmail:"Email", cEmailSub:"We reply within 24 hours",
+    cHotline:"24/7 Hotline", cHotlineSub:"Emergency travel support anytime",
+    cFollow:"FOLLOW US",
+    cFormTitle:"Send a Message", cFormSub:"Fill out the form and our team will get back to you within one business day.",
+    cFname:"First Name", cFnamePh:"John",
+    cLname:"Last Name", cLnamePh:"Doe",
+    cEmailL:"Email Address", cEmailPh:"john@example.com",
+    cPhoneL:"Phone Number", cPhonePh:"+62 812 0000 0000",
+    cInq:"Inquiry Type", cInqOpts:["Holiday Package","Custom Itinerary","Group Travel","Honeymoon Package","Other"],
+    cDest:"Destination of Interest", cDestPh:"e.g. Santorini, Maldives...",
+    cMsg:"Your Message", cMsgPh:"Tell us about your dream trip...",
+    cSend:"SEND MESSAGE",
+    ftTagline:"Explore the world with unforgettable travel experiences with Globe Express.",
+    ftMenu:"Menu", ftContact:"Contact", ftFollow:"Follow Us",
+    ftHome:"Home", ftHolidays:"Holidays", ftDest:"Destinations", ftFood:"Food", ftOffers:"Offers", ftContacts:"Contacts",
+    ftCopy:"Globe Express. All Rights Reserved.",
+    ftPrivacy:"Privacy Policy", ftTerms:"Terms & Conditions", ftSitemap:"Sitemap"
+  }
+};
 
-function scrollToSection(id) {
-  const el = document.getElementById('sec-' + id);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
+let lang = 'id';
+
+function applyLang(l) {
+  lang = l;
+  const t = T[l];
+  // Nav links
+  ['home','holidays','destinations','food','offers','contacts'].forEach((s,i)=>{
+    const el = document.getElementById('nl-'+s);
+    if(el) el.textContent = t.nl[i];
+  });
+  // Hero
+  document.getElementById('heroDesc').textContent = t.heroDesc;
+  document.getElementById('btnDisc').textContent  = t.heroBtn;
+  document.getElementById('shScroll').textContent  = t.scroll;
+  // Holidays hero
+  document.getElementById('hh-plabel').textContent = t.hhLabel;
+  document.getElementById('hh-title').innerHTML    = t.hhTitle;
+  const hhTag = document.getElementById('hhTag');
+  if(hhTag.textContent === T[l==='id'?'en':'id'].hhTag || hhTag.textContent === '' || hhTag.textContent === T.id.hhTag || hhTag.textContent === T.en.hhTag)
+    hhTag.textContent = t.hhTag;
+  // Holiday filters rebuild
+  buildHFilters();
+  // Explore buttons
+  document.querySelectorAll('.hgexp').forEach(b => b.textContent = t.hExplore);
+  // Night labels
+  document.querySelectorAll('.hgnight').forEach(s => { s.dataset.nights && (s.textContent = s.dataset.nights+' '+t.hNights); });
+  // Destinations
+  document.getElementById('d-plabel').textContent  = t.dLabel;
+  document.getElementById('d-title').innerHTML     = t.dTitle;
+  document.getElementById('d-desc').textContent    = t.dDesc;
+  document.getElementById('dciStatLbl').textContent = t.dStatLbl;
+  document.getElementById('dciRatingLbl').textContent = t.dRatLbl;
+  document.getElementById('ds-label').textContent  = t.dSideLabel;
+  buildDestRegions();
+  // Food
+  document.getElementById('f-plabel').textContent = t.fLabel;
+  document.getElementById('f-title').innerHTML    = t.fTitle;
+  document.getElementById('f-sig').textContent    = t.fSig;
+  document.getElementById('f-reg').textContent    = t.fReg;
+  buildFoodFilters();
+  // Offers
+  document.getElementById('o-plabel').textContent   = t.oLabel;
+  document.getElementById('o-title').innerHTML      = t.oTitle;
+  document.getElementById('clkLbl').textContent     = t.oClkLbl;
+  document.getElementById('clkHLbl').textContent    = t.oH;
+  document.getElementById('clkMLbl').textContent    = t.oM;
+  document.getElementById('clkSLbl').textContent    = t.oS;
+  document.getElementById('o-feat').textContent     = t.oFeat;
+  document.getElementById('o-maldives').innerHTML   = t.oMaldives;
+  document.getElementById('o-maldives-sub').textContent = t.oMaldivesSub;
+  // Contacts
+  document.getElementById('c-plabel').textContent    = t.cLabel;
+  document.getElementById('c-title').innerHTML       = t.cTitle;
+  document.getElementById('c-intro').textContent     = t.cIntro;
+  document.getElementById('c-office-t').textContent  = t.cOffice;
+  document.getElementById('c-phone-t').textContent   = t.cPhone;
+  document.getElementById('c-phone-s').textContent   = t.cPhoneSub;
+  document.getElementById('c-email-t').textContent   = t.cEmail;
+  document.getElementById('c-email-s').textContent   = t.cEmailSub;
+  document.getElementById('c-hotline-t').textContent = t.cHotline;
+  document.getElementById('c-hotline-s').textContent = t.cHotlineSub;
+  document.getElementById('c-follow').textContent    = t.cFollow;
+  document.getElementById('c-form-title').textContent = t.cFormTitle;
+  document.getElementById('c-form-sub').textContent   = t.cFormSub;
+  document.getElementById('c-fname').textContent   = t.cFname;
+  document.getElementById('c-fname-ph').placeholder = t.cFnamePh;
+  document.getElementById('c-lname').textContent   = t.cLname;
+  document.getElementById('c-lname-ph').placeholder = t.cLnamePh;
+  document.getElementById('c-email-l').textContent  = t.cEmailL;
+  document.getElementById('c-email-ph').placeholder = t.cEmailPh;
+  document.getElementById('c-phone-l').textContent  = t.cPhoneL;
+  document.getElementById('c-phone-ph').placeholder = t.cPhonePh;
+  document.getElementById('c-inq-l').textContent    = t.cInq;
+  const sel = document.getElementById('c-inq-sel');
+  sel.innerHTML = t.cInqOpts.map(o=>`<option>${o}</option>`).join('');
+  document.getElementById('c-dest-l').textContent   = t.cDest;
+  document.getElementById('c-dest-ph').placeholder  = t.cDestPh;
+  document.getElementById('c-msg-l').textContent    = t.cMsg;
+  document.getElementById('c-msg-ph').placeholder   = t.cMsgPh;
+  document.getElementById('c-send-t').textContent   = t.cSend;
+  // Footer
+  document.getElementById('ft-tagline').textContent    = t.ftTagline;
+  document.getElementById('ft-menu').textContent       = t.ftMenu;
+  document.getElementById('ft-contact-t').textContent  = t.ftContact;
+  document.getElementById('ft-follow').textContent     = t.ftFollow;
+  document.getElementById('ft-home').textContent       = t.ftHome;
+  document.getElementById('ft-holidays').textContent   = t.ftHolidays;
+  document.getElementById('ft-destinations').textContent = t.ftDest;
+  document.getElementById('ft-food').textContent       = t.ftFood;
+  document.getElementById('ft-offers').textContent     = t.ftOffers;
+  document.getElementById('ft-contacts').textContent   = t.ftContacts;
+  document.getElementById('ft-copy').textContent       = t.ftCopy;
+  document.getElementById('ft-privacy').textContent    = t.ftPrivacy;
+  document.getElementById('ft-terms').textContent      = t.ftTerms;
+  document.getElementById('ft-sitemap').textContent    = t.ftSitemap;
+  // Lang buttons
+  document.getElementById('btnId').classList.toggle('on', l==='id');
+  document.getElementById('btnEn').classList.toggle('on', l==='en');
 }
 
-// Update active nav link on scroll
-const navH = document.getElementById('mainNav').offsetHeight;
-window.addEventListener('scroll', () => {
-  let current = 'home';
-  sections.forEach(id => {
-    const el = document.getElementById('sec-' + id);
-    if (el && window.scrollY >= el.offsetTop - navH - 40) current = id;
+/* ════════════════════════════════════
+   NAV scroll transparency
+════════════════════════════════════ */
+function updateNav() {
+  const nav = document.getElementById('mainNav');
+  if (window.scrollY < window.innerHeight * 0.80) {
+    nav.classList.remove('solid');
+  } else {
+    nav.classList.add('solid');
+  }
+  // active link
+  const secs = ['home','holidays','destinations','food','offers','contacts'];
+  const navH = nav.offsetHeight;
+  let cur = 'home';
+  secs.forEach(id => {
+    const el = document.getElementById('sec-'+id);
+    if (el && window.scrollY >= el.offsetTop - navH - 60) cur = id;
   });
   document.querySelectorAll('.nav-links a').forEach(a => {
-    a.classList.toggle('active', a.dataset.sec === current);
+    a.classList.toggle('active', a.dataset.sec === cur);
   });
-}, { passive: true });
+}
+window.addEventListener('scroll', updateNav, { passive:true });
+updateNav();
 
-/* ===== HOME SLIDER ===== */
-const TOTAL = destinations.length;
-let current = 0;
-let autoTimer = null;
+/* ════════════════════════════════════
+   SCROLL TO SECTION
+════════════════════════════════════ */
+function goTo(id) {
+  const el = document.getElementById('sec-'+id);
+  if (!el) return;
+  const navH = document.getElementById('mainNav').offsetHeight;
+  window.scrollTo({ top: el.offsetTop - (id==='home'?0:navH), behavior:'smooth' });
+}
 
-function update(animate = true) {
-  const dest = destinations[current];
-  document.getElementById('heroBg').style.backgroundImage = `url('${dest.heroBg}')`;
-  document.getElementById('heroRegion').textContent = dest.region;
+/* ════════════════════════════════════
+   HOME SLIDER
+════════════════════════════════════ */
+let cur = 0, autoT = null;
+const TOTAL = DESTS.length;
+
+function renderSlider(animate) {
+  const d = DESTS[cur];
+  document.getElementById('heroBg').style.backgroundImage = `url('${d.heroBg}')`;
+  document.getElementById('heroReg').textContent = d.region;
   const titleEl = document.getElementById('heroTitle');
-  titleEl.innerHTML = dest.line1 + '<br>' + dest.line2;
-  if (animate) { titleEl.classList.remove('fade-in'); void titleEl.offsetWidth; titleEl.classList.add('fade-in'); }
-  document.getElementById('slideNum').textContent = current + 1;
-  document.getElementById('progressFill').style.width = ((current + 1) / TOTAL * 100) + '%';
-  const cardsRow = document.getElementById('cardsRow');
-  cardsRow.innerHTML = '';
-  for (let i = 1; i <= 4; i++) {
-    const idx = (current + i) % TOTAL;
-    const d = destinations[idx];
-    const card = document.createElement('div');
-    card.className = 'dest-card';
-    card.innerHTML = `<div class="card-bg" style="background-image:url('${d.cardBg}')"></div><div class="card-shade"></div><div class="card-info"><div class="card-region">${d.region}</div><div class="card-name">${d.line1}<br>${d.line2}</div></div>`;
-    card.addEventListener('click', () => { current = idx; update(); resetAuto(); });
-    cardsRow.appendChild(card);
+  titleEl.innerHTML = d.l1+'<br>'+d.l2;
+  if(animate){ titleEl.classList.remove('fade-up'); void titleEl.offsetWidth; titleEl.classList.add('fade-up'); }
+  document.getElementById('slideN').textContent = cur+1;
+  document.getElementById('progFill').style.width = ((cur+1)/TOTAL*100)+'%';
+
+  const row = document.getElementById('cardsRow');
+  row.innerHTML = '';
+  for(let i=1;i<=4;i++){
+    const idx=(cur+i)%TOTAL, d2=DESTS[idx];
+    const c = document.createElement('div');
+    c.className='hcard';
+    c.innerHTML=`<div class="hcard-bg" style="background-image:url('${d2.cardBg}')"></div><div class="hcard-shade"></div><div class="hcard-info"><div class="hcard-reg">${d2.region}</div><div class="hcard-name">${d2.l1}<br>${d2.l2}</div></div>`;
+    c.addEventListener('click',()=>{ cur=idx; renderSlider(true); resetAuto(); });
+    row.appendChild(c);
   }
 }
-function goNext() { current = (current + 1) % TOTAL; update(); }
-function goPrev() { current = (current - 1 + TOTAL) % TOTAL; update(); }
-function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(goNext, 5500); }
-document.getElementById('btnNext').addEventListener('click', () => { goNext(); resetAuto(); });
-document.getElementById('btnPrev').addEventListener('click', () => { goPrev(); resetAuto(); });
-update(false);
+function resetAuto(){ clearInterval(autoT); autoT=setInterval(()=>{ cur=(cur+1)%TOTAL; renderSlider(true); },5500); }
+document.getElementById('btnNext').addEventListener('click',()=>{ cur=(cur+1)%TOTAL; renderSlider(true); resetAuto(); });
+document.getElementById('btnPrev').addEventListener('click',()=>{ cur=(cur-1+TOTAL)%TOTAL; renderSlider(true); resetAuto(); });
+renderSlider(false);
 resetAuto();
 
-/* ===== UPDATE 3: HOLIDAYS — all features working + hero changes on click ===== */
-let allHolidayCards = [];
-function renderHolidays() {
-  const grid = document.getElementById('holidayGrid');
-  if (grid.innerHTML.trim()) return;
-  allHolidayCards = [];
-  holidays.forEach((h, i) => {
-    const card = document.createElement('div');
-    card.className = 'holiday-card slide-in-up d' + (i + 1);
-    card.dataset.type = h.type;
-    card.innerHTML = `
-      <div class="hcard-img-wrap"><div class="hcard-img" style="background-image:url('${h.img}');"></div>
-        <div class="hcard-badge">${h.type}</div>
-        <div class="hcard-save"><i class="ti ti-heart"></i></div>
-      </div>
-      <div class="hcard-body">
-        <div class="hcard-region">${h.region}</div>
-        <div class="hcard-name">${h.name}</div>
-        <div class="hcard-desc">${h.desc}</div>
-        <div class="hcard-footer">
-          <div class="hcard-meta">
-            <div class="hcard-meta-item"><i class="ti ti-moon"></i>${h.nights}</div>
-            <div class="hcard-meta-item"><i class="ti ti-star-filled" style="color:#c9a84c;"></i>${h.rating}</div>
-          </div>
-          <button class="btn-gold-sm">EXPLORE</button>
-        </div>
-      </div>`;
-    /* UPDATE 3: clicking card updates hero display */
-    card.addEventListener('click', () => {
-      document.querySelectorAll('.holiday-card').forEach(c => c.classList.remove('h-active'));
-      card.classList.add('h-active');
-      document.getElementById('holidaysHeroBg').style.backgroundImage = `url('${h.img.replace('w=800','w=1600')}')`;
-      document.getElementById('holidaysHeroTitle').innerHTML = h.name.replace(' ','<br>');
-      document.getElementById('holidayActiveLabel').textContent = h.region;
-      document.getElementById('sec-holidays').scrollIntoView({ behavior:'smooth' });
-    });
-    /* Save button toggle */
-    card.querySelector('.hcard-save').addEventListener('click', e => {
-      e.stopPropagation();
-      const icon = e.currentTarget.querySelector('i');
-      icon.classList.toggle('ti-heart'); icon.classList.toggle('ti-heart-filled');
-      e.currentTarget.style.background = icon.classList.contains('ti-heart-filled') ? 'var(--gold)' : '';
-    });
-    allHolidayCards.push(card);
-    grid.appendChild(card);
-  });
-
-  /* Filter tabs */
-  document.querySelectorAll('#holidayFilterRow .filter-tab').forEach(t => {
-    t.addEventListener('click', function() {
-      document.querySelectorAll('#holidayFilterRow .filter-tab').forEach(x => x.classList.remove('active'));
-      this.classList.add('active');
-      const filter = this.dataset.filter;
-      allHolidayCards.forEach(c => {
-        c.style.display = (filter === 'ALL' || c.dataset.type === filter) ? '' : 'none';
+/* ════════════════════════════════════
+   HOLIDAYS
+════════════════════════════════════ */
+function buildHFilters() {
+  const t = T[lang];
+  const row = document.getElementById('hFilterRow');
+  const filterTypes = ['ALL','Beach','Mountain','Cultural','Adventure','Luxury'];
+  row.innerHTML = '';
+  t.hFilters.forEach((lbl,i) => {
+    const b = document.createElement('button');
+    b.className = 'ftab' + (i===0?' on':'');
+    b.textContent = lbl;
+    b.dataset.type = filterTypes[i];
+    b.addEventListener('click', () => {
+      row.querySelectorAll('.ftab').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      document.querySelectorAll('.hgcard').forEach(c=>{
+        c.style.display = (b.dataset.type==='ALL' || c.dataset.type===b.dataset.type) ? '' : 'none';
       });
     });
+    row.appendChild(b);
   });
 }
 
-/* ===== UPDATE 3: DESTINATIONS — sidebar click updates main display ===== */
-function renderDestinations() {
-  const sidebar = document.getElementById('destSidebar');
-  if (sidebar.children.length > 1) { attachRegionBtns(); return; }
-  destItems.forEach((d, i) => {
+function buildHolidays() {
+  const grid = document.getElementById('hGrid');
+  if(grid.innerHTML.trim()) return;
+  HOLIDAYS.forEach((h,i) => {
+    const c = document.createElement('div');
+    c.className = 'hgcard fade-up d'+(i+1);
+    c.dataset.type = h.type;
+    c.innerHTML = `
+      <div class="hgimg-w">
+        <div class="hgimg" style="background-image:url('${h.img}');"></div>
+        <div class="hgbadge">${h.type}</div>
+        <div class="hgsave"><i class="ti ti-heart"></i></div>
+      </div>
+      <div class="hgbody">
+        <div class="hgreg">${h.reg}</div>
+        <div class="hgname">${h.name}</div>
+        <div class="hgdesc">${h.desc}</div>
+        <div class="hgfoot">
+          <div class="hgmeta">
+            <div class="hgmi"><i class="ti ti-moon"></i><span class="hgnight" data-nights="${h.nights}">${h.nights} ${T[lang].hNights}</span></div>
+            <div class="hgmi"><i class="ti ti-star-filled" style="color:var(--gold);"></i>${h.rating}</div>
+          </div>
+          <button class="btn-gold hgexp">${T[lang].hExplore}</button>
+        </div>
+      </div>`;
+    // click → update hero display
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.hgcard').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+      document.getElementById('hheroBg').style.backgroundImage = `url('${h.img.replace('w=800','w=1600')}')`;
+      document.getElementById('hh-title').innerHTML = h.name.replace(' ','<br>');
+      document.getElementById('hhTag').textContent  = h.reg;
+      window.scrollTo({ top: document.getElementById('sec-holidays').offsetTop - document.getElementById('mainNav').offsetHeight, behavior:'smooth' });
+    });
+    // save toggle
+    c.querySelector('.hgsave').addEventListener('click', e => {
+      e.stopPropagation();
+      const icon = e.currentTarget.querySelector('i');
+      const filled = icon.classList.contains('ti-heart-filled');
+      icon.className = filled ? 'ti ti-heart' : 'ti ti-heart-filled';
+      e.currentTarget.style.background = filled ? '' : 'var(--gold)';
+    });
+    grid.appendChild(c);
+  });
+  buildHFilters();
+}
+
+/* ════════════════════════════════════
+   DESTINATIONS
+════════════════════════════════════ */
+function buildDestRegions() {
+  const t = T[lang];
+  const cont = document.getElementById('destRegions');
+  const active = cont.querySelector('.on')?.textContent;
+  cont.innerHTML = '';
+  t.dRegs.forEach((lbl,i) => {
+    const b = document.createElement('button');
+    b.className = 'dreg-btn'+(i===0?' on':'');
+    b.textContent = lbl;
+    b.addEventListener('click',()=>{ cont.querySelectorAll('.dreg-btn').forEach(x=>x.classList.remove('on')); b.classList.add('on'); });
+    cont.appendChild(b);
+  });
+}
+
+function buildDestinations() {
+  const sb = document.getElementById('destSidebar');
+  if(sb.children.length > 1) return;
+  DEST_ITEMS.forEach((d,i) => {
     const item = document.createElement('div');
-    item.className = 'dest-item slide-in-up d' + Math.min(i+1,6);
-    if (i === 0) item.classList.add('selected');
+    item.className = 'ditem fade-up d'+Math.min(i+1,6);
+    if(i===0) item.classList.add('on');
     item.innerHTML = `
-      <div class="dest-item-img" style="background-image:url('${d.img}');"></div>
-      <div class="dest-item-body">
-        <div class="dest-item-name">${d.name}</div>
-        <div class="dest-item-country">${d.country}</div>
-        <div class="dest-item-stat">${d.stat}</div>
+      <div class="ditem-img" style="background-image:url('${d.img}');"></div>
+      <div class="ditem-body">
+        <div class="ditem-name">${d.name}</div>
+        <div class="ditem-country">${d.country}</div>
+        <div class="ditem-stat">${d.stat} packages</div>
       </div>`;
     item.addEventListener('click', () => {
-      document.querySelectorAll('.dest-item').forEach(x => x.classList.remove('selected'));
-      item.classList.add('selected');
-      document.getElementById('destDisplayBg').style.backgroundImage = `url('${d.img.replace('w=800','w=1200')}')`;
-      document.getElementById('destActiveName').textContent = d.name;
-      document.getElementById('destActiveCountry').textContent = d.country;
-      document.getElementById('destActiveStat').textContent = d.stat.split(' ')[0];
-      document.getElementById('destActiveRating').textContent = d.rating + ' ★';
+      document.querySelectorAll('.ditem').forEach(x=>x.classList.remove('on'));
+      item.classList.add('on');
+      document.getElementById('destImg').style.backgroundImage   = `url('${d.img.replace('w=800','w=1200')}')`;
+      document.getElementById('dciName').textContent    = d.name;
+      document.getElementById('dciCountry').textContent = d.country;
+      document.getElementById('dciStat').textContent    = d.stat;
+      document.getElementById('dciRating').textContent  = d.rating+' ★';
     });
-    sidebar.appendChild(item);
+    sb.appendChild(item);
   });
-  attachRegionBtns();
-}
-function attachRegionBtns() {
-  document.querySelectorAll('.dest-region-btn').forEach(b => {
-    b.onclick = function() {
-      document.querySelectorAll('.dest-region-btn').forEach(x => x.classList.remove('active'));
-      this.classList.add('active');
-    };
-  });
+  buildDestRegions();
 }
 
-/* ===== UPDATE 5: FOOD — pure photo cards, no SVG icons ===== */
-function renderFood() {
-  const g3 = document.getElementById('food3dGrid');
-  const gw = document.getElementById('foodWideGrid');
-  if (g3.innerHTML.trim()) return;
-
-  foods3d.forEach((f, i) => {
-    const card = document.createElement('div');
-    card.className = 'food-3d-card slide-in-up d' + (i+1);
-    card.innerHTML = `
-      <div class="food-photo" style="background-image:url('${f.photo}');"></div>
-      <div class="food-photo-overlay"></div>
-      <div class="food-3d-steam">
-        <div class="steam-line"></div>
-        <div class="steam-line"></div>
-        <div class="steam-line"></div>
-      </div>
-      <div class="food-3d-info">
-        <div class="food-3d-origin">${f.origin}</div>
-        <div class="food-3d-name">${f.name}</div>
-        <div class="food-3d-desc">${f.desc}</div>
-      </div>`;
-    g3.appendChild(card);
-  });
-
-  foodsWide.forEach((f, i) => {
-    const card = document.createElement('div');
-    card.className = 'food-wide-card slide-in-up d' + (i+1);
-    card.innerHTML = `
-      <div class="fwcard-img-wrap"><div class="fwcard-img" style="background-image:url('${f.img}');"></div></div>
-      <div class="fwcard-body">
-        <div class="fwcard-origin">${f.origin}</div>
-        <div class="fwcard-name">${f.name}</div>
-        <div class="fwcard-desc">${f.desc}</div>
-        <div class="fwcard-tags">${f.tags.map(t=>`<span class="fwcard-tag">${t}</span>`).join('')}</div>
-      </div>`;
-    gw.appendChild(card);
-  });
-
-  document.querySelectorAll('#foodFilterRow .filter-tab').forEach(t => {
-    t.addEventListener('click', function() {
-      document.querySelectorAll('#foodFilterRow .filter-tab').forEach(x => x.classList.remove('active'));
-      this.classList.add('active');
-    });
+/* ════════════════════════════════════
+   FOOD
+════════════════════════════════════ */
+function buildFoodFilters() {
+  const t = T[lang];
+  const row = document.getElementById('fFilterRow');
+  row.innerHTML = '';
+  t.fFilters.forEach((lbl,i) => {
+    const b = document.createElement('button');
+    b.className = 'ftab'+(i===0?' on':'');
+    b.textContent = lbl;
+    b.addEventListener('click',()=>{ row.querySelectorAll('.ftab').forEach(x=>x.classList.remove('on')); b.classList.add('on'); });
+    row.appendChild(b);
   });
 }
 
-/* ===== RENDER OFFERS (no prices/discounts) ===== */
-function renderOffers() {
-  const grid = document.getElementById('offersGrid');
-  if (grid.innerHTML.trim()) return;
-  offers.forEach((o, i) => {
-    const card = document.createElement('div');
-    card.className = 'offer-card slide-in-up d' + Math.min(i+1,5);
-    card.innerHTML = `
-      <div class="offer-bg" style="background-image:url('${o.img}');"></div>
-      <div class="offer-overlay"></div>
-      <div class="offer-content">
-        <div class="offer-name">${o.name}</div>
-        <div class="offer-details">${o.details}</div>
-      </div>`;
-    grid.appendChild(card);
+function buildFood() {
+  const g4=document.getElementById('fg4'), g2=document.getElementById('fg2');
+  if(g4.innerHTML.trim()) return;
+  FOODS4.forEach((f,i) => {
+    const c=document.createElement('div');
+    c.className='fcard fade-up d'+(i+1);
+    c.innerHTML=`<div class="fcard-photo" style="background-image:url('${f.photo}');"></div><div class="fcard-ov"></div><div class="fcard-steam"><div class="steam"></div><div class="steam"></div><div class="steam"></div></div><div class="fcard-txt"><div class="fcard-origin">${f.origin}</div><div class="fcard-name">${f.name}</div><div class="fcard-desc">${f.desc}</div></div>`;
+    g4.appendChild(c);
+  });
+  FOODS2.forEach((f,i) => {
+    const c=document.createElement('div');
+    c.className='fwcard fade-up d'+(i+1);
+    c.innerHTML=`<div class="fwimg-w"><div class="fwimg" style="background-image:url('${f.img}');"></div></div><div class="fwbody"><div class="fworigin">${f.origin}</div><div class="fwname">${f.name}</div><div class="fwdesc">${f.desc}</div><div class="fwtags">${f.tags.map(t=>`<span class="fwtag">${t}</span>`).join('')}</div></div>`;
+    g2.appendChild(c);
+  });
+  buildFoodFilters();
+}
+
+/* ════════════════════════════════════
+   OFFERS
+════════════════════════════════════ */
+function buildOffers() {
+  const grid=document.getElementById('offersGrid');
+  if(grid.innerHTML.trim()) return;
+  OFFERS.forEach((o,i) => {
+    const c=document.createElement('div');
+    c.className='ocard fade-up d'+Math.min(i+1,5);
+    c.innerHTML=`<div class="ocard-bg" style="background-image:url('${o.img}');"></div><div class="ocard-ov"></div><div class="ocard-txt"><div class="ocard-name">${o.name}</div><div class="ocard-det">${o.det}</div></div>`;
+    grid.appendChild(c);
   });
 }
 
-/* ===== UPDATE 4: Realtime Clock (WIB = UTC+7) ===== */
-const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+/* ════════════════════════════════════
+   REALTIME CLOCK (WIB UTC+7)
+════════════════════════════════════ */
+const DAYS_ID=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const DAYS_EN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONS_ID=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const MONS_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-function updateClock() {
-  const now = new Date();
-  const wib = new Date(now.getTime() + (7 * 60 * 60 * 1000 - now.getTimezoneOffset() * 60 * 1000));
-  const h = String(wib.getHours()).padStart(2,'0');
-  const m = String(wib.getMinutes()).padStart(2,'0');
-  const s = String(wib.getSeconds()).padStart(2,'0');
-  document.getElementById('clkHour').textContent = h;
-  document.getElementById('clkMin').textContent = m;
-  document.getElementById('clkSec').textContent = s;
-  document.getElementById('clkDate').textContent =
-    DAYS[wib.getDay()] + ', ' + wib.getDate() + ' ' + MONTHS[wib.getMonth()] + ' ' + wib.getFullYear();
+function tickClock() {
+  const utc = Date.now() + (new Date().getTimezoneOffset()*60000);
+  const wib = new Date(utc + 7*3600000);
+  document.getElementById('clkH').textContent = String(wib.getHours()).padStart(2,'0');
+  document.getElementById('clkM').textContent = String(wib.getMinutes()).padStart(2,'0');
+  document.getElementById('clkS').textContent = String(wib.getSeconds()).padStart(2,'0');
+  const days = lang==='id' ? DAYS_ID : DAYS_EN;
+  const mons = lang==='id' ? MONS_ID : MONS_EN;
+  document.getElementById('clkDate').textContent = `${days[wib.getDay()]}, ${wib.getDate()} ${mons[wib.getMonth()]} ${wib.getFullYear()}`;
 }
-setInterval(updateClock, 1000);
-updateClock();
+setInterval(tickClock, 1000);
+tickClock();
 
-/* ===== INTERSECTION OBSERVER — lazy render + active nav ===== */
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const id = entry.target.id.replace('sec-','');
-    if (id === 'holidays') renderHolidays();
-    if (id === 'destinations') renderDestinations();
-    if (id === 'food') renderFood();
-    if (id === 'offers') renderOffers();
+/* ════════════════════════════════════
+   INTERSECTION OBSERVER (lazy render)
+════════════════════════════════════ */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    const id = e.target.id;
+    if(id==='sec-holidays')     buildHolidays();
+    if(id==='sec-destinations') buildDestinations();
+    if(id==='sec-food')         buildFood();
+    if(id==='sec-offers')       buildOffers();
   });
-}, { threshold: 0.08 });
-
-sections.forEach(id => {
-  const el = document.getElementById('sec-' + id);
-  if (el) sectionObserver.observe(el);
+}, { threshold: 0.06 });
+['sec-holidays','sec-destinations','sec-food','sec-offers'].forEach(id => {
+  const el=document.getElementById(id); if(el) observer.observe(el);
 });
+
+/* ════════════════════════════════════
+   DARK MODE
+════════════════════════════════════ */
+document.getElementById('btnDm').addEventListener('click',()=>{
+  document.body.classList.toggle('light');
+});
+
+/* ════════════════════════════════════
+   LANGUAGE BUTTONS
+════════════════════════════════════ */
+document.getElementById('btnId').addEventListener('click',()=>applyLang('id'));
+document.getElementById('btnEn').addEventListener('click',()=>applyLang('en'));
+
+/* ════════════════════════════════════
+   FOOTER YEAR & INIT
+════════════════════════════════════ */
+document.getElementById('footYear').textContent = new Date().getFullYear();
+
+// init default language (Indonesia)
+applyLang('id');
 </script>
 </body>
 </html>
