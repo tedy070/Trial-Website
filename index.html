@@ -129,24 +129,42 @@ body.light .btn-dm { border-color: rgba(26,18,8,0.18); background: rgba(26,18,8,
 body.light .btn-dm i { color: rgba(26,18,8,0.70); }
 body.light .btn-dm:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
 
-/* Language pills */
-.lang-pill {
-  display: flex; border-radius: 20px; overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.20);
-  background: rgba(255,255,255,0.06);
+/* Language pills — now individual round buttons */
+/* Single globe language toggle */
+.lang-globe {
+  position: relative;
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; overflow: hidden;
+  transition: border-color 0.25s, background 0.25s;
 }
-.lang-btn {
-  padding: 7px 14px; border: none; background: transparent; cursor: pointer;
-  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.55);
-  transition: color 0.2s, background 0.2s;
+.lang-globe:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+body.light .lang-globe { border-color: rgba(26,18,8,0.18); background: rgba(26,18,8,0.06); }
+body.light .lang-globe:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+
+/* Globe SVG lines */
+.lang-globe-icon {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0.45; transition: opacity 0.25s;
 }
-.lang-btn.on { background: var(--gold); color: #1a1208; }
-.lang-btn:not(.on):hover { color: #fff; background: rgba(255,255,255,0.10); }
-body.light .lang-pill { border-color: rgba(26,18,8,0.16); background: rgba(26,18,8,0.05); }
-body.light .lang-btn { color: rgba(26,18,8,0.45); }
-body.light .lang-btn.on { background: var(--gold); color: #1a1208; }
-body.light .lang-btn:not(.on):hover { color: #1a1208; background: rgba(26,18,8,0.08); }
+.lang-globe:hover .lang-globe-icon { opacity: 0.70; }
+body.light .lang-globe-icon { opacity: 0.35; }
+
+/* Language code label */
+.lang-globe-lbl {
+  position: relative; z-index: 2;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px; font-weight: 800; letter-spacing: 0.5px;
+  text-transform: uppercase; color: rgba(255,255,255,0.90);
+  text-shadow: 0 0 8px rgba(0,0,0,0.6);
+  transition: color 0.25s;
+  line-height: 1;
+}
+body.light .lang-globe-lbl { color: rgba(26,18,8,0.80); text-shadow: none; }
+.lang-globe:hover .lang-globe-lbl { color: var(--gold); }
 
 /* ══════════════════════════════════════════
    SECTIONS
@@ -434,30 +452,36 @@ body.light .hgmi { color: rgba(26,18,8,0.50); }
 
 .dest-sidebar {
   background: rgba(7,7,7,0.97); border-left: 0.5px solid rgba(255,255,255,0.07);
-  padding: 28px 18px; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 14px;
+  padding: 28px 18px; overflow-y: auto; overflow-x: hidden;
+  display: flex; flex-direction: column; gap: 12px;
+  max-height: calc(100vh - var(--nav-h));
 }
 body.light .dest-sidebar { background: rgba(220,212,200,0.97); border-left-color: rgba(26,18,8,0.08); }
 .dest-sidebar::-webkit-scrollbar { width: 3px; }
 .dest-sidebar::-webkit-scrollbar-thumb { background: var(--gold-dim); }
-.ds-label { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--w50); margin-bottom: 4px; }
+.ds-label { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--w50); margin-bottom: 4px; flex-shrink: 0; }
 body.light .ds-label { color: rgba(26,18,8,0.42); }
 
 .ditem {
   border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07);
   cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.3s;
+  display: flex; flex-direction: row; align-items: stretch; flex-shrink: 0;
+  min-height: 80px;
 }
 body.light .ditem { background: rgba(26,18,8,0.03); border-color: rgba(26,18,8,0.08); }
 .ditem:hover { border-color: rgba(201,168,76,0.30); transform: translateX(4px); }
 .ditem.on { border-color: var(--gold); background: rgba(201,168,76,0.05); }
-.ditem-img { height: 100px; background-size: cover; background-position: center; position: relative; }
-.ditem-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.80) 100%); }
-.ditem-body { padding: 12px; }
-.ditem-name { font-size: 13px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+.ditem-body { padding: 10px 12px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.ditem-name { font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; }
 body.light .ditem-name { color: #1a1208; }
 .ditem-country { font-size: 9px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
-.ditem-stat { font-size: 8px; color: var(--w50); margin-top: 8px; }
+.ditem-stat { font-size: 8px; color: var(--w50); margin-top: 6px; }
 body.light .ditem-stat { color: rgba(26,18,8,0.45); }
+.ditem-img {
+  width: 80px; flex-shrink: 0; background-size: cover; background-position: center;
+  position: relative; border-radius: 0 11px 11px 0;
+}
+.ditem-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.50) 0%, transparent 60%); border-radius: 0 11px 11px 0; }
 
 /* ══════════════════════════════════════════
    FOOD
@@ -485,11 +509,23 @@ body.light .ditem-stat { color: rgba(26,18,8,0.45); }
 body.light .food-sec-title { color: rgba(26,18,8,0.40); }
 body.light .food-sec-title::after { background: rgba(26,18,8,0.08); }
 
-/* 4-col photo cards */
-.fg4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; padding: 20px 64px 40px; }
+/* 4-col photo cards — horizontal scroll */
+.fg4 {
+  display: flex; gap: 20px;
+  padding: 20px 64px 40px;
+  overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+.fg4:active { cursor: grabbing; }
+.fg4::-webkit-scrollbar { height: 3px; }
+.fg4::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
 .fcard {
-  position: relative; border-radius: 20px; overflow: hidden; cursor: pointer; height: 340px;
+  position: relative; border-radius: 20px; overflow: hidden; cursor: pointer;
+  height: 340px; min-width: 260px; flex-shrink: 0;
   border: 1px solid rgba(255,255,255,0.07);
+  scroll-snap-align: start;
   transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), box-shadow 0.5s;
 }
 body.light .fcard { border-color: rgba(26,18,8,0.10); }
@@ -766,6 +802,97 @@ body.light footer { background: #1a1208; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
 .d1{animation-delay:0.05s;opacity:0;} .d2{animation-delay:0.12s;opacity:0;} .d3{animation-delay:0.19s;opacity:0;}
 .d4{animation-delay:0.26s;opacity:0;} .d5{animation-delay:0.33s;opacity:0;} .d6{animation-delay:0.40s;opacity:0;}
+/* ══════════════════════════════════════════
+   MOBILE NAV — HAMBURGER
+══════════════════════════════════════════ */
+.hamburger {
+  display: none;
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.07);
+  flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  cursor: pointer; flex-shrink: 0;
+  transition: border-color 0.25s, background 0.25s;
+}
+.hamburger:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+body.light .hamburger { border-color: rgba(26,18,8,0.18); background: rgba(26,18,8,0.06); }
+body.light .hamburger:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+.hamburger span {
+  display: block; width: 16px; height: 1.5px;
+  background: rgba(255,255,255,0.80); border-radius: 2px;
+  transition: all 0.3s;
+}
+body.light .hamburger span { background: rgba(26,18,8,0.70); }
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile drawer */
+.mobile-drawer {
+  display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
+  background: rgba(6,6,6,0.97); backdrop-filter: blur(24px); z-index: 490;
+  flex-direction: column; padding: 32px 32px;
+  overflow-y: auto; transform: translateY(-8px); opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  border-top: 0.5px solid rgba(255,255,255,0.07);
+}
+body.light .mobile-drawer { background: rgba(240,236,228,0.97); border-top-color: rgba(26,18,8,0.08); }
+.mobile-drawer.open { opacity: 1; transform: translateY(0); }
+.mobile-drawer ul { list-style: none; display: flex; flex-direction: column; gap: 0; }
+.mobile-drawer ul li a {
+  display: block; padding: 16px 0;
+  color: rgba(255,255,255,0.70); font-size: 13px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none;
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  transition: color 0.2s, padding-left 0.2s; cursor: pointer;
+}
+body.light .mobile-drawer ul li a { color: rgba(26,18,8,0.55); border-bottom-color: rgba(26,18,8,0.07); }
+.mobile-drawer ul li a:hover,
+.mobile-drawer ul li a.active { color: var(--gold); padding-left: 8px; }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .mobile-drawer { display: flex; }
+  /* reorder actions: dark-mode + lang on left, hamburger on right */
+  .nav-actions { gap: 8px; }
+  #mainNav { padding: 0 20px; }
+  /* Sections */
+  .dest-wrap { grid-template-columns: 1fr; }
+  .dest-left { min-height: 50vh; }
+  .dest-sidebar { max-height: 360px; }
+  .fg4 { padding: 16px 20px 32px; }
+  .fg2 { grid-template-columns: 1fr; padding: 16px 20px 60px; }
+  .fwcard { flex-direction: column; height: auto; }
+  .fwimg-w { width: 100%; height: 180px; }
+  .hgrid { grid-template-columns: 1fr; padding: 16px 20px 60px; }
+  .filter-row { padding: 16px 20px 14px; }
+  .food-sec-title { padding: 24px 20px 0; }
+  .hhero-txt { padding: 32px 20px; }
+  .food-hero-txt { padding: 32px 20px; }
+  .offers-pad { padding: 32px 20px 60px; }
+  .offers-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .con-left { padding: 32px 20px; }
+  .con-right { padding: 32px 20px; border-left: none; border-top: 0.5px solid rgba(255,255,255,0.07); }
+  .contacts-wrap { grid-template-columns: 1fr; }
+  .dest-info { padding: 24px 20px; }
+  .dest-regions { padding-top: 20px; }
+  .hero-txt { left: 20px; }
+  .hero-bot { left: 20px; right: 20px; }
+  .slide-num { right: 20px; }
+  .foot-inner { padding: 40px 20px 24px; }
+  .foot-top { grid-template-columns: 1fr; gap: 32px; }
+  .foot-links { grid-template-columns: 1fr 1fr; }
+  .hgrid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .offers-grid { grid-template-columns: 1fr; }
+  .foot-links { grid-template-columns: 1fr; }
+  .fcard { min-width: 220px; height: 300px; }
+}
 </style>
 </head>
 <body>
@@ -789,12 +916,36 @@ body.light footer { background: #1a1208; }
       <i class="ti ti-moon ic-moon"></i>
       <i class="ti ti-sun  ic-sun"></i>
     </button>
-    <div class="lang-pill">
-      <button class="lang-btn on" id="btnId">ID</button>
-      <button class="lang-btn"   id="btnEn">EN</button>
-    </div>
+    <button class="lang-globe" id="btnLang" title="Toggle language / Ganti bahasa">
+      <!-- Globe SVG -->
+      <span class="lang-globe-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:rgba(255,255,255,0.75);">
+          <circle cx="14" cy="14" r="10.5" stroke="currentColor" stroke-width="1.2"/>
+          <ellipse cx="14" cy="14" rx="5.5" ry="10.5" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="3.5" y1="10" x2="24.5" y2="10" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="3.5" y1="14" x2="24.5" y2="14" stroke="currentColor" stroke-width="1.2"/>
+          <line x1="3.5" y1="18" x2="24.5" y2="18" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+      </span>
+      <span class="lang-globe-lbl" id="langLbl">ID</span>
+    </button>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- ═══ MOBILE DRAWER ═══ -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <ul>
+    <li><a data-sec="home"         onclick="mobileGoTo('home')"         id="mnl-home"></a></li>
+    <li><a data-sec="holidays"     onclick="mobileGoTo('holidays')"     id="mnl-holidays"></a></li>
+    <li><a data-sec="destinations" onclick="mobileGoTo('destinations')" id="mnl-destinations"></a></li>
+    <li><a data-sec="food"         onclick="mobileGoTo('food')"         id="mnl-food"></a></li>
+    <li><a data-sec="offers"       onclick="mobileGoTo('offers')"       id="mnl-offers"></a></li>
+    <li><a data-sec="contacts"     onclick="mobileGoTo('contacts')"     id="mnl-contacts"></a></li>
+  </ul>
+</div>
 
 <!-- ═══ HOME ═══ -->
 <section class="sec" id="sec-home">
@@ -1082,12 +1233,18 @@ const HOLIDAYS = [
 ];
 
 const DEST_ITEMS = [
-  { name:"PARIS",     country:"France",        img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80", stat:"248", rating:"4.9" },
-  { name:"BALI",      country:"Indonesia",     img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", stat:"186", rating:"4.8" },
-  { name:"TOKYO",     country:"Japan",         img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80", stat:"142", rating:"4.9" },
-  { name:"SANTORINI", country:"Greece",        img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80", stat:"95",  rating:"5.0" },
-  { name:"MARRAKECH", country:"Morocco",       img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", stat:"78",  rating:"4.7" },
-  { name:"NEW YORK",  country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80", stat:"116", rating:"4.8" }
+  { name:"PARIS",        country:"France",        img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80", stat:"248", rating:"4.9" },
+  { name:"BALI",         country:"Indonesia",     img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", stat:"186", rating:"4.8" },
+  { name:"TOKYO",        country:"Japan",         img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80", stat:"142", rating:"4.9" },
+  { name:"SANTORINI",    country:"Greece",        img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80", stat:"95",  rating:"5.0" },
+  { name:"MARRAKECH",    country:"Morocco",       img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", stat:"78",  rating:"4.7" },
+  { name:"NEW YORK",     country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80", stat:"116", rating:"4.8" },
+  { name:"DUBAI",        country:"UAE",           img:"https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80", stat:"134", rating:"4.8" },
+  { name:"ROME",         country:"Italy",         img:"https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80", stat:"109", rating:"4.7" },
+  { name:"BARCELONA",    country:"Spain",         img:"https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800&q=80", stat:"87",  rating:"4.9" },
+  { name:"SYDNEY",       country:"Australia",     img:"https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&q=80", stat:"72",  rating:"4.8" },
+  { name:"CAPE TOWN",    country:"South Africa",  img:"https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80", stat:"63",  rating:"4.7" },
+  { name:"AMSTERDAM",    country:"Netherlands",   img:"https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=800&q=80", stat:"91",  rating:"4.8" }
 ];
 
 const OFFERS = [
@@ -1099,10 +1256,14 @@ const OFFERS = [
 ];
 
 const FOODS4 = [
-  { origin:"Japan · Tokyo",       name:"RAMEN",            desc:"Rich tonkotsu broth, chashu pork, soft-boiled egg & bamboo shoots.", photo:"https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80" },
-  { origin:"Italy · Naples",      name:"PIZZA NAPOLETANA", desc:"Wood-fired sourdough crust, San Marzano tomato, fresh buffalo mozzarella.", photo:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80" },
-  { origin:"Morocco · Marrakech", name:"TAGINE",            desc:"Slow-cooked lamb with preserved lemon, olives, saffron & aromatic spices.", photo:"https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&q=80" },
-  { origin:"Indonesia · Bali",    name:"NASI GORENG",       desc:"Wok-fried rice with shrimp paste, kecap manis, prawn crackers & fried egg.", photo:"https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" }
+  { origin:"Japan · Tokyo",        name:"RAMEN",            desc:"Rich tonkotsu broth, chashu pork, soft-boiled egg & bamboo shoots.", photo:"https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80" },
+  { origin:"Italy · Naples",       name:"PIZZA NAPOLETANA", desc:"Wood-fired sourdough crust, San Marzano tomato, fresh buffalo mozzarella.", photo:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80" },
+  { origin:"Morocco · Marrakech",  name:"TAGINE",           desc:"Slow-cooked lamb with preserved lemon, olives, saffron & aromatic spices.", photo:"https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&q=80" },
+  { origin:"Indonesia · Bali",     name:"NASI GORENG",      desc:"Wok-fried rice with shrimp paste, kecap manis, prawn crackers & fried egg.", photo:"https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" },
+  { origin:"Thailand · Bangkok",   name:"PAD THAI",         desc:"Stir-fried rice noodles with egg, bean sprouts, peanuts and tamarind sauce.", photo:"https://images.unsplash.com/photo-1559314809-0d155014e29e?w=600&q=80" },
+  { origin:"USA · New Orleans",    name:"BURGER",           desc:"Smash-patty with aged cheddar, caramelised onion, pickles & special sauce.", photo:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" },
+  { origin:"Greece · Athens",      name:"SOUVLAKI",         desc:"Grilled pork skewers with tzatziki, pita bread, tomatoes and red onion.", photo:"https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&q=80" },
+  { origin:"Vietnam · Hanoi",      name:"PHO",              desc:"Slow-simmered beef bone broth with rice noodles, herbs, lime & chilli.", photo:"https://images.unsplash.com/photo-1503764654157-72d979d9af2f?w=600&q=80" }
 ];
 
 const FOODS2 = [
@@ -1205,6 +1366,8 @@ function applyLang(l) {
   ['home','holidays','destinations','food','offers','contacts'].forEach((s,i)=>{
     const el = document.getElementById('nl-'+s);
     if(el) el.textContent = t.nl[i];
+    const mel = document.getElementById('mnl-'+s);
+    if(mel) mel.textContent = t.nl[i];
   });
   // Hero
   document.getElementById('heroDesc').textContent = t.heroDesc;
@@ -1291,9 +1454,9 @@ function applyLang(l) {
   document.getElementById('ft-privacy').textContent    = t.ftPrivacy;
   document.getElementById('ft-terms').textContent      = t.ftTerms;
   document.getElementById('ft-sitemap').textContent    = t.ftSitemap;
-  // Lang buttons
-  document.getElementById('btnId').classList.toggle('on', l==='id');
-  document.getElementById('btnEn').classList.toggle('on', l==='en');
+  // Lang globe label
+  const langLbl = document.getElementById('langLbl');
+  if (langLbl) langLbl.textContent = l.toUpperCase();
 }
 
 /* ════════════════════════════════════
@@ -1314,7 +1477,7 @@ function updateNav() {
     const el = document.getElementById('sec-'+id);
     if (el && window.scrollY >= el.offsetTop - navH - 60) cur = id;
   });
-  document.querySelectorAll('.nav-links a').forEach(a => {
+  document.querySelectorAll('.nav-links a, .mobile-drawer a').forEach(a => {
     a.classList.toggle('active', a.dataset.sec === cur);
   });
 }
@@ -1460,12 +1623,12 @@ function buildDestinations() {
     item.className = 'ditem fade-up d'+Math.min(i+1,6);
     if(i===0) item.classList.add('on');
     item.innerHTML = `
-      <div class="ditem-img" style="background-image:url('${d.img}');"></div>
       <div class="ditem-body">
         <div class="ditem-name">${d.name}</div>
         <div class="ditem-country">${d.country}</div>
         <div class="ditem-stat">${d.stat} packages</div>
-      </div>`;
+      </div>
+      <div class="ditem-img" style="background-image:url('${d.img}');"></div>`;
     item.addEventListener('click', () => {
       document.querySelectorAll('.ditem').forEach(x=>x.classList.remove('on'));
       item.classList.add('on');
@@ -1574,18 +1737,72 @@ document.getElementById('btnDm').addEventListener('click',()=>{
 });
 
 /* ════════════════════════════════════
-   LANGUAGE BUTTONS
+   LANGUAGE TOGGLE (single globe btn)
 ════════════════════════════════════ */
-document.getElementById('btnId').addEventListener('click',()=>applyLang('id'));
-document.getElementById('btnEn').addEventListener('click',()=>applyLang('en'));
+document.getElementById('btnLang').addEventListener('click', () => {
+  applyLang(lang === 'id' ? 'en' : 'id');
+});
 
 /* ════════════════════════════════════
    FOOTER YEAR & INIT
 ════════════════════════════════════ */
 document.getElementById('footYear').textContent = new Date().getFullYear();
 
+/* ════════════════════════════════════
+   HAMBURGER MENU
+════════════════════════════════════ */
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileDrawer = document.getElementById('mobileDrawer');
+
+hamburgerBtn.addEventListener('click', () => {
+  const isOpen = hamburgerBtn.classList.toggle('open');
+  mobileDrawer.classList.toggle('open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+
+function mobileGoTo(id) {
+  hamburgerBtn.classList.remove('open');
+  mobileDrawer.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => goTo(id), 80);
+}
+
+// Close drawer on outside click
+document.addEventListener('click', e => {
+  if (mobileDrawer.classList.contains('open') &&
+      !mobileDrawer.contains(e.target) &&
+      !hamburgerBtn.contains(e.target)) {
+    hamburgerBtn.classList.remove('open');
+    mobileDrawer.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
 // init default language (Indonesia)
 applyLang('id');
+
+/* ════════════════════════════════════
+   DRAG SCROLL — Food horizontal strip
+════════════════════════════════════ */
+(function() {
+  const el = document.getElementById('fg4');
+  if (!el) return;
+  let isDown = false, startX, scrollLeft;
+  el.addEventListener('mousedown', e => {
+    isDown = true; el.classList.add('dragging');
+    startX = e.pageX - el.offsetLeft;
+    scrollLeft = el.scrollLeft;
+  });
+  el.addEventListener('mouseleave', () => { isDown = false; el.classList.remove('dragging'); });
+  el.addEventListener('mouseup',    () => { isDown = false; el.classList.remove('dragging'); });
+  el.addEventListener('mousemove',  e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    el.scrollLeft = scrollLeft - (x - startX) * 1.2;
+  });
+})();
+
 </script>
 </body>
 </html>
