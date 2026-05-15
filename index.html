@@ -26,34 +26,41 @@
   --nav-h: 64px;
 }
 
-body {
+/* ===== FIX 1: Allow scroll ===== */
+html, body {
   font-family: 'Montserrat', sans-serif;
   background: var(--dark);
-  overflow: hidden;
-  height: 100vh; width: 100vw;
   color: #fff;
+  width: 100%; height: 100%;
+  overflow: hidden; /* body itself hidden, pages manage their own scroll */
 }
 
 /* ===== PAGE SYSTEM ===== */
 .page {
-  position: absolute; inset: 0;
+  position: fixed; inset: 0;
   opacity: 0; pointer-events: none;
   transition: opacity 0.6s ease;
-  overflow: hidden;
+  overflow-y: auto; /* FIX 1: all pages scrollable */
+  overflow-x: hidden;
 }
 .page.active {
   opacity: 1; pointer-events: all;
 }
 
+.page::-webkit-scrollbar { width: 4px; }
+.page::-webkit-scrollbar-track { background: transparent; }
+.page::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
 /* ===== SHARED NAV ===== */
 nav {
-  position: absolute; top: 0; left: 0; right: 0; z-index: 100;
+  position: sticky; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 48px;
   height: var(--nav-h);
   border-bottom: 0.5px solid rgba(255,255,255,0.08);
-  background: rgba(0,0,0,0.25);
-  backdrop-filter: blur(12px);
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(14px);
+  flex-shrink: 0;
 }
 
 .nav-logo {
@@ -90,9 +97,13 @@ nav {
 .nav-actions i:hover { color: #fff; }
 
 /* ===== HOME PAGE ===== */
-#page-home {
-  width: 100vw; height: 100vh;
+#page-home { overflow: hidden; } /* Home is fullscreen, no scroll */
+
+.home-inner {
+  position: relative;
+  width: 100%; height: calc(100vh);
   display: flex; flex-direction: column;
+  flex-shrink: 0;
 }
 
 .hero-bg {
@@ -240,32 +251,22 @@ nav {
 
 /* ===== SECTION SHARED STYLES ===== */
 .section-page {
-  width: 100vw; height: 100vh;
-  overflow-y: auto;
-  padding-top: var(--nav-h);
+  background: var(--dark);
 }
-
-.section-page::-webkit-scrollbar { width: 4px; }
-.section-page::-webkit-scrollbar-track { background: transparent; }
-.section-page::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
 
 /* ===== HOLIDAYS PAGE ===== */
-#page-holidays {
-  background: var(--dark);
-  position: relative;
-}
-
 .holidays-hero {
   position: relative;
-  height: 55vh;
+  height: 55vh; min-height: 340px;
   overflow: hidden;
   display: flex; align-items: flex-end;
 }
 .holidays-hero-bg {
   position: absolute; inset: 0;
-  background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80') center/cover;
+  background-size: cover; background-position: center;
   transform: scale(1.05);
   animation: slowZoom 20s ease infinite alternate;
+  transition: background-image 0.8s ease;
 }
 @keyframes slowZoom { from { transform: scale(1.05); } to { transform: scale(1.12); } }
 
@@ -289,6 +290,15 @@ nav {
   font-size: clamp(40px, 5vw, 68px);
   font-weight: 900; text-transform: uppercase;
   letter-spacing: -1px; line-height: 0.95;
+}
+
+/* FIX 3: Holiday hero click area label */
+.holiday-active-label {
+  position: absolute; top: 20px; right: 20px; z-index: 5;
+  background: rgba(201,168,76,0.15); border: 0.5px solid var(--gold);
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold);
 }
 
 /* Filter tabs */
@@ -315,7 +325,7 @@ nav {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  padding: 28px 64px 60px;
+  padding: 28px 64px 80px;
 }
 
 .holiday-card {
@@ -334,6 +344,7 @@ nav {
   border-color: rgba(201,168,76,0.3);
 }
 .holiday-card:hover .hcard-img { transform: scale(1.06); }
+.holiday-card.h-active { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
 
 .hcard-img-wrap { height: 200px; overflow: hidden; position: relative; }
 .hcard-img {
@@ -388,32 +399,31 @@ nav {
 .btn-gold-sm:hover { background: var(--gold-light); transform: scale(1.03); }
 
 /* ===== DESTINATIONS PAGE ===== */
-#page-destinations {
-  background: var(--dark);
-}
-
 .dest-fullpage {
   display: grid;
   grid-template-columns: 1fr 380px;
-  height: calc(100vh - var(--nav-h));
+  min-height: calc(100vh - var(--nav-h));
 }
 
 .dest-map-area {
   position: relative;
   overflow: hidden;
   background: #0d0d0d;
+  min-height: calc(100vh - var(--nav-h));
+}
+
+/* FIX 4: Destination display panel */
+.dest-display-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: brightness(0.45);
+  transition: background-image 0.7s ease;
 }
 
 .dest-globe-visual {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
-}
-
-.globe-bg {
-  position: absolute; inset: 0;
-  background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80') center/cover;
-  opacity: 0.15;
 }
 
 .globe-rings {
@@ -432,55 +442,62 @@ nav {
   position: relative; z-index: 5;
   padding: 48px;
   display: flex; flex-direction: column;
+  height: 100%;
+  background: linear-gradient(105deg, rgba(0,0,0,0.75) 35%, rgba(0,0,0,0.2) 100%);
 }
 
 .dest-map-content .page-label { margin-bottom: 12px; }
 .dest-map-content h1 { font-size: clamp(34px, 4vw, 56px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 20px; }
 
+/* Active dest info */
+.dest-active-info {
+  margin-top: 24px;
+  padding: 20px;
+  background: rgba(0,0,0,0.5);
+  border: 0.5px solid rgba(201,168,76,0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+.dest-active-name { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 4px; }
+.dest-active-country { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+.dest-active-stats { display: flex; gap: 20px; }
+.dest-active-stat-item { display: flex; flex-direction: column; gap: 2px; }
+.dest-active-stat-val { font-size: 18px; font-weight: 800; color: var(--gold); }
+.dest-active-stat-label { font-size: 8px; color: var(--white-50); letter-spacing: 1px; text-transform: uppercase; }
+
 .dest-regions {
   display: flex; flex-wrap: wrap; gap: 10px;
-  margin-top: auto;
+  margin-top: auto; padding-top: 40px;
 }
 .dest-region-btn {
   padding: 10px 20px; border-radius: 30px;
   border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.04);
-  color: var(--white-70); font-family: 'Montserrat', sans-serif;
-  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
-  text-transform: uppercase; cursor: pointer;
-  transition: all 0.3s; position: relative; overflow: hidden;
+  background: rgba(255,255,255,0.05);
+  color: var(--white-70);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 600; letter-spacing: 1px;
+  cursor: pointer; transition: all 0.25s;
 }
-.dest-region-btn::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--gold); opacity: 0;
-  transition: opacity 0.3s;
-}
-.dest-region-btn:hover::before, .dest-region-btn.active::before { opacity: 1; }
-.dest-region-btn:hover, .dest-region-btn.active { color: var(--dark); border-color: var(--gold); }
-.dest-region-btn span { position: relative; z-index: 1; }
+.dest-region-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+.dest-region-btn.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
 
-/* Pin dots on visual */
-.dest-pin {
-  position: absolute; width: 12px; height: 12px; cursor: pointer;
-  z-index: 6;
-}
+/* Destination pin */
+.dest-pin { position: absolute; cursor: pointer; z-index: 6; }
 .dest-pin-dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 0 3px rgba(201,168,76,0.3), 0 0 0 6px rgba(201,168,76,0.1);
-  animation: pinPulse 2s ease-in-out infinite;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--gold); border: 2px solid rgba(255,255,255,0.8);
+  box-shadow: 0 0 0 4px rgba(201,168,76,0.3);
+  animation: pinPulse 2s ease infinite;
 }
-@keyframes pinPulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(201,168,76,0.3), 0 0 0 6px rgba(201,168,76,0.1); }
-  50% { box-shadow: 0 0 0 5px rgba(201,168,76,0.4), 0 0 0 10px rgba(201,168,76,0.15); }
-}
+@keyframes pinPulse { 0%,100%{box-shadow:0 0 0 4px rgba(201,168,76,0.3);} 50%{box-shadow:0 0 0 8px rgba(201,168,76,0.15);} }
 
-/* Sidebar */
 .dest-sidebar {
-  border-left: 0.5px solid rgba(255,255,255,0.08);
+  background: rgba(10,10,10,0.95);
+  border-left: 0.5px solid rgba(255,255,255,0.07);
+  padding: 28px 20px;
   overflow-y: auto;
-  padding: 32px 28px;
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex; flex-direction: column; gap: 14px;
+  min-height: calc(100vh - var(--nav-h));
 }
 .dest-sidebar::-webkit-scrollbar { width: 3px; }
 .dest-sidebar::-webkit-scrollbar-thumb { background: var(--gold-dim); }
@@ -515,188 +532,199 @@ nav {
 .dest-item-stat { font-size: 8px; color: var(--white-50); }
 .dest-item-price { font-size: 14px; font-weight: 800; color: var(--gold); }
 
-/* ===== FLIGHTS PAGE ===== */
-#page-flights {
-  background: var(--dark);
-  overflow: hidden;
+/* ===== FOOD PAGE (menggantikan FLIGHTS) ===== */
+#page-food { background: var(--dark); }
+
+.food-wrap {
+  min-height: calc(100vh - var(--nav-h));
+  padding: 0 0 80px;
 }
 
-.flights-wrap {
-  height: calc(100vh - var(--nav-h));
-  display: flex; flex-direction: column;
-  position: relative;
-  overflow-y: auto;
-  padding: 40px 64px 60px;
+.food-hero {
+  position: relative; height: 50vh; min-height: 300px;
+  overflow: hidden; display: flex; align-items: flex-end;
+  margin-bottom: 0;
 }
-.flights-wrap::-webkit-scrollbar { width: 4px; }
-.flights-wrap::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+.food-hero-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80') center/cover;
+  animation: slowZoom 25s ease infinite alternate;
+}
+.food-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(10,10,10,0.9) 100%);
+}
+.food-hero-content {
+  position: relative; z-index: 2;
+  padding: 48px 64px;
+}
+.food-hero-content h1 {
+  font-size: clamp(40px, 5vw, 68px);
+  font-weight: 900; text-transform: uppercase;
+  letter-spacing: -1px; line-height: 0.95;
+}
 
-.flights-header { margin-bottom: 36px; }
-.flights-header .page-label { margin-bottom: 12px; }
-.flights-header h1 { font-size: clamp(36px, 4.5vw, 62px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; }
+/* Food category filter */
+.food-filter-row {
+  display: flex; gap: 8px;
+  padding: 28px 64px 0;
+  flex-wrap: wrap;
+  border-bottom: 0.5px solid rgba(255,255,255,0.07);
+  padding-bottom: 24px;
+}
 
-/* Search box */
-.search-box {
-  background: rgba(255,255,255,0.04);
-  border: 0.5px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
-  padding: 28px 32px;
+/* Food featured strip */
+.food-featured {
+  padding: 36px 64px 0;
   margin-bottom: 40px;
-  position: relative;
-  overflow: hidden;
 }
-.search-box::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-
-.search-tabs { display: flex; gap: 4px; margin-bottom: 24px; }
-.search-tab {
-  padding: 6px 18px; border-radius: 30px;
-  border: none; background: transparent;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--white-50); cursor: pointer;
-  transition: all 0.2s;
-}
-.search-tab.active { background: var(--gold-dim); color: var(--gold); }
-
-.search-grid {
-  display: grid; grid-template-columns: 1fr 1fr 140px 140px 160px;
-  gap: 12px; align-items: end;
-}
-.search-field label {
-  display: block; font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
-}
-.search-field input, .search-field select {
-  width: 100%; background: rgba(255,255,255,0.06);
-  border: 0.5px solid rgba(255,255,255,0.12);
-  border-radius: 8px; padding: 12px 14px;
-  color: #fff; font-family: 'Montserrat', sans-serif;
-  font-size: 12px; font-weight: 500;
-  outline: none; transition: border-color 0.2s;
-  appearance: none; -webkit-appearance: none;
-}
-.search-field input:focus, .search-field select:focus { border-color: var(--gold); }
-.search-field input::placeholder { color: var(--white-50); }
-.search-field select option { background: #1a1a1a; color: #fff; }
-
-.search-field .airport-code {
-  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-  font-size: 16px; font-weight: 800; color: var(--gold);
-}
-.field-relative { position: relative; }
-
-.btn-search-flight {
-  width: 100%; padding: 13px;
-  background: var(--gold);
-  border: none; border-radius: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--dark);
-  cursor: pointer; transition: all 0.25s;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn-search-flight:hover { background: var(--gold-light); transform: translateY(-2px); }
-
-/* Flight Results */
-.flights-results-label {
+.food-section-title {
   font-size: 9px; font-weight: 700; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--white-50); margin-bottom: 16px;
+  text-transform: uppercase; color: var(--white-50);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 14px;
+}
+.food-section-title::after {
+  content: ''; flex: 1; height: 0.5px; background: rgba(255,255,255,0.1);
 }
 
-.flight-list { display: flex; flex-direction: column; gap: 12px; }
-
-.flight-card {
-  background: rgba(255,255,255,0.03);
-  border: 0.5px solid rgba(255,255,255,0.08);
-  border-radius: 14px; padding: 20px 24px;
-  display: grid; grid-template-columns: 140px 1fr 140px;
-  align-items: center; gap: 20px;
-  cursor: pointer; transition: all 0.3s;
-  position: relative; overflow: hidden;
+/* 3D Food Cards */
+.food-3d-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 0 64px 40px;
 }
-.flight-card::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-  background: var(--gold); opacity: 0; transition: opacity 0.3s;
-}
-.flight-card:hover { border-color: rgba(201,168,76,0.25); transform: translateX(4px); }
-.flight-card:hover::before { opacity: 1; }
-.flight-card.featured { border-color: rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); }
 
-.airline-info { display: flex; align-items: center; gap: 12px; }
-.airline-logo {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: rgba(255,255,255,0.08);
+.food-3d-card {
+  position: relative; border-radius: 20px;
+  overflow: hidden; cursor: pointer;
+  height: 320px;
+  background: var(--dark-3);
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), box-shadow 0.5s;
+  transform-style: preserve-3d;
+}
+.food-3d-card:hover {
+  transform: translateY(-16px) rotateX(5deg) rotateY(-3deg) scale(1.03);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.3);
+}
+.food-3d-card:hover .food-3d-plate { transform: translateY(-8px) scale(1.05) rotateZ(-3deg); }
+.food-3d-card:hover .food-3d-shadow { transform: scaleX(1.2) scaleY(0.6); opacity: 0.5; }
+.food-3d-card:hover .food-3d-steam { opacity: 1; }
+
+/* Card BG */
+.food-3d-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: brightness(0.25) saturate(0.5);
+  transition: filter 0.5s;
+}
+.food-3d-card:hover .food-3d-bg { filter: brightness(0.35) saturate(0.7); }
+
+/* Gradient */
+.food-3d-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.95) 100%);
+}
+
+/* 3D Plate container */
+.food-3d-plate-wrap {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 80px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 8px; font-weight: 800; color: var(--gold);
-  letter-spacing: 0.5px; text-align: center; line-height: 1.2;
-  border: 0.5px solid rgba(201,168,76,0.2);
+  perspective: 800px;
 }
-.airline-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
-.airline-num { font-size: 9px; color: var(--white-50); }
 
-.flight-route {
-  display: grid; grid-template-columns: 80px 1fr 80px;
-  align-items: center; gap: 8px;
+.food-3d-plate {
+  width: 160px; height: 160px;
+  transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+  position: relative; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.7));
 }
-.route-time { font-size: 22px; font-weight: 800; }
-.route-code { font-size: 9px; color: var(--white-50); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
-.route-line {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-}
-.route-line-bar {
-  display: flex; align-items: center; gap: 0; width: 100%;
-}
-.route-line-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--white-50); }
-.route-line-path {
-  flex: 1; height: 1px; background: rgba(255,255,255,0.2);
-  position: relative;
-}
-.route-line-path::after {
-  content: ''; position: absolute;
-  right: -3px; top: -4px;
-  border-left: 7px solid rgba(255,255,255,0.2);
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-}
-.route-duration { font-size: 9px; color: var(--white-50); white-space: nowrap; }
-.route-stops { font-size: 8px; color: var(--gold); letter-spacing: 0.5px; }
 
-.flight-price-col { text-align: right; }
-.flight-price-label { font-size: 8px; color: var(--white-50); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-.flight-price { font-size: 24px; font-weight: 900; color: var(--gold); margin-bottom: 8px; }
-.flight-price sup { font-size: 12px; font-weight: 400; }
-.flight-class { font-size: 8px; color: var(--white-50); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-
-.btn-select-flight {
-  padding: 8px 18px; border-radius: 6px;
-  background: transparent; border: 1px solid rgba(201,168,76,0.4);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--gold);
-  cursor: pointer; transition: all 0.2s;
+.food-3d-shadow {
+  position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%) scaleX(1) scaleY(0.4);
+  width: 120px; height: 40px; border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  filter: blur(12px);
+  transition: all 0.5s;
+  opacity: 0.35;
 }
-.btn-select-flight:hover { background: var(--gold); color: var(--dark); }
 
-.featured-tag {
-  position: absolute; top: 14px; right: 80px;
-  padding: 3px 10px; border-radius: 20px;
-  background: rgba(201,168,76,0.15); border: 0.5px solid var(--gold);
-  font-size: 8px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--gold);
+/* Steam animation */
+.food-3d-steam {
+  position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 8px; opacity: 0; transition: opacity 0.4s;
+}
+.steam-line {
+  width: 3px; height: 30px; border-radius: 3px;
+  background: linear-gradient(to top, transparent, rgba(255,255,255,0.4));
+  animation: steamRise 1.5s ease-in-out infinite;
+}
+.steam-line:nth-child(2) { animation-delay: 0.3s; height: 22px; }
+.steam-line:nth-child(3) { animation-delay: 0.6s; height: 28px; }
+@keyframes steamRise {
+  0% { transform: translateY(0) scaleX(1); opacity: 0.6; }
+  100% { transform: translateY(-20px) scaleX(2); opacity: 0; }
+}
+
+/* Card Info */
+.food-3d-info {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 18px;
+}
+.food-3d-origin {
+  font-size: 8px; color: var(--gold); letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.food-3d-name {
+  font-size: 15px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: -0.3px; margin-bottom: 6px; line-height: 1.1;
+}
+.food-3d-desc {
+  font-size: 9px; color: var(--white-50); line-height: 1.5;
+}
+
+/* Wide food card */
+.food-wide-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 0 64px 40px;
+}
+
+.food-wide-card {
+  border-radius: 16px; overflow: hidden;
+  position: relative; height: 220px;
+  cursor: pointer; border: 1px solid rgba(255,255,255,0.07);
+  transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
+  background: var(--dark-3);
+  display: flex;
+}
+.food-wide-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 24px 60px rgba(0,0,0,0.6); }
+.food-wide-card:hover .fwcard-img { transform: scale(1.06); }
+
+.fwcard-img-wrap { width: 220px; flex-shrink: 0; overflow: hidden; position: relative; }
+.fwcard-img {
+  width: 100%; height: 100%;
+  background-size: cover; background-position: center;
+  transition: transform 0.5s ease;
+}
+.fwcard-body { padding: 24px; display: flex; flex-direction: column; justify-content: center; }
+.fwcard-origin { font-size: 8px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.fwcard-name { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 10px; }
+.fwcard-desc { font-size: 10px; color: var(--white-50); line-height: 1.7; margin-bottom: 16px; }
+.fwcard-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.fwcard-tag {
+  padding: 4px 10px; border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(255,255,255,0.12);
+  font-size: 8px; color: var(--white-50); letter-spacing: 0.5px;
 }
 
 /* ===== OFFERS PAGE ===== */
-#page-offers { background: var(--dark); }
-
 .offers-wrap {
-  height: calc(100vh - var(--nav-h));
-  overflow-y: auto; padding: 48px 64px 60px;
+  min-height: calc(100vh - var(--nav-h));
+  padding: 48px 64px 80px;
 }
-.offers-wrap::-webkit-scrollbar { width: 4px; }
-.offers-wrap::-webkit-scrollbar-thumb { background: var(--gold-dim); }
 
 .offers-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 36px; }
 .offers-header-left .page-label { margin-bottom: 10px; }
@@ -709,7 +737,6 @@ nav {
 .countdown-unit-label { font-size: 7px; color: var(--white-50); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
 .countdown-sep { font-size: 24px; font-weight: 300; color: var(--gold); margin-top: -6px; }
 
-/* Deals Hero */
 .deals-hero {
   border-radius: 20px; overflow: hidden;
   position: relative; height: 320px;
@@ -740,7 +767,6 @@ nav {
 .deals-hero-price { font-size: 36px; font-weight: 900; color: var(--gold); }
 .deals-hero-price span { font-size: 13px; font-weight: 400; color: var(--white-50); }
 
-/* Offers Grid */
 .offers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
 .offer-card {
@@ -769,17 +795,14 @@ nav {
   letter-spacing: 0.5px; margin-bottom: 8px;
 }
 .offer-name { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 4px; }
-.offer-details { font-size: 9px; color: var(--white-60, rgba(255,255,255,0.6)); }
+.offer-details { font-size: 9px; color: rgba(255,255,255,0.6); }
 .offer-price { font-size: 22px; font-weight: 900; color: var(--gold); margin-top: 8px; }
 .offer-price del { font-size: 12px; color: var(--white-50); font-weight: 400; margin-right: 6px; }
 
 /* ===== CONTACTS PAGE ===== */
-#page-contacts { background: var(--dark); }
-
 .contacts-wrap {
-  height: calc(100vh - var(--nav-h));
+  min-height: calc(100vh - var(--nav-h));
   display: grid; grid-template-columns: 1fr 500px;
-  overflow: hidden;
 }
 
 .contacts-left {
@@ -788,9 +811,6 @@ nav {
   display: flex; flex-direction: column;
   gap: 32px;
 }
-.contacts-left::-webkit-scrollbar { width: 4px; }
-.contacts-left::-webkit-scrollbar-thumb { background: var(--gold-dim); }
-
 .contacts-left .page-label { margin-bottom: 10px; }
 .contacts-left h1 { font-size: clamp(34px, 4vw, 54px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 8px; }
 .contacts-intro { font-size: 11px; color: var(--white-50); line-height: 1.8; max-width: 380px; }
@@ -827,15 +847,12 @@ nav {
 .social-btn i { font-size: 18px; color: var(--white-70); }
 .social-btn:hover i { color: var(--gold); }
 
-/* Contact form */
 .contacts-right {
   border-left: 0.5px solid rgba(255,255,255,0.07);
   padding: 56px 48px;
   overflow-y: auto;
   position: relative;
 }
-.contacts-right::-webkit-scrollbar { width: 4px; }
-.contacts-right::-webkit-scrollbar-thumb { background: var(--gold-dim); }
 .contacts-right::before {
   content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 1px;
   background: linear-gradient(to bottom, transparent, var(--gold), transparent);
@@ -892,7 +909,6 @@ nav {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Staggered delays */
 .d1 { animation-delay: 0.05s; opacity: 0; }
 .d2 { animation-delay: 0.12s; opacity: 0; }
 .d3 { animation-delay: 0.19s; opacity: 0; }
@@ -905,20 +921,16 @@ nav {
 
 <!-- ==================== HOME ==================== -->
 <div class="page active" id="page-home">
-  <div class="hero-bg" id="heroBg"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-overlay-top"></div>
-
   <nav>
-    <div class="nav-logo" onclick="goHome()">
+    <div class="nav-logo" onclick="navigateTo('home')">
       <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
       GLOBE EXPRESS
     </div>
-    <ul class="nav-links" id="mainNav">
+    <ul class="nav-links">
       <li><a onclick="navigateTo('home')" class="active" data-page="home">HOME</a></li>
       <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
       <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
       <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
       <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
     </ul>
@@ -928,34 +940,40 @@ nav {
     </div>
   </nav>
 
-  <div class="hero-content">
-    <div class="location-tag"><span id="heroRegion">Switzerland Alps</span></div>
-    <h1 class="hero-title" id="heroTitle">SAINT<br>ANTÖNIEN</h1>
-    <p class="hero-desc">Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.</p>
-    <div class="hero-actions">
-      <button class="btn-play" aria-label="Play video"><i class="ti ti-player-play"></i></button>
-      <button class="btn-discover">DISCOVER LOCATION</button>
-    </div>
-  </div>
+  <div class="home-inner">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-overlay-top"></div>
 
-  <div class="hero-bottom">
-    <div class="controls-col">
-      <div class="nav-arrows">
-        <button class="arrow-btn" id="btnPrev"><i class="ti ti-chevron-left"></i></button>
-        <button class="arrow-btn" id="btnNext"><i class="ti ti-chevron-right"></i></button>
+    <div class="hero-content">
+      <div class="location-tag"><span id="heroRegion">Switzerland Alps</span></div>
+      <h1 class="hero-title" id="heroTitle">SAINT<br>ANTÖNIEN</h1>
+      <p class="hero-desc">Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.</p>
+      <div class="hero-actions">
+        <button class="btn-play" aria-label="Play video"><i class="ti ti-player-play"></i></button>
+        <button class="btn-discover">DISCOVER LOCATION</button>
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </div>
-    <div class="cards-row" id="cardsRow"></div>
-  </div>
 
-  <div class="slide-num">0<em id="slideNum">1</em></div>
+    <div class="hero-bottom">
+      <div class="controls-col">
+        <div class="nav-arrows">
+          <button class="arrow-btn" id="btnPrev"><i class="ti ti-chevron-left"></i></button>
+          <button class="arrow-btn" id="btnNext"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <div class="cards-row" id="cardsRow"></div>
+    </div>
+
+    <div class="slide-num">0<em id="slideNum">1</em></div>
+  </div>
 </div>
 
 <!-- ==================== HOLIDAYS ==================== -->
 <div class="page section-page" id="page-holidays">
   <nav>
-    <div class="nav-logo" onclick="goHome()">
+    <div class="nav-logo" onclick="navigateTo('home')">
       <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
       GLOBE EXPRESS
     </div>
@@ -963,7 +981,7 @@ nav {
       <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
       <li><a onclick="navigateTo('holidays')" data-page="holidays" class="active">HOLIDAYS</a></li>
       <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
       <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
       <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
     </ul>
@@ -972,13 +990,15 @@ nav {
     </div>
   </nav>
 
-  <div class="holidays-hero">
-    <div class="holidays-hero-bg"></div>
+  <!-- FIX 3: Holidays hero with clickable bg display -->
+  <div class="holidays-hero" id="holidaysHero">
+    <div class="holidays-hero-bg" id="holidaysHeroBg" style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80');"></div>
     <div class="holidays-hero-overlay"></div>
     <div class="holidays-hero-content">
       <div class="page-label">Curated Escapes</div>
-      <h1>HOLIDAY<br>PACKAGES</h1>
+      <h1 id="holidaysHeroTitle">HOLIDAY<br>PACKAGES</h1>
     </div>
+    <div class="holiday-active-label" id="holidayActiveLabel">Click a card to preview</div>
   </div>
 
   <div class="filter-row">
@@ -997,7 +1017,7 @@ nav {
 <!-- ==================== DESTINATIONS ==================== -->
 <div class="page" id="page-destinations">
   <nav>
-    <div class="nav-logo" onclick="goHome()">
+    <div class="nav-logo" onclick="navigateTo('home')">
       <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
       GLOBE EXPRESS
     </div>
@@ -1005,7 +1025,7 @@ nav {
       <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
       <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
       <li><a onclick="navigateTo('destinations')" data-page="destinations" class="active">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
       <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
       <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
     </ul>
@@ -1014,14 +1034,14 @@ nav {
     </div>
   </nav>
 
-  <div class="dest-fullpage" style="margin-top: var(--nav-h);">
+  <div class="dest-fullpage">
+    <!-- FIX 4: Left panel with dynamic image display -->
     <div class="dest-map-area">
+      <div class="dest-display-bg" id="destDisplayBg" style="background-image:url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&q=80');"></div>
       <div class="dest-globe-visual">
-        <div class="globe-bg"></div>
         <div class="globe-rings"></div>
         <div class="globe-rings"></div>
         <div class="globe-rings"></div>
-        <!-- Pins -->
         <div class="dest-pin" style="left:32%;top:28%;" title="Swiss Alps"><div class="dest-pin-dot"></div></div>
         <div class="dest-pin" style="left:72%;top:35%;" title="Japan"><div class="dest-pin-dot"></div></div>
         <div class="dest-pin" style="left:44%;top:48%;" title="Morocco"><div class="dest-pin-dot"></div></div>
@@ -1037,6 +1057,22 @@ nav {
         <p style="font-size:11px; color:rgba(255,255,255,0.5); max-width:340px; line-height:1.8; margin-top:10px;">
           From alpine peaks to tropical shores — explore 200+ curated destinations across 6 continents.
         </p>
+        <!-- Active destination info -->
+        <div class="dest-active-info" id="destActiveInfo">
+          <div class="dest-active-name" id="destActiveName">PARIS</div>
+          <div class="dest-active-country" id="destActiveCountry">France</div>
+          <div class="dest-active-stats">
+            <div class="dest-active-stat-item">
+              <div class="dest-active-stat-val" id="destActivePrice">$1,890</div>
+              <div class="dest-active-stat-label">From / person</div>
+            </div>
+            <div class="dest-active-stat-item">
+              <div class="dest-active-stat-val" id="destActiveStat">248</div>
+              <div class="dest-active-stat-label">Packages</div>
+            </div>
+          </div>
+        </div>
+
         <div class="dest-regions" style="margin-top:auto; padding-top:40px;">
           <button class="dest-region-btn active"><span>🌍 All</span></button>
           <button class="dest-region-btn"><span>🇪🇺 Europe</span></button>
@@ -1054,10 +1090,10 @@ nav {
   </div>
 </div>
 
-<!-- ==================== FLIGHTS ==================== -->
-<div class="page section-page" id="page-flights">
+<!-- ==================== FOOD (replacing FLIGHTS) ==================== -->
+<div class="page section-page" id="page-food">
   <nav>
-    <div class="nav-logo" onclick="goHome()">
+    <div class="nav-logo" onclick="navigateTo('home')">
       <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
       GLOBE EXPRESS
     </div>
@@ -1065,7 +1101,7 @@ nav {
       <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
       <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
       <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('flights')" data-page="flights" class="active">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('food')" data-page="food" class="active">FOOD</a></li>
       <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
       <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
     </ul>
@@ -1074,53 +1110,46 @@ nav {
     </div>
   </nav>
 
-  <div class="flights-wrap">
-    <div class="flights-header">
-      <div class="page-label">Book Your Journey</div>
-      <h1>FIND BEST<br>FLIGHTS</h1>
-    </div>
-
-    <div class="search-box">
-      <div class="search-tabs">
-        <button class="search-tab active">Round Trip</button>
-        <button class="search-tab">One Way</button>
-        <button class="search-tab">Multi-City</button>
-      </div>
-      <div class="search-grid">
-        <div class="search-field">
-          <label><i class="ti ti-plane-departure" style="font-size:10px;margin-right:4px;"></i>From</label>
-          <div class="field-relative">
-            <input type="text" placeholder="Jakarta, Indonesia">
-          </div>
-        </div>
-        <div class="search-field">
-          <label><i class="ti ti-plane-arrival" style="font-size:10px;margin-right:4px;"></i>To</label>
-          <input type="text" placeholder="Paris, France">
-        </div>
-        <div class="search-field">
-          <label>Depart</label>
-          <input type="date" value="2025-08-15">
-        </div>
-        <div class="search-field">
-          <label>Return</label>
-          <input type="date" value="2025-08-28">
-        </div>
-        <div class="search-field">
-          <label>Passengers</label>
-          <button class="btn-search-flight"><i class="ti ti-search" style="font-size:14px;"></i> SEARCH</button>
-        </div>
+  <div class="food-wrap">
+    <div class="food-hero">
+      <div class="food-hero-bg"></div>
+      <div class="food-hero-overlay"></div>
+      <div class="food-hero-content">
+        <div class="page-label">Taste The World</div>
+        <h1>LOCAL<br>CUISINE</h1>
       </div>
     </div>
 
-    <div class="flights-results-label">12 FLIGHTS FOUND · JKT → CDG · 15 AUG 2025</div>
-    <div class="flight-list" id="flightList"></div>
+    <div class="food-filter-row" id="foodFilterRow">
+      <button class="filter-tab active">ALL</button>
+      <button class="filter-tab">🇯🇵 JAPAN</button>
+      <button class="filter-tab">🇮🇩 INDONESIA</button>
+      <button class="filter-tab">🇮🇹 ITALY</button>
+      <button class="filter-tab">🇲🇦 MOROCCO</button>
+      <button class="filter-tab">🇫🇷 FRANCE</button>
+      <button class="filter-tab">🇮🇳 INDIA</button>
+      <button class="filter-tab">🇲🇽 MEXICO</button>
+    </div>
+
+    <div class="food-featured" style="margin-top:36px;">
+      <div class="food-section-title">SIGNATURE DISHES · 3D SHOWCASE</div>
+    </div>
+
+    <!-- FIX 5: 3D Food cards -->
+    <div class="food-3d-grid" id="food3dGrid"></div>
+
+    <div class="food-featured">
+      <div class="food-section-title">REGIONAL SPECIALTIES</div>
+    </div>
+
+    <div class="food-wide-grid" id="foodWideGrid"></div>
   </div>
 </div>
 
 <!-- ==================== OFFERS ==================== -->
 <div class="page section-page" id="page-offers">
   <nav>
-    <div class="nav-logo" onclick="goHome()">
+    <div class="nav-logo" onclick="navigateTo('home')">
       <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
       GLOBE EXPRESS
     </div>
@@ -1128,7 +1157,7 @@ nav {
       <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
       <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
       <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
       <li><a onclick="navigateTo('offers')" data-page="offers" class="active">OFFERS</a></li>
       <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
     </ul>
@@ -1178,7 +1207,7 @@ nav {
 <!-- ==================== CONTACTS ==================== -->
 <div class="page" id="page-contacts">
   <nav>
-    <div class="nav-logo" onclick="goHome()">
+    <div class="nav-logo" onclick="navigateTo('home')">
       <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
       GLOBE EXPRESS
     </div>
@@ -1186,7 +1215,7 @@ nav {
       <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
       <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
       <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('flights')" data-page="flights">FLIGHTS</a></li>
+      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
       <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
       <li><a onclick="navigateTo('contacts')" data-page="contacts" class="active">CONTACTS</a></li>
     </ul>
@@ -1195,11 +1224,11 @@ nav {
     </div>
   </nav>
 
-  <div class="contacts-wrap" style="margin-top: var(--nav-h);">
+  <div class="contacts-wrap">
     <div class="contacts-left">
       <div>
         <div class="page-label">Get In Touch</div>
-        <h1>LET'S PLAN<br>YOUR TRIP</h1>
+        <h1>CONTACT<br>US</h1>
         <p class="contacts-intro" style="margin-top:14px;">
           Our travel experts are ready to craft your perfect journey. Reach out and we'll create an itinerary tailored to your dreams.
         </p>
@@ -1278,7 +1307,6 @@ nav {
         <label>Inquiry Type</label>
         <select>
           <option>Holiday Package</option>
-          <option>Flight Booking</option>
           <option>Custom Itinerary</option>
           <option>Group Travel</option>
           <option>Honeymoon Package</option>
@@ -1303,29 +1331,33 @@ nav {
 
 <script>
 // ===== DATA =====
+
+// FIX 2: Nagano gets proper Japanese Snow Monkey image
 const destinations = [
-  { region:"Switzerland Alps", line1:"SAINT", line2:"ANTÖNIEN", heroBg:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80" },
-  { region:"Japan Alps", line1:"NAGANO", line2:"PREFECTURE", heroBg:"https://images.unsplash.com/photo-1535082623926-b39c1c9f3e9d?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1535082623926-b39c1c9f3e9d?w=400&q=80" },
-  { region:"Sahara Desert · Morocco", line1:"MARRAKECH", line2:"MERZOUGA", heroBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80" },
-  { region:"Sierra Nevada · USA", line1:"YOSEMITE", line2:"NATIONAL PARK", heroBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80" },
-  { region:"Tarifa · Spain", line1:"LOS LANCES", line2:"BEACH", heroBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80", cardBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" }
+  { region:"Switzerland Alps", line1:"SAINT", line2:"ANTÖNIEN",
+    heroBg:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80" },
+  { region:"Japan Alps", line1:"NAGANO", line2:"PREFECTURE",
+    heroBg:"https://images.unsplash.com/photo-1480796927426-f609979314bd?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1480796927426-f609979314bd?w=400&q=80" },
+  { region:"Sahara Desert · Morocco", line1:"MARRAKECH", line2:"MERZOUGA",
+    heroBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80" },
+  { region:"Sierra Nevada · USA", line1:"YOSEMITE", line2:"NATIONAL PARK",
+    heroBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80" },
+  { region:"Tarifa · Spain", line1:"LOS LANCES", line2:"BEACH",
+    heroBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" }
 ];
 
 const holidays = [
-  { region:"Maldives", name:"NORTH MALÉ ATOLL", desc:"Overwater bungalows, crystal lagoons, and world-class diving reefs await.", img:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=600&q=80", price:"$3,299", nights:"7 nights", type:"Beach", rating:"4.9" },
-  { region:"Switzerland", name:"GRINDELWALD PEAKS", desc:"Iconic alpine village below the North Face with glaciers and cable cars.", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80", price:"$2,899", nights:"6 nights", type:"Mountain", rating:"4.8" },
-  { region:"Japan", name:"KYOTO IMPERIAL", desc:"Cherry blossom temples, kaiseki dining, and centuries of living culture.", img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80", price:"$3,499", nights:"8 nights", type:"Cultural", rating:"5.0" },
-  { region:"Morocco", name:"SAHARA MERZOUGA", desc:"Camel treks at sunset, luxury desert camps under a billion stars.", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&q=80", price:"$1,899", nights:"5 nights", type:"Adventure", rating:"4.7" },
-  { region:"French Riviera", name:"CÔTE D'AZUR", desc:"Glamorous promenades, azure seas, Michelin dining and yacht culture.", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=80", price:"$4,199", nights:"7 nights", type:"Luxury", rating:"4.9" },
-  { region:"Bali, Indonesia", name:"UBUD HIGHLANDS", desc:"Rice terraces, jungle spa retreats, and Balinese temple ceremonies.", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80", price:"$1,499", nights:"5 nights", type:"Cultural", rating:"4.8" }
-];
-
-const flights = [
-  { airline:"SINGAPORE AIRLINES", code:"SQ 722", from:"CGK", to:"CDG", dep:"08:45", arr:"19:20", duration:"14h 35m", stops:"Direct", price:"$1,245", cls:"Business", featured:true },
-  { airline:"QATAR AIRWAYS", code:"QR 956", from:"CGK", to:"CDG", dep:"10:15", arr:"22:05", duration:"15h 50m", stops:"1 Stop", price:"$987", cls:"Economy", featured:false },
-  { airline:"EMIRATES", code:"EK 358", from:"CGK", to:"CDG", dep:"23:50", arr:"13:40+1", duration:"17h 50m", stops:"1 Stop", price:"$876", cls:"Economy", featured:false },
-  { airline:"AIR FRANCE", code:"AF 257", from:"CGK", to:"CDG", dep:"06:30", arr:"14:55", duration:"16h 25m", stops:"1 Stop", price:"$1,099", cls:"Premium", featured:false },
-  { airline:"GARUDA INDONESIA", code:"GA 870", from:"CGK", to:"CDG", dep:"17:25", arr:"05:30+1", duration:"18h 05m", stops:"1 Stop", price:"$799", cls:"Economy", featured:false }
+  { region:"Maldives", name:"NORTH MALÉ ATOLL", desc:"Overwater bungalows, crystal lagoons, and world-class diving reefs await.", img:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80", price:"$3,299", nights:"7 nights", type:"Beach", rating:"4.9" },
+  { region:"Switzerland", name:"GRINDELWALD PEAKS", desc:"Iconic alpine village below the North Face with glaciers and cable cars.", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80", price:"$2,899", nights:"6 nights", type:"Mountain", rating:"4.8" },
+  { region:"Japan", name:"KYOTO IMPERIAL", desc:"Cherry blossom temples, kaiseki dining, and centuries of living culture.", img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80", price:"$3,499", nights:"8 nights", type:"Cultural", rating:"5.0" },
+  { region:"Morocco", name:"SAHARA MERZOUGA", desc:"Camel treks at sunset, luxury desert camps under a billion stars.", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", price:"$1,899", nights:"5 nights", type:"Adventure", rating:"4.7" },
+  { region:"French Riviera", name:"CÔTE D'AZUR", desc:"Glamorous promenades, azure seas, Michelin dining and yacht culture.", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800&q=80", price:"$4,199", nights:"7 nights", type:"Luxury", rating:"4.9" },
+  { region:"Bali, Indonesia", name:"UBUD HIGHLANDS", desc:"Rice terraces, jungle spa retreats, and Balinese temple ceremonies.", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", price:"$1,499", nights:"5 nights", type:"Cultural", rating:"4.8" }
 ];
 
 const offers = [
@@ -1337,12 +1369,87 @@ const offers = [
 ];
 
 const destItems = [
-  { name:"PARIS", country:"France", img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400&q=80", price:"$1,890", stat:"248 packages" },
-  { name:"BALI", country:"Indonesia", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80", price:"$899", stat:"186 packages" },
-  { name:"TOKYO", country:"Japan", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80", price:"$2,100", stat:"142 packages" },
-  { name:"SANTORINI", country:"Greece", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&q=80", price:"$1,650", stat:"95 packages" },
-  { name:"MARRAKECH", country:"Morocco", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80", price:"$890", stat:"78 packages" },
-  { name:"NEW YORK", country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80", price:"$1,420", stat:"116 packages" }
+  { name:"PARIS", country:"France", img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80", price:"$1,890", stat:"248 packages" },
+  { name:"BALI", country:"Indonesia", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", price:"$899", stat:"186 packages" },
+  { name:"TOKYO", country:"Japan", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80", price:"$2,100", stat:"142 packages" },
+  { name:"SANTORINI", country:"Greece", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80", price:"$1,650", stat:"95 packages" },
+  { name:"MARRAKECH", country:"Morocco", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", price:"$890", stat:"78 packages" },
+  { name:"NEW YORK", country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80", price:"$1,420", stat:"116 packages" }
+];
+
+// FIX 5: Food data with beautiful SVG 3D dish renders
+const foods3d = [
+  {
+    origin: "Japan · Tokyo",
+    name: "RAMEN",
+    desc: "Rich tonkotsu broth, chashu pork, soft-boiled egg & bamboo shoots",
+    bgImg: "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80",
+    svgColor: "#e8b96a",
+    bowlColor: "#2a1a0a",
+    steamColor: "rgba(255,220,180,0.5)",
+    emoji: "🍜"
+  },
+  {
+    origin: "Italy · Naples",
+    name: "PIZZA NAPOLETANA",
+    desc: "Wood-fired sourdough crust, San Marzano tomato, fresh buffalo mozzarella",
+    bgImg: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80",
+    svgColor: "#e05a2b",
+    bowlColor: "#8b2500",
+    steamColor: "rgba(255,180,150,0.4)",
+    emoji: "🍕"
+  },
+  {
+    origin: "Morocco · Marrakech",
+    name: "TAGINE",
+    desc: "Slow-cooked lamb with preserved lemon, olives, saffron & aromatic spices",
+    bgImg: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&q=80",
+    svgColor: "#c98a2a",
+    bowlColor: "#5a2a00",
+    steamColor: "rgba(255,200,100,0.5)",
+    emoji: "🫕"
+  },
+  {
+    origin: "Indonesia · Bali",
+    name: "NASI GORENG",
+    desc: "Wok-fried rice with shrimp paste, kecap manis, prawn crackers & fried egg",
+    bgImg: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80",
+    svgColor: "#c4622d",
+    bowlColor: "#3a1500",
+    steamColor: "rgba(255,160,80,0.4)",
+    emoji: "🍳"
+  }
+];
+
+const foodsWide = [
+  {
+    origin: "France · Paris",
+    name: "BOEUF BOURGUIGNON",
+    desc: "Classic French braised beef slow-cooked in Burgundy wine with mushrooms, pearl onions, and lardons.",
+    img: "https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600&q=80",
+    tags: ["Slow-cooked", "Wine braised", "Heritage recipe"]
+  },
+  {
+    origin: "India · Mumbai",
+    name: "BUTTER CHICKEN",
+    desc: "Tender chicken tikka in rich tomato-cream curry, fragrant with garam masala and fresh ginger.",
+    img: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80",
+    tags: ["Spiced", "Creamy", "North Indian"]
+  },
+  {
+    origin: "Mexico · Oaxaca",
+    name: "MOLE NEGRO",
+    desc: "Complex dark mole sauce with over 30 ingredients including chillies, chocolate, spices, and turkey.",
+    img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80",
+    tags: ["Complex", "Chocolate-infused", "Traditional"]
+  },
+  {
+    origin: "Spain · Seville",
+    name: "PAELLA VALENCIANA",
+    desc: "Saffron-scented Bomba rice with rabbit, chicken, green beans, and the essential socarrat crust.",
+    img: "https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=600&q=80",
+    tags: ["Saffron", "Socarrat crust", "Wood-fired"]
+  }
 ];
 
 // ===== NAV =====
@@ -1351,16 +1458,15 @@ let currentPage = 'home';
 function navigateTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
+  // Scroll to top when switching pages
+  document.getElementById('page-' + page).scrollTop = 0;
   currentPage = page;
 
-  if (page === 'home') return;
   if (page === 'holidays') renderHolidays();
   if (page === 'destinations') renderDestinations();
-  if (page === 'flights') renderFlights();
+  if (page === 'food') renderFood();
   if (page === 'offers') renderOffers();
 }
-
-function goHome() { navigateTo('home'); }
 
 // ===== HOME SLIDER =====
 const TOTAL = destinations.length;
@@ -1400,10 +1506,15 @@ document.getElementById('btnPrev').addEventListener('click', () => { goPrev(); r
 update(false);
 resetAuto();
 
-// ===== RENDER HOLIDAYS =====
+// ===== FIX 3: RENDER HOLIDAYS with hero display update =====
 function renderHolidays() {
   const grid = document.getElementById('holidayGrid');
-  if (grid.innerHTML.trim()) return;
+  if (grid.innerHTML.trim()) {
+    // Re-attach filter tabs
+    attachFilterTabs();
+    return;
+  }
+
   holidays.forEach((h, i) => {
     const card = document.createElement('div');
     card.className = 'holiday-card slide-in-up d' + (i + 1);
@@ -1431,20 +1542,41 @@ function renderHolidays() {
           </div>
         </div>
       </div>`;
+
+    // FIX 3: Click updates the hero display above
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.holiday-card').forEach(c => c.classList.remove('h-active'));
+      card.classList.add('h-active');
+      document.getElementById('holidaysHeroBg').style.backgroundImage = `url('${h.img.replace('w=800','w=1600')}')`;
+      document.getElementById('holidaysHeroTitle').innerHTML = h.name.replace(' ','<br>');
+      document.getElementById('holidayActiveLabel').textContent = h.region;
+      // Scroll to top so user sees the hero change
+      document.getElementById('page-holidays').scrollTo({ top: 64, behavior: 'smooth' });
+    });
+
     grid.appendChild(card);
   });
+
+  attachFilterTabs();
+}
+
+function attachFilterTabs() {
   document.querySelectorAll('.filter-tab').forEach(t => {
-    t.addEventListener('click', function() {
+    t.onclick = function() {
       document.querySelectorAll('.filter-tab').forEach(x => x.classList.remove('active'));
       this.classList.add('active');
-    });
+    };
   });
 }
 
-// ===== RENDER DESTINATIONS =====
+// ===== FIX 4: RENDER DESTINATIONS with left panel display update =====
 function renderDestinations() {
   const sidebar = document.getElementById('destSidebar');
-  if (sidebar.children.length > 1) return;
+  if (sidebar.children.length > 1) {
+    attachRegionBtns();
+    return;
+  }
+
   destItems.forEach((d, i) => {
     const item = document.createElement('div');
     item.className = 'dest-item slide-in-up d' + Math.min(i + 1, 6);
@@ -1459,71 +1591,253 @@ function renderDestinations() {
           <div class="dest-item-price">${d.price}</div>
         </div>
       </div>`;
+
+    // FIX 4: clicking updates the main display on the left
     item.addEventListener('click', () => {
       document.querySelectorAll('.dest-item').forEach(x => x.classList.remove('selected'));
       item.classList.add('selected');
+      // Update background image on left panel
+      document.getElementById('destDisplayBg').style.backgroundImage = `url('${d.img.replace('w=800','w=1200')}')`;
+      // Update info card
+      document.getElementById('destActiveName').textContent = d.name;
+      document.getElementById('destActiveCountry').textContent = d.country;
+      document.getElementById('destActivePrice').textContent = d.price;
+      document.getElementById('destActiveStat').textContent = d.stat.split(' ')[0];
     });
+
     sidebar.appendChild(item);
   });
 
+  attachRegionBtns();
+}
+
+function attachRegionBtns() {
   document.querySelectorAll('.dest-region-btn').forEach(b => {
-    b.addEventListener('click', function() {
+    b.onclick = function() {
       document.querySelectorAll('.dest-region-btn').forEach(x => x.classList.remove('active'));
       this.classList.add('active');
-    });
+    };
   });
 }
 
-// ===== RENDER FLIGHTS =====
-function renderFlights() {
-  const list = document.getElementById('flightList');
-  if (list.innerHTML.trim()) return;
-  flights.forEach((f, i) => {
+// ===== FIX 5: RENDER FOOD with 3D dish SVG =====
+function renderFood() {
+  const grid3d = document.getElementById('food3dGrid');
+  const gridWide = document.getElementById('foodWideGrid');
+  if (grid3d.innerHTML.trim()) return;
+
+  // 3D dish SVGs using canvas-rendered plates
+  foods3d.forEach((f, i) => {
     const card = document.createElement('div');
-    card.className = 'flight-card slide-in-up d' + Math.min(i + 1, 5) + (f.featured ? ' featured' : '');
+    card.className = 'food-3d-card slide-in-up d' + (i + 1);
     card.innerHTML = `
-      ${f.featured ? '<div class="featured-tag">BEST VALUE</div>' : ''}
-      <div class="airline-info">
-        <div class="airline-logo">${f.airline.split(' ').map(w => w[0]).join('').slice(0,3)}</div>
-        <div>
-          <div class="airline-name">${f.airline}</div>
-          <div class="airline-num">${f.code}</div>
-        </div>
-      </div>
-      <div class="flight-route">
-        <div>
-          <div class="route-time">${f.dep}</div>
-          <div class="route-code">${f.from}</div>
-        </div>
-        <div class="route-line">
-          <div class="route-duration">${f.duration}</div>
-          <div class="route-line-bar">
-            <div class="route-line-dot"></div>
-            <div class="route-line-path"></div>
-            <div class="route-line-dot"></div>
+      <div class="food-3d-bg" style="background-image:url('${f.bgImg}');"></div>
+      <div class="food-3d-gradient"></div>
+      <div class="food-3d-plate-wrap">
+        <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+          <div class="food-3d-steam">
+            <div class="steam-line"></div>
+            <div class="steam-line"></div>
+            <div class="steam-line"></div>
           </div>
-          <div class="route-stops">${f.stops}</div>
-        </div>
-        <div style="text-align:right;">
-          <div class="route-time">${f.arr}</div>
-          <div class="route-code">${f.to}</div>
+          <div class="food-3d-plate">
+            ${buildDishSVG(f)}
+          </div>
+          <div class="food-3d-shadow"></div>
         </div>
       </div>
-      <div class="flight-price-col">
-        <div class="flight-price-label">From</div>
-        <div class="flight-price">${f.price}</div>
-        <div class="flight-class">${f.cls} Class</div>
-        <button class="btn-select-flight">SELECT</button>
+      <div class="food-3d-info">
+        <div class="food-3d-origin">${f.origin}</div>
+        <div class="food-3d-name">${f.name}</div>
+        <div class="food-3d-desc">${f.desc}</div>
       </div>`;
-    list.appendChild(card);
+    grid3d.appendChild(card);
   });
 
-  document.querySelectorAll('.search-tab').forEach(t => {
-    t.addEventListener('click', function() {
-      document.querySelectorAll('.search-tab').forEach(x => x.classList.remove('active'));
-      this.classList.add('active');
-    });
+  // Wide food cards
+  foodsWide.forEach((f, i) => {
+    const card = document.createElement('div');
+    card.className = 'food-wide-card slide-in-up d' + (i + 1);
+    card.innerHTML = `
+      <div class="fwcard-img-wrap">
+        <div class="fwcard-img" style="background-image:url('${f.img}');"></div>
+      </div>
+      <div class="fwcard-body">
+        <div class="fwcard-origin">${f.origin}</div>
+        <div class="fwcard-name">${f.name}</div>
+        <div class="fwcard-desc">${f.desc}</div>
+        <div class="fwcard-tags">${f.tags.map(t=>`<span class="fwcard-tag">${t}</span>`).join('')}</div>
+      </div>`;
+    gridWide.appendChild(card);
   });
+
+  // Food filter tabs
+  document.querySelectorAll('#foodFilterRow .filter-tab').forEach(t => {
+    t.onclick = function() {
+      document.querySelectorAll('#foodFilterRow .filter-tab').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+    };
+  });
+}
+
+function buildDishSVG(f) {
+  const idx = foods3d.indexOf(f);
+  if (idx === 0) return buildRamenSVG();
+  if (idx === 1) return buildPizzaSVG();
+  if (idx === 2) return buildTagineSVG();
+  if (idx === 3) return buildNasiGorengSVG();
+  return `<text style="font-size:80px;line-height:1;">${f.emoji}</text>`;
+}
+
+function buildRamenSVG() {
+  return `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+    <!-- Shadow/depth -->
+    <ellipse cx="80" cy="148" rx="68" ry="10" fill="rgba(0,0,0,0.4)"/>
+    <!-- Bowl body 3D -->
+    <ellipse cx="80" cy="110" rx="68" ry="18" fill="#1a0d04"/>
+    <path d="M12 90 Q12 140 80 145 Q148 140 148 90 Z" fill="#2e1608"/>
+    <path d="M12 90 Q12 135 80 140 Q148 135 148 90 Z" fill="#3d1e0a"/>
+    <!-- Bowl rim 3D -->
+    <ellipse cx="80" cy="90" rx="68" ry="16" fill="#4a2510"/>
+    <ellipse cx="80" cy="88" rx="64" ry="13" fill="#5c2e12"/>
+    <!-- Broth surface -->
+    <ellipse cx="80" cy="88" rx="60" ry="11" fill="#8B4513"/>
+    <ellipse cx="80" cy="87" rx="58" ry="10" fill="#c17a3a"/>
+    <!-- Noodle swirl -->
+    <path d="M50 82 Q65 76 80 82 Q95 88 110 82" stroke="#f5d5a0" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M45 86 Q62 80 80 86 Q98 92 115 86" stroke="#f0c880" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M52 90 Q68 84 82 90 Q96 96 108 90" stroke="#f5d5a0" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Chashu pork slices -->
+    <ellipse cx="60" cy="78" rx="14" ry="8" fill="#8b2020" transform="rotate(-15 60 78)"/>
+    <ellipse cx="60" cy="78" rx="10" ry="5.5" fill="#c05050" transform="rotate(-15 60 78)"/>
+    <ellipse cx="60" cy="78" rx="5" ry="2.5" fill="#8b2020" transform="rotate(-15 60 78)"/>
+    <!-- Soft boiled egg -->
+    <ellipse cx="102" cy="76" rx="11" ry="9" fill="#f5e88e"/>
+    <ellipse cx="102" cy="76" rx="6" ry="5" fill="#f9a825"/>
+    <!-- Nori sheet -->
+    <rect x="74" y="66" width="6" height="18" rx="1" fill="#1a3a1a" transform="rotate(5 77 75)"/>
+    <!-- Spring onion -->
+    <line x1="55" y1="70" x2="58" y2="85" stroke="#5ab55a" stroke-width="2" stroke-linecap="round"/>
+    <line x1="62" y1="68" x2="64" y2="83" stroke="#4aa04a" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Chopsticks -->
+    <line x1="30" y1="60" x2="85" y2="95" stroke="#c8956c" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="35" y1="56" x2="90" y2="91" stroke="#b07850" stroke-width="3" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function buildPizzaSVG() {
+  return `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+    <!-- Shadow -->
+    <ellipse cx="80" cy="150" rx="65" ry="8" fill="rgba(0,0,0,0.35)"/>
+    <!-- Pizza base 3D side -->
+    <ellipse cx="80" cy="115" rx="62" ry="12" fill="#8b4a1a"/>
+    <path d="M18 100 Q18 118 80 122 Q142 118 142 100 Z" fill="#a05820"/>
+    <!-- Crust ring bottom -->
+    <ellipse cx="80" cy="100" rx="62" ry="12" fill="#c97a30"/>
+    <!-- Pizza top surface -->
+    <ellipse cx="80" cy="98" rx="60" ry="11" fill="#d4512a"/>
+    <!-- Tomato sauce layer -->
+    <ellipse cx="80" cy="97" rx="54" ry="9" fill="#c0392b"/>
+    <!-- Cheese melted -->
+    <ellipse cx="80" cy="96" rx="50" ry="8" fill="#f5e082"/>
+    <!-- Cheese blobs -->
+    <ellipse cx="68" cy="93" rx="14" ry="6" fill="#f9e88a" opacity="0.9"/>
+    <ellipse cx="94" cy="91" rx="12" ry="5" fill="#f7e070" opacity="0.9"/>
+    <ellipse cx="80" cy="89" rx="10" ry="5" fill="#fef08a" opacity="0.8"/>
+    <!-- Tomato slices -->
+    <circle cx="62" cy="92" r="8" fill="#e74c3c" opacity="0.85"/>
+    <circle cx="62" cy="92" r="5" fill="#c0392b" opacity="0.7"/>
+    <circle cx="98" cy="90" r="7" fill="#e74c3c" opacity="0.8"/>
+    <circle cx="98" cy="90" r="4" fill="#c0392b" opacity="0.7"/>
+    <!-- Basil leaves -->
+    <ellipse cx="75" cy="86" rx="8" ry="4" fill="#27ae60" transform="rotate(-20 75 86)"/>
+    <ellipse cx="88" cy="96" rx="7" ry="3.5" fill="#2ecc71" transform="rotate(15 88 96)"/>
+    <!-- Mozzarella blobs -->
+    <circle cx="72" cy="100" r="5" fill="rgba(255,255,255,0.7)"/>
+    <circle cx="87" cy="98" r="4" fill="rgba(255,255,255,0.65)"/>
+    <circle cx="80" cy="104" r="4.5" fill="rgba(255,255,255,0.6)"/>
+    <!-- Crust texture -->
+    <ellipse cx="80" cy="100" rx="60" ry="11" fill="none" stroke="#a05820" stroke-width="1.5" opacity="0.5"/>
+  </svg>`;
+}
+
+function buildTagineSVG() {
+  return `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+    <!-- Shadow -->
+    <ellipse cx="80" cy="152" rx="58" ry="7" fill="rgba(0,0,0,0.35)"/>
+    <!-- Base plate -->
+    <ellipse cx="80" cy="130" rx="58" ry="10" fill="#5a2800"/>
+    <path d="M22 118 Q22 132 80 136 Q138 132 138 118 Z" fill="#6e3310"/>
+    <ellipse cx="80" cy="118" rx="58" ry="10" fill="#8b4a20"/>
+    <!-- Tagine body (cone shape) -->
+    <path d="M30 118 Q30 90 80 88 Q130 90 130 118 Z" fill="#c47a3a"/>
+    <path d="M32 118 Q32 92 80 90 Q128 92 128 118 Z" fill="#d4883d"/>
+    <!-- Tagine cone top -->
+    <path d="M55 88 Q80 45 105 88 Z" fill="#c47a3a"/>
+    <path d="M57 88 Q80 48 103 88 Z" fill="#d4883d"/>
+    <!-- Cone highlight -->
+    <path d="M68 75 Q80 50 92 75 Q80 68 68 75 Z" fill="rgba(255,200,100,0.2)"/>
+    <!-- Knob on top -->
+    <circle cx="80" cy="44" r="7" fill="#a06020"/>
+    <circle cx="80" cy="42" r="5" fill="#c07830"/>
+    <!-- Tagine rim decoration -->
+    <ellipse cx="80" cy="90" rx="50" ry="8" fill="#b06828"/>
+    <ellipse cx="80" cy="89" rx="46" ry="6" fill="#c47a3a"/>
+    <!-- Inside dish visible at bottom edge -->
+    <ellipse cx="80" cy="117" rx="50" ry="8" fill="#8b3a10"/>
+    <!-- Food colors peeking -->
+    <path d="M46 115 Q80 108 114 115 Q80 120 46 115 Z" fill="#c87030" opacity="0.7"/>
+    <!-- Spice decorations on cone -->
+    <circle cx="65" cy="100" r="2.5" fill="#e8a030" opacity="0.7"/>
+    <circle cx="80" cy="98" r="2" fill="#d4502a" opacity="0.6"/>
+    <circle cx="95" cy="100" r="2.5" fill="#e8a030" opacity="0.7"/>
+    <circle cx="72" cy="108" r="2" fill="#d4502a" opacity="0.6"/>
+    <circle cx="88" cy="108" r="2" fill="#e8a030" opacity="0.6"/>
+  </svg>`;
+}
+
+function buildNasiGorengSVG() {
+  return `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+    <!-- Shadow -->
+    <ellipse cx="80" cy="148" rx="62" ry="9" fill="rgba(0,0,0,0.35)"/>
+    <!-- Plate 3D bottom -->
+    <ellipse cx="80" cy="120" rx="62" ry="11" fill="#2a1f14"/>
+    <path d="M18 105 Q18 122 80 126 Q142 122 142 105 Z" fill="#3a2a1a"/>
+    <!-- Plate rim 3D -->
+    <ellipse cx="80" cy="105" rx="62" ry="11" fill="#f5f0e8"/>
+    <ellipse cx="80" cy="103" rx="58" ry="9" fill="#ede8e0"/>
+    <!-- Plate surface -->
+    <ellipse cx="80" cy="103" rx="52" ry="8" fill="#f9f5ee"/>
+    <!-- Fried rice mound -->
+    <ellipse cx="80" cy="100" rx="44" ry="9" fill="#c4812a"/>
+    <path d="M36 100 Q36 80 80 77 Q124 80 124 100 Z" fill="#d4922a"/>
+    <ellipse cx="80" cy="100" rx="44" ry="9" fill="none" stroke="#b87020" stroke-width="0.5"/>
+    <!-- Rice texture dots -->
+    <circle cx="65" cy="90" r="1.5" fill="#e8c060" opacity="0.8"/>
+    <circle cx="72" cy="85" r="1.5" fill="#dbb050" opacity="0.8"/>
+    <circle cx="80" cy="83" r="1.5" fill="#e8c060" opacity="0.8"/>
+    <circle cx="88" cy="86" r="1.5" fill="#dbb050" opacity="0.8"/>
+    <circle cx="95" cy="91" r="1.5" fill="#e8c060" opacity="0.8"/>
+    <circle cx="70" cy="94" r="1.5" fill="#dbb050" opacity="0.7"/>
+    <circle cx="85" cy="93" r="1.5" fill="#e8c060" opacity="0.7"/>
+    <circle cx="60" cy="96" r="1.5" fill="#dbb050" opacity="0.7"/>
+    <circle cx="100" cy="96" r="1.5" fill="#e8c060" opacity="0.7"/>
+    <!-- Fried egg on top -->
+    <ellipse cx="80" cy="83" rx="18" ry="11" fill="#f5e8a0" transform="rotate(-10 80 83)"/>
+    <ellipse cx="80" cy="83" rx="9" ry="7" fill="#f9a825" transform="rotate(-10 80 83)"/>
+    <!-- Shrimp -->
+    <path d="M48 92 Q44 82 52 80 Q56 82 54 90 Z" fill="#e87070"/>
+    <path d="M112 90 Q116 80 108 78 Q104 80 106 88 Z" fill="#e87070"/>
+    <!-- Spring onions -->
+    <line x1="68" y1="78" x2="72" y2="92" stroke="#5ab55a" stroke-width="2" stroke-linecap="round"/>
+    <line x1="88" y1="77" x2="92" y2="91" stroke="#4aa04a" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Krupuk (cracker) -->
+    <path d="M115 85 Q125 78 130 88 Q122 96 115 85 Z" fill="#f5e0a0" opacity="0.9"/>
+    <path d="M116 86 Q124 80 128 88 Q121 94 116 86 Z" fill="#faeaaa" opacity="0.8"/>
+    <!-- Chili slices -->
+    <ellipse cx="58" cy="98" rx="5" ry="3" fill="#e03030" transform="rotate(-30 58 98)"/>
+    <ellipse cx="102" cy="99" rx="5" ry="3" fill="#e03030" transform="rotate(30 102 99)"/>
+  </svg>`;
 }
 
 // ===== RENDER OFFERS =====
@@ -1560,10 +1874,10 @@ function updateCountdown() {
   const h = Math.floor((diff % 86400000) / 3600000);
   const m = Math.floor((diff % 3600000) / 60000);
   const s = Math.floor((diff % 60000) / 1000);
-  document.getElementById('cdDays').textContent = String(d).padStart(2, '0');
-  document.getElementById('cdHours').textContent = String(h).padStart(2, '0');
-  document.getElementById('cdMins').textContent = String(m).padStart(2, '0');
-  document.getElementById('cdSecs').textContent = String(s).padStart(2, '0');
+  document.getElementById('cdDays').textContent = String(d).padStart(2,'0');
+  document.getElementById('cdHours').textContent = String(h).padStart(2,'0');
+  document.getElementById('cdMins').textContent = String(m).padStart(2,'0');
+  document.getElementById('cdSecs').textContent = String(s).padStart(2,'0');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
