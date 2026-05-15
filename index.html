@@ -809,42 +809,138 @@ body.light .mobile-drawer ul li a { color: rgba(26,18,8,0.55); border-bottom-col
 .mobile-drawer ul li a.active { color: var(--gold); padding-left: 8px; }
 
 /* ══════════════════════════════════════════
-   RESPONSIVE
+   HYBRID MOBILE — Desktop layout preserved,
+   touch-friendly sizing & spacing
 ══════════════════════════════════════════ */
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .hamburger { display: flex; }
-  .mobile-drawer { display: flex; }
-  /* reorder actions: dark-mode + lang on left, hamburger on right */
-  .nav-actions { gap: 8px; }
-  #mainNav { padding: 0 20px; }
-  /* Sections */
-  .dest-wrap { grid-template-columns: 1fr; }
-  .dest-left { min-height: 50vh; }
-  .dest-sidebar { max-height: 360px; }
-  .fg4 { padding: 16px 20px 32px; }
-  .fg2 { grid-template-columns: 1fr; padding: 16px 20px 60px; }
-  .fwcard { flex-direction: column; height: auto; }
-  .fwimg-w { width: 100%; height: 180px; }
-  .hgrid { grid-template-columns: 1fr; padding: 16px 20px 60px; }
-  .filter-row { padding: 16px 20px 14px; }
-  .food-sec-title { padding: 24px 20px 0; }
-  .hhero-txt { padding: 32px 20px; }
-  .food-hero-txt { padding: 32px 20px; }
-  .offers-pad { padding: 32px 20px 60px; }
-  .offers-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .con-left { padding: 32px 20px; }
-  .con-right { padding: 32px 20px; border-left: none; border-top: 0.5px solid rgba(255,255,255,0.07); }
-  .contacts-wrap { grid-template-columns: 1fr; }
-  .dest-info { padding: 24px 20px; }
-  .hero-txt { left: 20px; }
-  .hero-bot { left: 20px; right: 20px; }
-  .slide-num { right: 20px; }
-  .hgrid { grid-template-columns: 1fr; }
-}
-@media (max-width: 480px) {
-  .offers-grid { grid-template-columns: 1fr; }
+
+/* ── Tablet (≤1024px): shrink but keep desktop structure ── */
+@media (max-width: 1024px) {
+  #mainNav { padding: 0 24px; }
+  .nav-links { gap: 18px; }
+  .nav-links a { font-size: 9px; letter-spacing: 1px; }
+
+  .dest-wrap { grid-template-columns: 1fr 280px; }
+  .dest-info { padding: 32px 28px; }
+  .dest-sidebar { padding: 20px 12px; gap: 10px; }
+  .ditem { height: 88px; }
+
+  .fg4 { padding: 16px 24px 32px; gap: 14px; }
   .fcard { min-width: 220px; height: 300px; }
+  .fg2 { padding: 16px 24px 48px; gap: 14px; }
+
+  .hgrid { padding: 16px 24px 48px; }
+  .offers-pad { padding: 24px 24px 48px; }
+  .con-left, .con-right { padding: 32px 28px; }
+}
+
+/* ── Mobile (≤768px): full desktop layout, touch-optimised ── */
+@media (max-width: 768px) {
+  /* Nav — keep full links, shrink to fit */
+  .nav-links { display: flex; gap: 10px; }
+  .nav-links a { font-size: 8px; letter-spacing: 0.8px; }
+  .hamburger { display: none; }          /* hide hamburger — nav visible */
+  .mobile-drawer { display: none !important; }   /* never show drawer */
+  #mainNav { padding: 0 12px; }
+  .nav-logo { font-size: 9px; letter-spacing: 2px; gap: 7px; }
+  .nav-logo-ring { width: 26px; height: 26px; }
+  .nav-logo-ring i { font-size: 12px; }
+  .nav-actions { gap: 6px; }
+  .btn-dm { width: 32px; height: 32px; }
+  .lang-globe { width: 32px; height: 32px; }
+  .lang-globe-lbl { font-size: 7.5px; }
+
+  /* Destinations — keep sidebar alongside left panel */
+  .dest-wrap { grid-template-columns: 1fr 220px; min-height: auto; }
+  .dest-left { min-height: 55vw; }
+  .dest-sidebar {
+    max-height: calc(100vw * 0.55);
+    padding: 14px 10px; gap: 8px;
+  }
+  .dest-info { padding: 18px 14px; }
+  .dest-info h1 { font-size: clamp(18px, 5vw, 28px); }
+  .dest-info p { font-size: 9px; }
+  .dci-name { font-size: 13px; }
+  .dci-country { font-size: 9px; }
+  .dci-val { font-size: 18px; }
+  .dci-lbl { font-size: 8px; }
+  .ditem { height: 76px; }
+  .ditem-name { font-size: 10px; }
+  .ditem-country { font-size: 7px; }
+  .ditem-stat { font-size: 6.5px; }
+  .ds-label { font-size: 7px; }
+
+  /* Food horizontal strip */
+  .fg4 { padding: 12px 14px 24px; gap: 10px; }
+  .fcard { min-width: 180px; height: 260px; }
+  .fcard-name { font-size: 13px; }
+  .fcard-origin { font-size: 7px; }
+  .food-sec-title { padding: 20px 14px 0; font-size: 9px; }
+
+  /* Food wide cards */
+  .fg2 { grid-template-columns: 1fr; padding: 12px 14px 40px; gap: 12px; }
+  .fwcard { height: auto; flex-direction: column; }
+  .fwimg-w { width: 100%; height: 160px; }
+  .fwbody { padding: 16px; }
+
+  /* Holidays grid */
+  .hgrid { grid-template-columns: 1fr 1fr; padding: 12px 14px 40px; gap: 10px; }
+  .hcard { height: 180px; }
+  .hcard-name { font-size: 11px; }
+
+  /* Holiday hero */
+  .hhero-txt { padding: 24px 14px; }
+  .hhero-txt h1 { font-size: clamp(22px, 6vw, 40px); }
+  .food-hero-txt { padding: 24px 14px; }
+
+  /* Filter row — horizontal scroll */
+  .filter-row { padding: 12px 14px 10px; gap: 6px; flex-wrap: nowrap; overflow-x: auto; }
+  .ftab, .htab { padding: 8px 14px; font-size: 8px; white-space: nowrap; }
+
+  /* Offers */
+  .offers-pad { padding: 20px 14px 40px; }
+  .offers-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ocard { padding: 14px; }
+
+  /* Contacts */
+  .contacts-wrap { grid-template-columns: 1fr; }
+  .con-left { padding: 24px 14px; }
+  .con-right { padding: 24px 14px; border-left: none; border-top: 0.5px solid rgba(255,255,255,0.07); }
+  .c-form-grid { grid-template-columns: 1fr; }
+
+  /* Hero slide */
+  .hero-txt { left: 14px; bottom: 130px; }
+  .hero-title { font-size: clamp(26px, 8vw, 48px); }
+  .hero-desc { font-size: 10px; }
+  .hero-bot { left: 14px; right: 14px; }
+  .slide-num { right: 14px; }
+  .cards-row { gap: 8px; }
+  .mini-card { min-width: 100px; }
+
+  /* Section labels */
+  .plabel { font-size: 8px; }
+}
+
+/* ── Small phones (≤480px): tighten further ── */
+@media (max-width: 480px) {
+  .nav-links { gap: 6px; }
+  .nav-links a { font-size: 7px; letter-spacing: 0.5px; }
+  .nav-logo { font-size: 8px; letter-spacing: 1.5px; }
+
+  .dest-wrap { grid-template-columns: 1fr 180px; }
+  .ditem { height: 68px; }
+  .ditem-name { font-size: 9px; }
+
+  .hgrid { grid-template-columns: 1fr; }
+  .offers-grid { grid-template-columns: 1fr; }
+  .fcard { min-width: 160px; height: 240px; }
+}
+
+/* Touch target minimum size */
+@media (hover: none) and (pointer: coarse) {
+  .nav-links a { padding: 10px 4px; }
+  .arr-btn, .btn-dm, .lang-globe { min-width: 36px; min-height: 36px; }
+  .ditem { min-height: 64px; }
+  .ftab, .htab { min-height: 36px; }
 }
 </style>
 </head>
