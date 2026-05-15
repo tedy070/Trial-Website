@@ -455,6 +455,7 @@ body.light .hgmi { color: rgba(26,18,8,0.50); }
   padding: 28px 18px; overflow-y: auto; overflow-x: hidden;
   display: flex; flex-direction: column; gap: 12px;
   max-height: calc(100vh - var(--nav-h));
+  scroll-behavior: smooth;
 }
 body.light .dest-sidebar { background: rgba(220,212,200,0.97); border-left-color: rgba(26,18,8,0.08); }
 .dest-sidebar::-webkit-scrollbar { width: 3px; }
@@ -462,26 +463,35 @@ body.light .dest-sidebar { background: rgba(220,212,200,0.97); border-left-color
 .ds-label { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--w50); margin-bottom: 4px; flex-shrink: 0; }
 body.light .ds-label { color: rgba(26,18,8,0.42); }
 
+/* ── Destination card: full thumbnail with overlay text ── */
 .ditem {
   border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07);
-  cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.3s;
-  display: flex; flex-direction: row; align-items: stretch; flex-shrink: 0;
-  min-height: 80px;
+  cursor: pointer; position: relative; flex-shrink: 0;
+  height: 100px; transition: all 0.3s;
 }
-body.light .ditem { background: rgba(26,18,8,0.03); border-color: rgba(26,18,8,0.08); }
-.ditem:hover { border-color: rgba(201,168,76,0.30); transform: translateX(4px); }
-.ditem.on { border-color: var(--gold); background: rgba(201,168,76,0.05); }
-.ditem-body { padding: 10px 12px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.ditem-name { font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; }
-body.light .ditem-name { color: #1a1208; }
-.ditem-country { font-size: 9px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
-.ditem-stat { font-size: 8px; color: var(--w50); margin-top: 6px; }
-body.light .ditem-stat { color: rgba(26,18,8,0.45); }
+body.light .ditem { border-color: rgba(26,18,8,0.08); }
+.ditem:hover { border-color: rgba(201,168,76,0.40); transform: translateX(4px); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
+.ditem.on { border-color: var(--gold); box-shadow: 0 0 0 1.5px var(--gold); }
+/* full-bleed background image */
 .ditem-img {
-  width: 80px; flex-shrink: 0; background-size: cover; background-position: center;
-  position: relative; border-radius: 0 11px 11px 0;
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: transform 0.5s ease;
 }
-.ditem-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.50) 0%, transparent 60%); border-radius: 0 11px 11px 0; }
+.ditem:hover .ditem-img { transform: scale(1.06); }
+/* dark overlay gradient */
+.ditem-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.30) 55%, rgba(0,0,0,0.10) 100%);
+}
+/* text on top of image */
+.ditem-body {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 10px 12px; z-index: 2;
+}
+.ditem-name { font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 2px; color: #fff; line-height: 1.1; }
+.ditem-country { font-size: 8px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; }
+.ditem-stat { font-size: 7.5px; color: rgba(255,255,255,0.55); margin-top: 4px; }
 
 /* ══════════════════════════════════════════
    FOOD
@@ -1623,12 +1633,12 @@ function buildDestinations() {
     item.className = 'ditem fade-up d'+Math.min(i+1,6);
     if(i===0) item.classList.add('on');
     item.innerHTML = `
+      <div class="ditem-img" style="background-image:url('${d.img}');"></div>
       <div class="ditem-body">
         <div class="ditem-name">${d.name}</div>
         <div class="ditem-country">${d.country}</div>
         <div class="ditem-stat">${d.stat} packages</div>
-      </div>
-      <div class="ditem-img" style="background-image:url('${d.img}');"></div>`;
+      </div>`;
     item.addEventListener('click', () => {
       document.querySelectorAll('.ditem').forEach(x=>x.classList.remove('on'));
       item.classList.add('on');
@@ -1782,11 +1792,79 @@ document.addEventListener('click', e => {
 applyLang('id');
 
 /* ════════════════════════════════════
-   DRAG SCROLL — Food horizontal strip
+   INFINITE CIRCULAR SCROLL — Destinations Sidebar (vertical)
 ════════════════════════════════════ */
-(function() {
+function initDestInfiniteScroll() {
+  const sb = document.getElementById('destSidebar');
+  if (!sb || sb.dataset.infinite) return;
+  sb.dataset.infinite = '1';
+
+  // Clone all ditems (not the label) and append at bottom
+  const items = Array.from(sb.querySelectorAll('.ditem'));
+  if (items.length === 0) return;
+  items.forEach(it => {
+    const clone = it.cloneNode(true);
+    clone.classList.add('clone');
+    // clone needs same click behaviour
+    clone.addEventListener('click', () => {
+      // find original by index and trigger it
+      const idx = items.indexOf(it);
+      it.click();
+    });
+    sb.appendChild(clone);
+  });
+
+  const singleH = () => items.reduce((s, el) => s + el.offsetHeight + 12, 0); // 12 = gap
+
+  function loopScroll() {
+    const half = singleH();
+    if (sb.scrollTop >= half) {
+      sb.scrollTop -= half;
+    } else if (sb.scrollTop <= 0) {
+      sb.scrollTop += half;
+    }
+  }
+
+  // Start scroll in middle so user can go both ways immediately
+  requestAnimationFrame(() => {
+    sb.scrollTop = singleH() * 0.0001; // tiny offset from top to allow up-scroll
+  });
+
+  sb.addEventListener('scroll', loopScroll, { passive: true });
+}
+
+/* ════════════════════════════════════
+   INFINITE CIRCULAR SCROLL — Food Strip (horizontal)
+════════════════════════════════════ */
+function initFoodInfiniteScroll() {
   const el = document.getElementById('fg4');
-  if (!el) return;
+  if (!el || el.dataset.infinite) return;
+  el.dataset.infinite = '1';
+
+  // Clone all cards
+  const cards = Array.from(el.querySelectorAll('.fcard'));
+  if (cards.length === 0) return;
+  cards.forEach(c => {
+    const clone = c.cloneNode(true);
+    clone.classList.add('clone');
+    el.appendChild(clone);
+  });
+
+  const singleW = () => cards.reduce((s, c) => s + c.offsetWidth + 20, 0); // 20 = gap
+
+  function loopH() {
+    const half = singleW();
+    if (el.scrollLeft >= half) {
+      el.scrollLeft -= half;
+    } else if (el.scrollLeft <= 0) {
+      el.scrollLeft += half;
+    }
+  }
+
+  requestAnimationFrame(() => { el.scrollLeft = 1; });
+  el.addEventListener('scroll', loopH, { passive: true });
+
+  // Drag scroll
   let isDown = false, startX, scrollLeft;
   el.addEventListener('mousedown', e => {
     isDown = true; el.classList.add('dragging');
@@ -1801,7 +1879,21 @@ applyLang('id');
     const x = e.pageX - el.offsetLeft;
     el.scrollLeft = scrollLeft - (x - startX) * 1.2;
   });
-})();
+}
+
+// Hook into buildDestinations and buildFood after they run
+const _origBuildDest = buildDestinations;
+buildDestinations = function() {
+  _origBuildDest();
+  setTimeout(initDestInfiniteScroll, 100);
+};
+
+const _origBuildFood = buildFood;
+buildFood = function() {
+  _origBuildFood();
+  setTimeout(initFoodInfiniteScroll, 100);
+};
+
 
 </script>
 </body>
