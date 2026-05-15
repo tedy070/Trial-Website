@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Globe Express – Travel & Holidays</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,55 +14,46 @@
   --gold: #c9a84c;
   --gold-light: #e8c96a;
   --gold-dim: rgba(201,168,76,0.25);
-  --white: #ffffff;
   --white-70: rgba(255,255,255,0.7);
   --white-50: rgba(255,255,255,0.5);
-  --white-20: rgba(255,255,255,0.2);
-  --white-10: rgba(255,255,255,0.1);
-  --white-05: rgba(255,255,255,0.05);
   --dark: #0a0a0a;
-  --dark-2: #111111;
   --dark-3: #161616;
   --nav-h: 64px;
 }
 
-/* ===== FIX 1: Allow scroll ===== */
+/* ===== UPDATE 2: Full page scroll from Home down through Contacts ===== */
+html {
+  scroll-behavior: smooth;
+}
 html, body {
   font-family: 'Montserrat', sans-serif;
   background: var(--dark);
   color: #fff;
-  width: 100%; height: 100%;
-  overflow: hidden; /* body itself hidden, pages manage their own scroll */
-}
-
-/* ===== PAGE SYSTEM ===== */
-.page {
-  position: fixed; inset: 0;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.6s ease;
-  overflow-y: auto; /* FIX 1: all pages scrollable */
+  width: 100%;
   overflow-x: hidden;
 }
-.page.active {
-  opacity: 1; pointer-events: all;
+
+/* Each section is a full-screen panel stacked vertically */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
 }
 
-.page::-webkit-scrollbar { width: 4px; }
-.page::-webkit-scrollbar-track { background: transparent; }
-.page::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
 
-/* ===== SHARED NAV ===== */
+/* ===== STICKY NAV ===== */
 nav {
-  position: sticky; top: 0; left: 0; right: 0; z-index: 100;
+  position: sticky; top: 0; z-index: 200;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 48px;
-  height: var(--nav-h);
+  padding: 0 48px; height: var(--nav-h);
   border-bottom: 0.5px solid rgba(255,255,255,0.08);
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(14px);
-  flex-shrink: 0;
+  background: rgba(5,5,5,0.85);
+  backdrop-filter: blur(18px);
 }
-
 .nav-logo {
   display: flex; align-items: center; gap: 10px;
   text-decoration: none; color: #fff;
@@ -88,873 +79,520 @@ nav {
   content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
   height: 1.5px; background: var(--gold);
 }
-
 .nav-actions { display: flex; gap: 20px; align-items: center; }
-.nav-actions i {
-  color: var(--white-70); font-size: 19px; cursor: pointer;
-  transition: color 0.2s;
-}
+.nav-actions i { color: var(--white-70); font-size: 19px; cursor: pointer; transition: color 0.2s; }
 .nav-actions i:hover { color: #fff; }
 
-/* ===== HOME PAGE ===== */
-#page-home { overflow: hidden; } /* Home is fullscreen, no scroll */
-
-.home-inner {
-  position: relative;
-  width: 100%; height: calc(100vh);
+/* ===== HOME SECTION ===== */
+#sec-home {
+  height: 100vh; overflow: hidden;
   display: flex; flex-direction: column;
-  flex-shrink: 0;
 }
-
+.home-wrap {
+  position: relative; flex: 1;
+}
 .hero-bg {
   position: absolute; inset: 0;
   background-size: cover; background-position: center;
-  transition: all 1s ease;
+  transition: background-image 1s ease;
 }
 .hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(105deg, rgba(0,0,0,0.72) 30%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.1) 100%);
+  background: linear-gradient(105deg, rgba(0,0,0,0.72) 30%, rgba(0,0,0,0.2) 70%);
 }
-.hero-overlay-top {
-  position: absolute; top: 0; left: 0; right: 0; height: 140px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
-}
-
 .hero-content {
   position: absolute; z-index: 10;
   top: 50%; transform: translateY(-50%);
-  left: 48px;
-  max-width: 520px;
+  left: 48px; max-width: 520px;
 }
-
 .location-tag {
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
 }
 .location-tag::before {
-  content: ''; display: block;
-  width: 28px; height: 1.5px; background: var(--gold);
-  flex-shrink: 0;
+  content: ''; display: block; width: 28px; height: 1.5px; background: var(--gold); flex-shrink: 0;
 }
-.location-tag span {
-  color: var(--white-70); font-size: 12px; font-weight: 400;
-  letter-spacing: 1.2px;
-}
-
+.location-tag span { color: var(--white-70); font-size: 12px; letter-spacing: 1.2px; }
 .hero-title {
-  font-size: clamp(44px, 6vw, 78px);
-  font-weight: 900; line-height: 0.95;
+  font-size: clamp(44px, 6vw, 78px); font-weight: 900; line-height: 0.95;
   text-transform: uppercase; letter-spacing: -1.5px;
-  text-shadow: 0 2px 30px rgba(0,0,0,0.5);
-  margin-bottom: 18px;
-  transition: opacity 0.4s;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.5); margin-bottom: 18px;
 }
-
-.hero-desc {
-  color: var(--white-50); font-size: 11px; line-height: 1.75;
-  max-width: 280px; margin-bottom: 30px;
-}
-
+.hero-desc { color: var(--white-50); font-size: 11px; line-height: 1.75; max-width: 280px; margin-bottom: 30px; }
 .hero-actions { display: flex; align-items: center; gap: 16px; }
-
 .btn-play {
   width: 46px; height: 46px; border-radius: 50%;
   background: var(--gold); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: transform 0.2s, background 0.2s;
+  transition: transform 0.2s, background 0.2s;
 }
 .btn-play:hover { transform: scale(1.1); background: var(--gold-light); }
 .btn-play i { color: #fff; font-size: 17px; margin-left: 2px; }
-
 .btn-discover {
-  border: 1px solid rgba(255,255,255,0.45);
-  background: transparent; color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 2px;
-  text-transform: uppercase; padding: 12px 26px; border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.45); background: transparent; color: #fff;
+  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase; padding: 12px 26px; border-radius: 3px;
   cursor: pointer; transition: all 0.25s;
 }
 .btn-discover:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.8); }
 
 .hero-bottom {
   position: absolute; bottom: 28px; left: 48px; right: 48px; z-index: 10;
-  display: flex; align-items: flex-end; gap: 0;
+  display: flex; align-items: flex-end;
 }
-
-.controls-col {
-  display: flex; flex-direction: column; gap: 16px;
-  margin-right: 28px; flex-shrink: 0;
-}
+.controls-col { display: flex; flex-direction: column; gap: 16px; margin-right: 28px; flex-shrink: 0; }
 .nav-arrows { display: flex; gap: 10px; }
-
 .arrow-btn {
   width: 38px; height: 38px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.07);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: all 0.2s;
 }
 .arrow-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.65); }
 .arrow-btn i { color: #fff; font-size: 14px; }
-
-.progress-bar {
-  width: 160px; height: 2px;
-  background: rgba(255,255,255,0.18); border-radius: 2px; overflow: hidden;
-}
-.progress-fill {
-  height: 100%; background: var(--gold);
-  border-radius: 2px; transition: width 0.6s ease;
-}
-
+.progress-bar { width: 160px; height: 2px; background: rgba(255,255,255,0.18); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.6s ease; }
 .cards-row { display: flex; gap: 10px; align-items: flex-end; flex: 1; }
-
 .dest-card {
-  width: 145px; height: 185px; border-radius: 12px;
-  overflow: hidden; position: relative;
-  cursor: pointer; flex-shrink: 0;
-  border: 1.5px solid rgba(255,255,255,0.15);
+  width: 145px; height: 185px; border-radius: 12px; overflow: hidden; position: relative;
+  cursor: pointer; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.15);
   transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s;
 }
-.dest-card:hover {
-  transform: translateY(-6px) scale(1.025);
-  border-color: rgba(255,255,255,0.35);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-}
-.dest-card.active {
-  border-color: var(--gold);
-  transform: translateY(-8px) scale(1.04);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.55);
-}
-
-.card-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  filter: brightness(0.55);
-  transition: filter 0.3s;
-}
+.dest-card:hover { transform: translateY(-6px) scale(1.025); border-color: rgba(255,255,255,0.35); box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
+.dest-card.active { border-color: var(--gold); transform: translateY(-8px) scale(1.04); }
+.card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.55); transition: filter 0.3s; }
 .dest-card:hover .card-bg { filter: brightness(0.7); }
-.dest-card.active .card-bg { filter: brightness(0.8); }
-
-.card-shade {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.1) 100%);
-}
+.card-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.1) 100%); }
 .card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 12px; }
 .card-region { color: rgba(255,255,255,0.6); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
 .card-name { color: #fff; font-size: 11.5px; font-weight: 800; text-transform: uppercase; line-height: 1.2; }
-
-.slide-num {
-  position: absolute; bottom: 22px; right: 48px; z-index: 10;
-  color: rgba(255,255,255,0.4); font-size: 30px; font-weight: 800; letter-spacing: -1px;
-}
+.slide-num { position: absolute; bottom: 22px; right: 48px; z-index: 10; color: rgba(255,255,255,0.4); font-size: 30px; font-weight: 800; }
 .slide-num em { color: #fff; font-style: normal; }
 
-/* ===== SECTION SHARED STYLES ===== */
-.section-page {
-  background: var(--dark);
+/* Down arrow hint */
+.scroll-hint {
+  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 10;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;
+  animation: bounce 2s ease infinite;
 }
+.scroll-hint span { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--white-50); }
+.scroll-hint i { font-size: 18px; color: var(--gold); }
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(6px);} }
 
-/* ===== HOLIDAYS PAGE ===== */
-.holidays-hero {
-  position: relative;
-  height: 55vh; min-height: 340px;
-  overflow: hidden;
-  display: flex; align-items: flex-end;
-}
-.holidays-hero-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  transform: scale(1.05);
-  animation: slowZoom 20s ease infinite alternate;
-  transition: background-image 0.8s ease;
-}
-@keyframes slowZoom { from { transform: scale(1.05); } to { transform: scale(1.12); } }
-
-.holidays-hero-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(10,10,10,0.85) 100%);
-}
-.holidays-hero-content {
-  position: relative; z-index: 2;
-  padding: 48px 64px;
-}
+/* ===== SHARED SECTION STYLES ===== */
 .page-label {
   font-size: 9px; font-weight: 700; letter-spacing: 4px;
   text-transform: uppercase; color: var(--gold);
   display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
 }
-.page-label::before {
-  content: ''; width: 24px; height: 1px; background: var(--gold);
-}
-.holidays-hero h1 {
-  font-size: clamp(40px, 5vw, 68px);
-  font-weight: 900; text-transform: uppercase;
-  letter-spacing: -1px; line-height: 0.95;
-}
+.page-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+.section-header { padding: 64px 64px 0; }
+.section-header h1 { font-size: clamp(40px, 5vw, 68px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
 
-/* FIX 3: Holiday hero click area label */
+/* ===== HOLIDAYS SECTION ===== */
+#sec-holidays { background: var(--dark); }
+
+.holidays-hero {
+  position: relative; height: 55vh; min-height: 320px;
+  overflow: hidden; display: flex; align-items: flex-end;
+}
+.holidays-hero-bg {
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+  transform: scale(1.05); animation: slowZoom 20s ease infinite alternate;
+  transition: background-image 0.8s ease;
+}
+@keyframes slowZoom { from { transform: scale(1.05); } to { transform: scale(1.12); } }
+.holidays-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(10,10,10,0.88) 100%);
+}
+.holidays-hero-content { position: relative; z-index: 2; padding: 48px 64px; }
+.holidays-hero h1 { font-size: clamp(40px, 5vw, 68px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
+
 .holiday-active-label {
-  position: absolute; top: 20px; right: 20px; z-index: 5;
-  background: rgba(201,168,76,0.15); border: 0.5px solid var(--gold);
+  position: absolute; top: 84px; right: 28px; z-index: 5;
+  background: rgba(201,168,76,0.12); border: 0.5px solid var(--gold);
   padding: 6px 14px; border-radius: 20px;
-  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--gold);
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold);
 }
 
-/* Filter tabs */
 .filter-row {
-  display: flex; gap: 8px;
-  padding: 28px 64px 20px;
-  border-bottom: 0.5px solid rgba(255,255,255,0.07);
-  flex-wrap: wrap;
+  display: flex; gap: 8px; padding: 24px 64px 20px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.07); flex-wrap: wrap;
 }
 .filter-tab {
-  padding: 8px 20px; border-radius: 30px;
-  border: 1px solid rgba(255,255,255,0.15);
+  padding: 8px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15);
   background: transparent; color: var(--white-50);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
-  text-transform: uppercase; cursor: pointer;
-  transition: all 0.25s;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.25s;
 }
 .filter-tab:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
 .filter-tab.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
 
-/* Holiday Cards Grid */
 .holiday-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 28px 64px 80px;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; padding: 24px 64px 80px;
 }
-
 .holiday-card {
-  border-radius: 16px;
-  overflow: hidden;
-  background: var(--dark-3);
-  border: 1px solid rgba(255,255,255,0.08);
-  cursor: pointer;
+  border-radius: 16px; overflow: hidden; background: var(--dark-3);
+  border: 1px solid rgba(255,255,255,0.08); cursor: pointer;
   transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s, border-color 0.4s;
-  transform-style: preserve-3d;
-  position: relative;
 }
 .holiday-card:hover {
-  transform: translateY(-10px) rotateX(2deg) rotateY(-1deg);
+  transform: translateY(-10px) rotateX(2deg);
   box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.2);
   border-color: rgba(201,168,76,0.3);
 }
 .holiday-card:hover .hcard-img { transform: scale(1.06); }
 .holiday-card.h-active { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
-
 .hcard-img-wrap { height: 200px; overflow: hidden; position: relative; }
-.hcard-img {
-  width: 100%; height: 100%;
-  object-fit: cover; background-size: cover; background-position: center;
-  transition: transform 0.6s ease;
-}
+.hcard-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.6s ease; }
 .hcard-badge {
-  position: absolute; top: 14px; left: 14px;
-  padding: 5px 12px; border-radius: 20px;
+  position: absolute; top: 14px; left: 14px; padding: 5px 12px; border-radius: 20px;
   background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
-  font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--gold);
+  font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold);
   border: 0.5px solid rgba(201,168,76,0.3);
 }
 .hcard-save {
-  position: absolute; top: 14px; right: 14px;
-  width: 32px; height: 32px; border-radius: 50%;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s;
-  border: 0.5px solid rgba(255,255,255,0.15);
+  position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; border: 0.5px solid rgba(255,255,255,0.15);
 }
-.hcard-save:hover { background: var(--gold); border-color: var(--gold); }
+.hcard-save:hover { background: var(--gold); }
 .hcard-save i { font-size: 14px; color: #fff; }
-
 .hcard-body { padding: 18px; }
 .hcard-region { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
 .hcard-name { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 8px; }
 .hcard-desc { font-size: 10px; color: var(--white-50); line-height: 1.7; margin-bottom: 14px; }
-
-.hcard-footer {
-  display: flex; align-items: center; justify-content: space-between;
-  border-top: 0.5px solid rgba(255,255,255,0.08); padding-top: 14px;
-}
-.hcard-price-label { font-size: 8px; color: var(--white-50); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
-.hcard-price { font-size: 20px; font-weight: 800; color: var(--gold); }
-.hcard-price span { font-size: 10px; font-weight: 400; color: var(--white-50); }
-
+.hcard-footer { display: flex; align-items: center; justify-content: space-between; border-top: 0.5px solid rgba(255,255,255,0.08); padding-top: 14px; }
 .hcard-meta { display: flex; align-items: center; gap: 10px; }
 .hcard-meta-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--white-50); }
-.hcard-meta-item i { font-size: 12px; color: var(--white-50); }
-
+.hcard-meta-item i { font-size: 12px; }
 .btn-gold-sm {
-  padding: 9px 18px; border-radius: 4px;
-  background: var(--gold); border: none;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--dark);
-  cursor: pointer; transition: all 0.2s;
+  padding: 9px 18px; border-radius: 4px; background: var(--gold); border: none;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--dark); cursor: pointer; transition: all 0.2s;
 }
 .btn-gold-sm:hover { background: var(--gold-light); transform: scale(1.03); }
 
-/* ===== DESTINATIONS PAGE ===== */
+/* ===== DESTINATIONS SECTION ===== */
+#sec-destinations { background: var(--dark); }
+
 .dest-fullpage {
-  display: grid;
-  grid-template-columns: 1fr 380px;
+  display: grid; grid-template-columns: 1fr 380px;
   min-height: calc(100vh - var(--nav-h));
 }
-
-.dest-map-area {
-  position: relative;
-  overflow: hidden;
-  background: #0d0d0d;
-  min-height: calc(100vh - var(--nav-h));
-}
-
-/* FIX 4: Destination display panel */
+.dest-map-area { position: relative; overflow: hidden; min-height: calc(100vh - var(--nav-h)); }
 .dest-display-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  filter: brightness(0.45);
-  transition: background-image 0.7s ease;
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+  filter: brightness(0.42); transition: background-image 0.7s ease;
 }
-
 .dest-globe-visual {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
-
 .globe-rings {
-  position: absolute;
-  width: 600px; height: 600px;
-  border-radius: 50%;
-  border: 1px solid rgba(201,168,76,0.1);
-  animation: rotateSlow 30s linear infinite;
+  position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.1); animation: rotateSlow 30s linear infinite;
 }
 .globe-rings:nth-child(2) { width: 450px; height: 450px; border-color: rgba(201,168,76,0.07); animation-duration: 22s; animation-direction: reverse; }
 .globe-rings:nth-child(3) { width: 300px; height: 300px; border-color: rgba(201,168,76,0.12); animation-duration: 16s; }
-
 @keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-.dest-map-content {
-  position: relative; z-index: 5;
-  padding: 48px;
-  display: flex; flex-direction: column;
-  height: 100%;
-  background: linear-gradient(105deg, rgba(0,0,0,0.75) 35%, rgba(0,0,0,0.2) 100%);
-}
-
-.dest-map-content .page-label { margin-bottom: 12px; }
-.dest-map-content h1 { font-size: clamp(34px, 4vw, 56px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 20px; }
-
-/* Active dest info */
-.dest-active-info {
-  margin-top: 24px;
-  padding: 20px;
-  background: rgba(0,0,0,0.5);
-  border: 0.5px solid rgba(201,168,76,0.3);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-}
-.dest-active-name { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 4px; }
-.dest-active-country { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
-.dest-active-stats { display: flex; gap: 20px; }
-.dest-active-stat-item { display: flex; flex-direction: column; gap: 2px; }
-.dest-active-stat-val { font-size: 18px; font-weight: 800; color: var(--gold); }
-.dest-active-stat-label { font-size: 8px; color: var(--white-50); letter-spacing: 1px; text-transform: uppercase; }
-
-.dest-regions {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin-top: auto; padding-top: 40px;
-}
-.dest-region-btn {
-  padding: 10px 20px; border-radius: 30px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.05);
-  color: var(--white-70);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px; font-weight: 600; letter-spacing: 1px;
-  cursor: pointer; transition: all 0.25s;
-}
-.dest-region-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
-.dest-region-btn.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
-
-/* Destination pin */
 .dest-pin { position: absolute; cursor: pointer; z-index: 6; }
 .dest-pin-dot {
   width: 12px; height: 12px; border-radius: 50%;
   background: var(--gold); border: 2px solid rgba(255,255,255,0.8);
-  box-shadow: 0 0 0 4px rgba(201,168,76,0.3);
-  animation: pinPulse 2s ease infinite;
+  box-shadow: 0 0 0 4px rgba(201,168,76,0.3); animation: pinPulse 2s ease infinite;
 }
 @keyframes pinPulse { 0%,100%{box-shadow:0 0 0 4px rgba(201,168,76,0.3);} 50%{box-shadow:0 0 0 8px rgba(201,168,76,0.15);} }
-
+.dest-map-content {
+  position: relative; z-index: 5; padding: 48px; display: flex; flex-direction: column; height: 100%;
+  background: linear-gradient(105deg, rgba(0,0,0,0.75) 35%, rgba(0,0,0,0.2) 100%);
+}
+.dest-map-content h1 { font-size: clamp(34px, 4vw, 56px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 20px; }
+.dest-active-info {
+  margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.5);
+  border: 0.5px solid rgba(201,168,76,0.3); border-radius: 12px; backdrop-filter: blur(10px);
+}
+.dest-active-name { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 4px; }
+.dest-active-country { font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+.dest-active-stats { display: flex; gap: 24px; }
+.dest-active-stat-item { display: flex; flex-direction: column; gap: 2px; }
+.dest-active-stat-val { font-size: 18px; font-weight: 800; color: var(--gold); }
+.dest-active-stat-label { font-size: 8px; color: var(--white-50); letter-spacing: 1px; text-transform: uppercase; }
+.dest-regions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 40px; }
+.dest-region-btn {
+  padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05); color: var(--white-70);
+  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1px;
+  cursor: pointer; transition: all 0.25s;
+}
+.dest-region-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+.dest-region-btn.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
 .dest-sidebar {
-  background: rgba(10,10,10,0.95);
-  border-left: 0.5px solid rgba(255,255,255,0.07);
-  padding: 28px 20px;
-  overflow-y: auto;
-  display: flex; flex-direction: column; gap: 14px;
+  background: rgba(8,8,8,0.97); border-left: 0.5px solid rgba(255,255,255,0.07);
+  padding: 28px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
   min-height: calc(100vh - var(--nav-h));
 }
 .dest-sidebar::-webkit-scrollbar { width: 3px; }
 .dest-sidebar::-webkit-scrollbar-thumb { background: var(--gold-dim); }
-
-.dest-sidebar-label {
-  font-size: 9px; font-weight: 700; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--white-50); margin-bottom: 4px;
-}
-
+.dest-sidebar-label { font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--white-50); margin-bottom: 4px; }
 .dest-item {
-  border-radius: 12px; overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.07);
-  cursor: pointer; transition: all 0.3s;
-  background: rgba(255,255,255,0.02);
-  position: relative;
+  border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07);
+  cursor: pointer; transition: all 0.3s; background: rgba(255,255,255,0.02);
 }
 .dest-item:hover { border-color: rgba(201,168,76,0.3); transform: translateX(4px); }
 .dest-item.selected { border-color: var(--gold); background: rgba(201,168,76,0.05); }
-
-.dest-item-img {
-  height: 100px; background-size: cover; background-position: center;
-  position: relative;
-}
-.dest-item-img::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8) 100%);
-}
+.dest-item-img { height: 100px; background-size: cover; background-position: center; position: relative; }
+.dest-item-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8) 100%); }
 .dest-item-body { padding: 12px; }
 .dest-item-name { font-size: 13px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
 .dest-item-country { font-size: 9px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
-.dest-item-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-.dest-item-stat { font-size: 8px; color: var(--white-50); }
-.dest-item-price { font-size: 14px; font-weight: 800; color: var(--gold); }
+/* UPDATE 1: removed price from dest-item-row, only stat remains */
+.dest-item-stat { font-size: 8px; color: var(--white-50); margin-top: 8px; }
 
-/* ===== FOOD PAGE (menggantikan FLIGHTS) ===== */
-#page-food { background: var(--dark); }
-
-.food-wrap {
-  min-height: calc(100vh - var(--nav-h));
-  padding: 0 0 80px;
-}
+/* ===== FOOD SECTION ===== */
+#sec-food { background: var(--dark); }
 
 .food-hero {
-  position: relative; height: 50vh; min-height: 300px;
+  position: relative; height: 50vh; min-height: 280px;
   overflow: hidden; display: flex; align-items: flex-end;
-  margin-bottom: 0;
 }
 .food-hero-bg {
   position: absolute; inset: 0;
   background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80') center/cover;
   animation: slowZoom 25s ease infinite alternate;
 }
-.food-hero-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(10,10,10,0.9) 100%);
-}
-.food-hero-content {
-  position: relative; z-index: 2;
-  padding: 48px 64px;
-}
-.food-hero-content h1 {
-  font-size: clamp(40px, 5vw, 68px);
-  font-weight: 900; text-transform: uppercase;
-  letter-spacing: -1px; line-height: 0.95;
-}
-
-/* Food category filter */
+.food-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(10,10,10,0.92) 100%); }
+.food-hero-content { position: relative; z-index: 2; padding: 48px 64px; }
+.food-hero-content h1 { font-size: clamp(40px, 5vw, 68px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
 .food-filter-row {
-  display: flex; gap: 8px;
-  padding: 28px 64px 0;
-  flex-wrap: wrap;
-  border-bottom: 0.5px solid rgba(255,255,255,0.07);
-  padding-bottom: 24px;
-}
-
-/* Food featured strip */
-.food-featured {
-  padding: 36px 64px 0;
-  margin-bottom: 40px;
+  display: flex; gap: 8px; padding: 24px 64px 20px;
+  flex-wrap: wrap; border-bottom: 0.5px solid rgba(255,255,255,0.07);
 }
 .food-section-title {
-  font-size: 9px; font-weight: 700; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--white-50);
-  margin-bottom: 20px;
-  display: flex; align-items: center; gap: 14px;
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--white-50);
+  display: flex; align-items: center; gap: 14px; padding: 32px 64px 0;
 }
-.food-section-title::after {
-  content: ''; flex: 1; height: 0.5px; background: rgba(255,255,255,0.1);
-}
+.food-section-title::after { content: ''; flex: 1; height: 0.5px; background: rgba(255,255,255,0.1); }
 
-/* 3D Food Cards */
+/* UPDATE 5: 3D food cards — photo fills full card, SVG removed */
 .food-3d-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 0 64px 40px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 20px; padding: 20px 64px 40px;
 }
-
 .food-3d-card {
-  position: relative; border-radius: 20px;
-  overflow: hidden; cursor: pointer;
-  height: 320px;
-  background: var(--dark-3);
-  border: 1px solid rgba(255,255,255,0.07);
+  position: relative; border-radius: 20px; overflow: hidden; cursor: pointer;
+  height: 340px; border: 1px solid rgba(255,255,255,0.07);
   transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), box-shadow 0.5s;
-  transform-style: preserve-3d;
 }
 .food-3d-card:hover {
-  transform: translateY(-16px) rotateX(5deg) rotateY(-3deg) scale(1.03);
+  transform: translateY(-16px) rotateX(4deg) rotateY(-2deg) scale(1.03);
   box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.3);
 }
-.food-3d-card:hover .food-3d-plate { transform: translateY(-8px) scale(1.05) rotateZ(-3deg); }
-.food-3d-card:hover .food-3d-shadow { transform: scaleX(1.2) scaleY(0.6); opacity: 0.5; }
-.food-3d-card:hover .food-3d-steam { opacity: 1; }
-
-/* Card BG */
-.food-3d-bg {
+/* UPDATE 5: Photo takes full card, no dim SVG overlay */
+.food-photo {
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+  filter: brightness(0.72); transition: filter 0.5s, transform 0.5s;
+}
+.food-3d-card:hover .food-photo { filter: brightness(0.9); transform: scale(1.05); }
+.food-photo-overlay {
   position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  filter: brightness(0.25) saturate(0.5);
-  transition: filter 0.5s;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 35%, rgba(0,0,0,0.05) 75%);
 }
-.food-3d-card:hover .food-3d-bg { filter: brightness(0.35) saturate(0.7); }
-
-/* Gradient */
-.food-3d-gradient {
-  position: absolute; inset: 0;
-  background: linear-gradient(160deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.95) 100%);
-}
-
-/* 3D Plate container */
-.food-3d-plate-wrap {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 80px;
-  display: flex; align-items: center; justify-content: center;
-  perspective: 800px;
-}
-
-.food-3d-plate {
-  width: 160px; height: 160px;
-  transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
-  position: relative; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.7));
-}
-
-.food-3d-shadow {
-  position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%) scaleX(1) scaleY(0.4);
-  width: 120px; height: 40px; border-radius: 50%;
-  background: rgba(0,0,0,0.5);
-  filter: blur(12px);
-  transition: all 0.5s;
-  opacity: 0.35;
-}
-
-/* Steam animation */
+/* Steam stays for ambience */
 .food-3d-steam {
-  position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 8px; opacity: 0; transition: opacity 0.4s;
+  position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 10px; opacity: 0; transition: opacity 0.4s;
 }
+.food-3d-card:hover .food-3d-steam { opacity: 1; }
 .steam-line {
-  width: 3px; height: 30px; border-radius: 3px;
-  background: linear-gradient(to top, transparent, rgba(255,255,255,0.4));
-  animation: steamRise 1.5s ease-in-out infinite;
+  width: 3px; height: 32px; border-radius: 3px;
+  background: linear-gradient(to top, transparent, rgba(255,255,255,0.35));
+  animation: steamRise 1.6s ease-in-out infinite;
 }
-.steam-line:nth-child(2) { animation-delay: 0.3s; height: 22px; }
-.steam-line:nth-child(3) { animation-delay: 0.6s; height: 28px; }
-@keyframes steamRise {
-  0% { transform: translateY(0) scaleX(1); opacity: 0.6; }
-  100% { transform: translateY(-20px) scaleX(2); opacity: 0; }
-}
+.steam-line:nth-child(2) { animation-delay: 0.35s; height: 24px; }
+.steam-line:nth-child(3) { animation-delay: 0.7s; height: 30px; }
+@keyframes steamRise { 0%{transform:translateY(0) scaleX(1);opacity:0.6;} 100%{transform:translateY(-22px) scaleX(2);opacity:0;} }
+.food-3d-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 18px 20px; }
+.food-3d-origin { font-size: 8px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+.food-3d-name { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 7px; line-height: 1.1; }
+.food-3d-desc { font-size: 9px; color: var(--white-50); line-height: 1.55; }
 
-/* Card Info */
-.food-3d-info {
-  position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 18px;
-}
-.food-3d-origin {
-  font-size: 8px; color: var(--gold); letter-spacing: 2px;
-  text-transform: uppercase; margin-bottom: 4px;
-}
-.food-3d-name {
-  font-size: 15px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: -0.3px; margin-bottom: 6px; line-height: 1.1;
-}
-.food-3d-desc {
-  font-size: 9px; color: var(--white-50); line-height: 1.5;
-}
-
-/* Wide food card */
-.food-wide-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  padding: 0 64px 40px;
-}
-
+.food-wide-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px 64px 80px; }
 .food-wide-card {
-  border-radius: 16px; overflow: hidden;
-  position: relative; height: 220px;
+  border-radius: 16px; overflow: hidden; position: relative; height: 230px;
   cursor: pointer; border: 1px solid rgba(255,255,255,0.07);
   transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
-  background: var(--dark-3);
-  display: flex;
+  background: var(--dark-3); display: flex;
 }
 .food-wide-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 24px 60px rgba(0,0,0,0.6); }
 .food-wide-card:hover .fwcard-img { transform: scale(1.06); }
-
-.fwcard-img-wrap { width: 220px; flex-shrink: 0; overflow: hidden; position: relative; }
-.fwcard-img {
-  width: 100%; height: 100%;
-  background-size: cover; background-position: center;
-  transition: transform 0.5s ease;
-}
-.fwcard-body { padding: 24px; display: flex; flex-direction: column; justify-content: center; }
+.fwcard-img-wrap { width: 230px; flex-shrink: 0; overflow: hidden; }
+.fwcard-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.5s ease; }
+.fwcard-body { padding: 26px; display: flex; flex-direction: column; justify-content: center; }
 .fwcard-origin { font-size: 8px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
 .fwcard-name { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 10px; }
 .fwcard-desc { font-size: 10px; color: var(--white-50); line-height: 1.7; margin-bottom: 16px; }
 .fwcard-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .fwcard-tag {
-  padding: 4px 10px; border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  border: 0.5px solid rgba(255,255,255,0.12);
-  font-size: 8px; color: var(--white-50); letter-spacing: 0.5px;
+  padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(255,255,255,0.12); font-size: 8px; color: var(--white-50);
 }
 
-/* ===== OFFERS PAGE ===== */
-.offers-wrap {
-  min-height: calc(100vh - var(--nav-h));
-  padding: 48px 64px 80px;
-}
-
+/* ===== OFFERS SECTION ===== */
+#sec-offers { background: var(--dark); }
+.offers-wrap { padding: 48px 64px 80px; }
 .offers-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 36px; }
 .offers-header-left .page-label { margin-bottom: 10px; }
 .offers-header-left h1 { font-size: clamp(36px, 4.5vw, 60px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; }
 .offers-header-right { text-align: right; }
-.countdown-label { font-size: 8px; color: var(--white-50); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-.countdown { display: flex; gap: 12px; align-items: center; }
-.countdown-unit { text-align: center; }
-.countdown-num { font-size: 28px; font-weight: 800; color: var(--gold); line-height: 1; }
-.countdown-unit-label { font-size: 7px; color: var(--white-50); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
-.countdown-sep { font-size: 24px; font-weight: 300; color: var(--gold); margin-top: -6px; }
+
+/* UPDATE 4: Live clock display */
+.clock-label { font-size: 8px; color: var(--white-50); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+.live-clock { display: flex; gap: 0; align-items: baseline; }
+.clock-part { text-align: center; }
+.clock-num { font-size: 32px; font-weight: 800; color: var(--gold); line-height: 1; font-variant-numeric: tabular-nums; }
+.clock-unit-label { font-size: 7px; color: var(--white-50); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; }
+.clock-sep { font-size: 28px; font-weight: 300; color: var(--gold); margin: 0 4px; padding-bottom: 4px; }
+.clock-date { font-size: 10px; color: var(--white-50); margin-top: 8px; letter-spacing: 0.5px; }
 
 .deals-hero {
-  border-radius: 20px; overflow: hidden;
-  position: relative; height: 320px;
-  cursor: pointer; margin-bottom: 28px;
-  transition: transform 0.4s;
+  border-radius: 20px; overflow: hidden; position: relative; height: 300px;
+  cursor: pointer; margin-bottom: 28px; transition: transform 0.4s;
 }
 .deals-hero:hover { transform: scale(1.01); }
 .deals-hero-bg {
   position: absolute; inset: 0;
   background: url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1400&q=80') center/cover;
-  transition: transform 0.6s; filter: brightness(0.65);
+  filter: brightness(0.62); transition: transform 0.6s;
 }
 .deals-hero:hover .deals-hero-bg { transform: scale(1.04); }
-.deals-hero-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,0.8) 30%, transparent 75%);
-}
+.deals-hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.8) 30%, transparent 75%); }
 .deals-hero-content { position: relative; z-index: 2; padding: 48px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
 .deals-hero-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--gold); border-radius: 20px;
-  padding: 5px 14px; margin-bottom: 16px;
-  font-size: 8px; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--dark); width: fit-content;
+  display: inline-flex; align-items: center; gap: 8px; background: var(--gold);
+  border-radius: 20px; padding: 5px 14px; margin-bottom: 14px;
+  font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--dark); width: fit-content;
 }
-.deals-hero-title { font-size: 42px; font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 12px; }
-.deals-hero-sub { font-size: 11px; color: var(--white-70); margin-bottom: 20px; }
-.deals-hero-price { font-size: 36px; font-weight: 900; color: var(--gold); }
-.deals-hero-price span { font-size: 13px; font-weight: 400; color: var(--white-50); }
+.deals-hero-title { font-size: 40px; font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 10px; }
+.deals-hero-sub { font-size: 11px; color: var(--white-70); }
 
 .offers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-
 .offer-card {
-  border-radius: 16px; overflow: hidden;
-  position: relative; height: 260px; cursor: pointer;
+  border-radius: 16px; overflow: hidden; position: relative; height: 260px; cursor: pointer;
   transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
 }
 .offer-card:hover { transform: translateY(-8px) scale(1.02); }
 .offer-card:hover .offer-bg { transform: scale(1.08); filter: brightness(0.75); }
-.offer-card.tall { grid-row: span 2; height: 100%; }
-
-.offer-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  filter: brightness(0.6); transition: all 0.5s ease;
-}
-.offer-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
-}
+.offer-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.6); transition: all 0.5s ease; }
+.offer-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 60%); }
 .offer-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; }
-.offer-discount {
-  display: inline-block; background: var(--gold);
-  padding: 4px 10px; border-radius: 4px;
-  font-size: 10px; font-weight: 800; color: var(--dark);
-  letter-spacing: 0.5px; margin-bottom: 8px;
-}
+/* UPDATE 1: removed discount badge and price from offers */
 .offer-name { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 4px; }
 .offer-details { font-size: 9px; color: rgba(255,255,255,0.6); }
-.offer-price { font-size: 22px; font-weight: 900; color: var(--gold); margin-top: 8px; }
-.offer-price del { font-size: 12px; color: var(--white-50); font-weight: 400; margin-right: 6px; }
 
-/* ===== CONTACTS PAGE ===== */
-.contacts-wrap {
-  min-height: calc(100vh - var(--nav-h));
-  display: grid; grid-template-columns: 1fr 500px;
-}
-
-.contacts-left {
-  padding: 56px 64px;
-  overflow-y: auto;
-  display: flex; flex-direction: column;
-  gap: 32px;
-}
-.contacts-left .page-label { margin-bottom: 10px; }
+/* ===== CONTACTS SECTION ===== */
+#sec-contacts { background: var(--dark); }
+.contacts-wrap { display: grid; grid-template-columns: 1fr 500px; min-height: 100vh; }
+.contacts-left { padding: 64px; display: flex; flex-direction: column; gap: 32px; }
 .contacts-left h1 { font-size: clamp(34px, 4vw, 54px); font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 0.95; margin-bottom: 8px; }
 .contacts-intro { font-size: 11px; color: var(--white-50); line-height: 1.8; max-width: 380px; }
-
 .info-cards { display: flex; flex-direction: column; gap: 12px; }
 .info-card {
-  display: flex; align-items: flex-start; gap: 16px;
-  padding: 20px; border-radius: 12px;
-  background: rgba(255,255,255,0.03);
-  border: 0.5px solid rgba(255,255,255,0.08);
-  transition: border-color 0.3s;
+  display: flex; align-items: flex-start; gap: 16px; padding: 20px; border-radius: 12px;
+  background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.08); transition: border-color 0.3s;
 }
 .info-card:hover { border-color: rgba(201,168,76,0.25); }
 .info-card-icon {
-  width: 44px; height: 44px; border-radius: 12px;
-  background: var(--gold-dim); border: 0.5px solid rgba(201,168,76,0.3);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 12px; background: var(--gold-dim);
+  border: 0.5px solid rgba(201,168,76,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .info-card-icon i { font-size: 20px; color: var(--gold); }
 .info-card-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
 .info-card-val { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
 .info-card-sub { font-size: 10px; color: var(--white-50); }
-
 .social-row { display: flex; gap: 10px; }
 .social-btn {
-  width: 42px; height: 42px; border-radius: 10px;
-  border: 0.5px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.04);
-  display: flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 10px; border: 0.5px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: all 0.2s;
 }
 .social-btn:hover { border-color: var(--gold); background: var(--gold-dim); }
 .social-btn i { font-size: 18px; color: var(--white-70); }
 .social-btn:hover i { color: var(--gold); }
-
 .contacts-right {
   border-left: 0.5px solid rgba(255,255,255,0.07);
-  padding: 56px 48px;
-  overflow-y: auto;
-  position: relative;
+  padding: 64px 48px; position: relative;
 }
 .contacts-right::before {
   content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 1px;
-  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-  opacity: 0.3;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent); opacity: 0.3;
 }
-
-.form-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 6px; }
+.form-title { font-size: 18px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
 .form-sub { font-size: 10px; color: var(--white-50); margin-bottom: 28px; line-height: 1.7; }
-
 .form-group { margin-bottom: 18px; }
-.form-group label {
-  display: block; font-size: 8px; font-weight: 700;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 8px;
-}
+.form-group label { display: block; font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
 .form-group input, .form-group select, .form-group textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 0.5px solid rgba(255,255,255,0.1);
-  border-radius: 10px; padding: 13px 16px;
-  color: #fff; font-family: 'Montserrat', sans-serif;
-  font-size: 12px; outline: none;
-  transition: border-color 0.2s;
-  resize: none; appearance: none;
+  width: 100%; background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 13px 16px; color: #fff; font-family: 'Montserrat', sans-serif;
+  font-size: 12px; outline: none; transition: border-color 0.2s; resize: none; appearance: none;
 }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); background: rgba(201,168,76,0.04); }
 .form-group input::placeholder, .form-group textarea::placeholder { color: var(--white-50); }
 .form-group select option { background: #1a1a1a; }
-
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
 .btn-submit {
-  width: 100%; padding: 15px;
-  background: var(--gold); border: none; border-radius: 10px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--dark);
-  cursor: pointer; transition: all 0.3s;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  margin-top: 8px;
+  width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px;
+  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--dark); cursor: pointer; transition: all 0.3s;
+  display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px;
 }
 .btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(201,168,76,0.25); }
 
 /* ===== ANIMATIONS ===== */
 .fade-in { animation: fadeIn 0.6s ease forwards; }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
 .slide-in-up { animation: slideInUp 0.7s cubic-bezier(0.23,1,0.32,1) forwards; }
-@keyframes slideInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.d1 { animation-delay: 0.05s; opacity: 0; }
-.d2 { animation-delay: 0.12s; opacity: 0; }
-.d3 { animation-delay: 0.19s; opacity: 0; }
-.d4 { animation-delay: 0.26s; opacity: 0; }
-.d5 { animation-delay: 0.33s; opacity: 0; }
-.d6 { animation-delay: 0.40s; opacity: 0; }
+@keyframes slideInUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+.d1{animation-delay:0.05s;opacity:0;} .d2{animation-delay:0.12s;opacity:0;} .d3{animation-delay:0.19s;opacity:0;}
+.d4{animation-delay:0.26s;opacity:0;} .d5{animation-delay:0.33s;opacity:0;} .d6{animation-delay:0.40s;opacity:0;}
 </style>
 </head>
 <body>
 
-<!-- ==================== HOME ==================== -->
-<div class="page active" id="page-home">
-  <nav>
-    <div class="nav-logo" onclick="navigateTo('home')">
-      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
-      GLOBE EXPRESS
-    </div>
-    <ul class="nav-links">
-      <li><a onclick="navigateTo('home')" class="active" data-page="home">HOME</a></li>
-      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
-      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
-      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
-      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
-    </ul>
-    <div class="nav-actions">
-      <i class="ti ti-search" title="Search"></i>
-      <i class="ti ti-user" title="Account"></i>
-    </div>
-  </nav>
+<!-- ===== SINGLE STICKY NAV ===== -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="scrollToSection('home')">
+    <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
+    GLOBE EXPRESS
+  </div>
+  <ul class="nav-links">
+    <li><a class="active" data-sec="home" onclick="scrollToSection('home')">HOME</a></li>
+    <li><a data-sec="holidays" onclick="scrollToSection('holidays')">HOLIDAYS</a></li>
+    <li><a data-sec="destinations" onclick="scrollToSection('destinations')">DESTINATIONS</a></li>
+    <li><a data-sec="food" onclick="scrollToSection('food')">FOOD</a></li>
+    <li><a data-sec="offers" onclick="scrollToSection('offers')">OFFERS</a></li>
+    <li><a data-sec="contacts" onclick="scrollToSection('contacts')">CONTACTS</a></li>
+  </ul>
+  <div class="nav-actions">
+    <i class="ti ti-search" title="Search"></i>
+    <i class="ti ti-user" title="Account"></i>
+  </div>
+</nav>
 
-  <div class="home-inner">
+<!-- ==================== HOME ==================== -->
+<section class="section" id="sec-home">
+  <div class="home-wrap" style="height:calc(100vh - var(--nav-h));">
     <div class="hero-bg" id="heroBg"></div>
     <div class="hero-overlay"></div>
-    <div class="hero-overlay-top"></div>
-
     <div class="hero-content">
       <div class="location-tag"><span id="heroRegion">Switzerland Alps</span></div>
       <h1 class="hero-title" id="heroTitle">SAINT<br>ANTÖNIEN</h1>
       <p class="hero-desc">Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero.</p>
       <div class="hero-actions">
         <button class="btn-play" aria-label="Play video"><i class="ti ti-player-play"></i></button>
-        <button class="btn-discover">DISCOVER LOCATION</button>
+        <button class="btn-discover" onclick="scrollToSection('holidays')">DISCOVER LOCATION</button>
       </div>
     </div>
-
     <div class="hero-bottom">
       <div class="controls-col">
         <div class="nav-arrows">
@@ -965,32 +603,16 @@ nav {
       </div>
       <div class="cards-row" id="cardsRow"></div>
     </div>
-
     <div class="slide-num">0<em id="slideNum">1</em></div>
+    <div class="scroll-hint" onclick="scrollToSection('holidays')">
+      <span>Scroll</span>
+      <i class="ti ti-chevrons-down"></i>
+    </div>
   </div>
-</div>
+</section>
 
 <!-- ==================== HOLIDAYS ==================== -->
-<div class="page section-page" id="page-holidays">
-  <nav>
-    <div class="nav-logo" onclick="navigateTo('home')">
-      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
-      GLOBE EXPRESS
-    </div>
-    <ul class="nav-links">
-      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
-      <li><a onclick="navigateTo('holidays')" data-page="holidays" class="active">HOLIDAYS</a></li>
-      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
-      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
-      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
-    </ul>
-    <div class="nav-actions">
-      <i class="ti ti-search"></i><i class="ti ti-user"></i>
-    </div>
-  </nav>
-
-  <!-- FIX 3: Holidays hero with clickable bg display -->
+<section class="section" id="sec-holidays">
   <div class="holidays-hero" id="holidaysHero">
     <div class="holidays-hero-bg" id="holidaysHeroBg" style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80');"></div>
     <div class="holidays-hero-overlay"></div>
@@ -1000,189 +622,122 @@ nav {
     </div>
     <div class="holiday-active-label" id="holidayActiveLabel">Click a card to preview</div>
   </div>
-
-  <div class="filter-row">
-    <button class="filter-tab active">ALL</button>
-    <button class="filter-tab">BEACH</button>
-    <button class="filter-tab">MOUNTAIN</button>
-    <button class="filter-tab">CULTURAL</button>
-    <button class="filter-tab">ADVENTURE</button>
-    <button class="filter-tab">LUXURY</button>
-    <button class="filter-tab">CITY BREAK</button>
+  <div class="filter-row" id="holidayFilterRow">
+    <button class="filter-tab active" data-filter="ALL">ALL</button>
+    <button class="filter-tab" data-filter="Beach">BEACH</button>
+    <button class="filter-tab" data-filter="Mountain">MOUNTAIN</button>
+    <button class="filter-tab" data-filter="Cultural">CULTURAL</button>
+    <button class="filter-tab" data-filter="Adventure">ADVENTURE</button>
+    <button class="filter-tab" data-filter="Luxury">LUXURY</button>
   </div>
-
   <div class="holiday-grid" id="holidayGrid"></div>
-</div>
+</section>
 
 <!-- ==================== DESTINATIONS ==================== -->
-<div class="page" id="page-destinations">
-  <nav>
-    <div class="nav-logo" onclick="navigateTo('home')">
-      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
-      GLOBE EXPRESS
-    </div>
-    <ul class="nav-links">
-      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
-      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
-      <li><a onclick="navigateTo('destinations')" data-page="destinations" class="active">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
-      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
-      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
-    </ul>
-    <div class="nav-actions">
-      <i class="ti ti-search"></i><i class="ti ti-user"></i>
-    </div>
-  </nav>
-
+<section class="section" id="sec-destinations">
   <div class="dest-fullpage">
-    <!-- FIX 4: Left panel with dynamic image display -->
     <div class="dest-map-area">
       <div class="dest-display-bg" id="destDisplayBg" style="background-image:url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&q=80');"></div>
       <div class="dest-globe-visual">
-        <div class="globe-rings"></div>
-        <div class="globe-rings"></div>
-        <div class="globe-rings"></div>
-        <div class="dest-pin" style="left:32%;top:28%;" title="Swiss Alps"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:72%;top:35%;" title="Japan"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:44%;top:48%;" title="Morocco"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:20%;top:36%;" title="Yosemite"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:36%;top:33%;" title="Spain"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:80%;top:55%;" title="Bali"><div class="dest-pin-dot"></div></div>
-        <div class="dest-pin" style="left:25%;top:55%;" title="Peru"><div class="dest-pin-dot"></div></div>
+        <div class="globe-rings"></div><div class="globe-rings"></div><div class="globe-rings"></div>
+        <div class="dest-pin" style="left:32%;top:28%;"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:72%;top:35%;"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:44%;top:48%;"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:20%;top:36%;"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:36%;top:33%;"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:80%;top:55%;"><div class="dest-pin-dot"></div></div>
+        <div class="dest-pin" style="left:25%;top:55%;"><div class="dest-pin-dot"></div></div>
       </div>
-
       <div class="dest-map-content">
         <div class="page-label">Explore The World</div>
         <h1>DISCOVER<br>DESTINATIONS</h1>
         <p style="font-size:11px; color:rgba(255,255,255,0.5); max-width:340px; line-height:1.8; margin-top:10px;">
           From alpine peaks to tropical shores — explore 200+ curated destinations across 6 continents.
         </p>
-        <!-- Active destination info -->
         <div class="dest-active-info" id="destActiveInfo">
           <div class="dest-active-name" id="destActiveName">PARIS</div>
           <div class="dest-active-country" id="destActiveCountry">France</div>
           <div class="dest-active-stats">
             <div class="dest-active-stat-item">
-              <div class="dest-active-stat-val" id="destActivePrice">$1,890</div>
-              <div class="dest-active-stat-label">From / person</div>
+              <div class="dest-active-stat-val" id="destActiveStat">248</div>
+              <div class="dest-active-stat-label">Packages Available</div>
             </div>
             <div class="dest-active-stat-item">
-              <div class="dest-active-stat-val" id="destActiveStat">248</div>
-              <div class="dest-active-stat-label">Packages</div>
+              <div class="dest-active-stat-val" id="destActiveRating">4.9 ★</div>
+              <div class="dest-active-stat-label">Avg. Rating</div>
             </div>
           </div>
         </div>
-
-        <div class="dest-regions" style="margin-top:auto; padding-top:40px;">
-          <button class="dest-region-btn active"><span>🌍 All</span></button>
-          <button class="dest-region-btn"><span>🇪🇺 Europe</span></button>
-          <button class="dest-region-btn"><span>🌏 Asia</span></button>
-          <button class="dest-region-btn"><span>🌎 Americas</span></button>
-          <button class="dest-region-btn"><span>🌍 Africa</span></button>
-          <button class="dest-region-btn"><span>🌊 Pacific</span></button>
+        <div class="dest-regions">
+          <button class="dest-region-btn active">🌍 All</button>
+          <button class="dest-region-btn">🇪🇺 Europe</button>
+          <button class="dest-region-btn">🌏 Asia</button>
+          <button class="dest-region-btn">🌎 Americas</button>
+          <button class="dest-region-btn">🌍 Africa</button>
+          <button class="dest-region-btn">🌊 Pacific</button>
         </div>
       </div>
     </div>
-
     <div class="dest-sidebar" id="destSidebar">
       <div class="dest-sidebar-label">Popular Destinations</div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ==================== FOOD (replacing FLIGHTS) ==================== -->
-<div class="page section-page" id="page-food">
-  <nav>
-    <div class="nav-logo" onclick="navigateTo('home')">
-      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
-      GLOBE EXPRESS
+<!-- ==================== FOOD ==================== -->
+<section class="section" id="sec-food">
+  <div class="food-hero">
+    <div class="food-hero-bg"></div>
+    <div class="food-hero-overlay"></div>
+    <div class="food-hero-content">
+      <div class="page-label">Taste The World</div>
+      <h1>LOCAL<br>CUISINE</h1>
     </div>
-    <ul class="nav-links">
-      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
-      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
-      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('food')" data-page="food" class="active">FOOD</a></li>
-      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
-      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
-    </ul>
-    <div class="nav-actions">
-      <i class="ti ti-search"></i><i class="ti ti-user"></i>
-    </div>
-  </nav>
-
-  <div class="food-wrap">
-    <div class="food-hero">
-      <div class="food-hero-bg"></div>
-      <div class="food-hero-overlay"></div>
-      <div class="food-hero-content">
-        <div class="page-label">Taste The World</div>
-        <h1>LOCAL<br>CUISINE</h1>
-      </div>
-    </div>
-
-    <div class="food-filter-row" id="foodFilterRow">
-      <button class="filter-tab active">ALL</button>
-      <button class="filter-tab">🇯🇵 JAPAN</button>
-      <button class="filter-tab">🇮🇩 INDONESIA</button>
-      <button class="filter-tab">🇮🇹 ITALY</button>
-      <button class="filter-tab">🇲🇦 MOROCCO</button>
-      <button class="filter-tab">🇫🇷 FRANCE</button>
-      <button class="filter-tab">🇮🇳 INDIA</button>
-      <button class="filter-tab">🇲🇽 MEXICO</button>
-    </div>
-
-    <div class="food-featured" style="margin-top:36px;">
-      <div class="food-section-title">SIGNATURE DISHES · 3D SHOWCASE</div>
-    </div>
-
-    <!-- FIX 5: 3D Food cards -->
-    <div class="food-3d-grid" id="food3dGrid"></div>
-
-    <div class="food-featured">
-      <div class="food-section-title">REGIONAL SPECIALTIES</div>
-    </div>
-
-    <div class="food-wide-grid" id="foodWideGrid"></div>
   </div>
-</div>
+  <div class="food-filter-row" id="foodFilterRow">
+    <button class="filter-tab active">ALL</button>
+    <button class="filter-tab">🇯🇵 JAPAN</button>
+    <button class="filter-tab">🇮🇩 INDONESIA</button>
+    <button class="filter-tab">🇮🇹 ITALY</button>
+    <button class="filter-tab">🇲🇦 MOROCCO</button>
+    <button class="filter-tab">🇫🇷 FRANCE</button>
+    <button class="filter-tab">🇮🇳 INDIA</button>
+    <button class="filter-tab">🇲🇽 MEXICO</button>
+  </div>
+  <div class="food-section-title">SIGNATURE DISHES</div>
+  <div class="food-3d-grid" id="food3dGrid"></div>
+  <div class="food-section-title" style="margin-top:0;">REGIONAL SPECIALTIES</div>
+  <div class="food-wide-grid" id="foodWideGrid"></div>
+</section>
 
 <!-- ==================== OFFERS ==================== -->
-<div class="page section-page" id="page-offers">
-  <nav>
-    <div class="nav-logo" onclick="navigateTo('home')">
-      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
-      GLOBE EXPRESS
-    </div>
-    <ul class="nav-links">
-      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
-      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
-      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
-      <li><a onclick="navigateTo('offers')" data-page="offers" class="active">OFFERS</a></li>
-      <li><a onclick="navigateTo('contacts')" data-page="contacts">CONTACTS</a></li>
-    </ul>
-    <div class="nav-actions">
-      <i class="ti ti-search"></i><i class="ti ti-user"></i>
-    </div>
-  </nav>
-
+<section class="section" id="sec-offers">
   <div class="offers-wrap">
     <div class="offers-header">
       <div class="offers-header-left">
-        <div class="page-label">Limited Time</div>
+        <div class="page-label">Featured Packages</div>
         <h1>EXCLUSIVE<br>DEALS</h1>
       </div>
+      <!-- UPDATE 4: Realtime clock -->
       <div class="offers-header-right">
-        <div class="countdown-label">Flash Sale Ends In</div>
-        <div class="countdown">
-          <div class="countdown-unit"><div class="countdown-num" id="cdDays">02</div><div class="countdown-unit-label">DAYS</div></div>
-          <div class="countdown-sep">:</div>
-          <div class="countdown-unit"><div class="countdown-num" id="cdHours">14</div><div class="countdown-unit-label">HRS</div></div>
-          <div class="countdown-sep">:</div>
-          <div class="countdown-unit"><div class="countdown-num" id="cdMins">37</div><div class="countdown-unit-label">MIN</div></div>
-          <div class="countdown-sep">:</div>
-          <div class="countdown-unit"><div class="countdown-num" id="cdSecs">22</div><div class="countdown-unit-label">SEC</div></div>
+        <div class="clock-label">Current Time · WIB</div>
+        <div class="live-clock">
+          <div class="clock-part">
+            <div class="clock-num" id="clkHour">00</div>
+            <div class="clock-unit-label">HOUR</div>
+          </div>
+          <div class="clock-sep">:</div>
+          <div class="clock-part">
+            <div class="clock-num" id="clkMin">00</div>
+            <div class="clock-unit-label">MIN</div>
+          </div>
+          <div class="clock-sep">:</div>
+          <div class="clock-part">
+            <div class="clock-num" id="clkSec">00</div>
+            <div class="clock-unit-label">SEC</div>
+          </div>
         </div>
+        <div class="clock-date" id="clkDate"></div>
       </div>
     </div>
 
@@ -1190,40 +745,18 @@ nav {
       <div class="deals-hero-bg"></div>
       <div class="deals-hero-overlay"></div>
       <div class="deals-hero-content">
-        <div class="deals-hero-tag"><i class="ti ti-bolt" style="font-size:11px;"></i> FLASH DEAL</div>
+        <div class="deals-hero-tag"><i class="ti ti-bolt" style="font-size:11px;"></i> FEATURED</div>
         <div class="deals-hero-title">MALDIVES<br>ALL INCLUSIVE</div>
         <div class="deals-hero-sub">7 Nights · Private Villa · Full Board · Seaplane Transfer</div>
-        <div class="deals-hero-price">
-          <del style="font-size:18px; color:rgba(255,255,255,0.4);">$4,200</del>
-          &nbsp;$2,499 <span>/ person</span>
-        </div>
       </div>
     </div>
 
     <div class="offers-grid" id="offersGrid"></div>
   </div>
-</div>
+</section>
 
 <!-- ==================== CONTACTS ==================== -->
-<div class="page" id="page-contacts">
-  <nav>
-    <div class="nav-logo" onclick="navigateTo('home')">
-      <div class="nav-logo-icon"><i class="ti ti-world"></i></div>
-      GLOBE EXPRESS
-    </div>
-    <ul class="nav-links">
-      <li><a onclick="navigateTo('home')" data-page="home">HOME</a></li>
-      <li><a onclick="navigateTo('holidays')" data-page="holidays">HOLIDAYS</a></li>
-      <li><a onclick="navigateTo('destinations')" data-page="destinations">DESTINATIONS</a></li>
-      <li><a onclick="navigateTo('food')" data-page="food">FOOD</a></li>
-      <li><a onclick="navigateTo('offers')" data-page="offers">OFFERS</a></li>
-      <li><a onclick="navigateTo('contacts')" data-page="contacts" class="active">CONTACTS</a></li>
-    </ul>
-    <div class="nav-actions">
-      <i class="ti ti-search"></i><i class="ti ti-user"></i>
-    </div>
-  </nav>
-
+<section class="section" id="sec-contacts">
   <div class="contacts-wrap">
     <div class="contacts-left">
       <div>
@@ -1233,7 +766,6 @@ nav {
           Our travel experts are ready to craft your perfect journey. Reach out and we'll create an itinerary tailored to your dreams.
         </p>
       </div>
-
       <div class="info-cards">
         <div class="info-card">
           <div class="info-card-icon"><i class="ti ti-map-pin"></i></div>
@@ -1268,9 +800,8 @@ nav {
           </div>
         </div>
       </div>
-
       <div>
-        <div style="font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:12px;">FOLLOW US</div>
+        <div style="font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:12px;">FOLLOW US</div>
         <div class="social-row">
           <div class="social-btn"><i class="ti ti-brand-instagram"></i></div>
           <div class="social-btn"><i class="ti ti-brand-facebook"></i></div>
@@ -1280,59 +811,31 @@ nav {
         </div>
       </div>
     </div>
-
     <div class="contacts-right">
       <div class="form-title">Send a Message</div>
       <div class="form-sub">Fill out the form and our team will get back to you within one business day.</div>
-
       <div class="form-row">
-        <div class="form-group">
-          <label>First Name</label>
-          <input type="text" placeholder="John">
-        </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" placeholder="Doe">
-        </div>
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="John"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe"></div>
       </div>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" placeholder="john@example.com">
-      </div>
-      <div class="form-group">
-        <label>Phone Number</label>
-        <input type="tel" placeholder="+62 812 0000 0000">
-      </div>
+      <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@example.com"></div>
+      <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+62 812 0000 0000"></div>
       <div class="form-group">
         <label>Inquiry Type</label>
         <select>
-          <option>Holiday Package</option>
-          <option>Custom Itinerary</option>
-          <option>Group Travel</option>
-          <option>Honeymoon Package</option>
-          <option>Other</option>
+          <option>Holiday Package</option><option>Custom Itinerary</option>
+          <option>Group Travel</option><option>Honeymoon Package</option><option>Other</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Destination of Interest</label>
-        <input type="text" placeholder="e.g. Santorini, Maldives, Swiss Alps...">
-      </div>
-      <div class="form-group">
-        <label>Your Message</label>
-        <textarea rows="4" placeholder="Tell us about your dream trip..."></textarea>
-      </div>
-      <button class="btn-submit">
-        <i class="ti ti-send" style="font-size:16px;"></i>
-        SEND MESSAGE
-      </button>
+      <div class="form-group"><label>Destination of Interest</label><input type="text" placeholder="e.g. Santorini, Maldives, Swiss Alps..."></div>
+      <div class="form-group"><label>Your Message</label><textarea rows="4" placeholder="Tell us about your dream trip..."></textarea></div>
+      <button class="btn-submit"><i class="ti ti-send" style="font-size:16px;"></i>SEND MESSAGE</button>
     </div>
   </div>
-</div>
+</section>
 
 <script>
-// ===== DATA =====
-
-// FIX 2: Nagano gets proper Japanese Snow Monkey image
+/* ===== DATA — UPDATE 1: All prices, discounts, money references removed ===== */
 const destinations = [
   { region:"Switzerland Alps", line1:"SAINT", line2:"ANTÖNIEN",
     heroBg:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80",
@@ -1352,123 +855,74 @@ const destinations = [
 ];
 
 const holidays = [
-  { region:"Maldives", name:"NORTH MALÉ ATOLL", desc:"Overwater bungalows, crystal lagoons, and world-class diving reefs await.", img:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80", price:"$3,299", nights:"7 nights", type:"Beach", rating:"4.9" },
-  { region:"Switzerland", name:"GRINDELWALD PEAKS", desc:"Iconic alpine village below the North Face with glaciers and cable cars.", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80", price:"$2,899", nights:"6 nights", type:"Mountain", rating:"4.8" },
-  { region:"Japan", name:"KYOTO IMPERIAL", desc:"Cherry blossom temples, kaiseki dining, and centuries of living culture.", img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80", price:"$3,499", nights:"8 nights", type:"Cultural", rating:"5.0" },
-  { region:"Morocco", name:"SAHARA MERZOUGA", desc:"Camel treks at sunset, luxury desert camps under a billion stars.", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", price:"$1,899", nights:"5 nights", type:"Adventure", rating:"4.7" },
-  { region:"French Riviera", name:"CÔTE D'AZUR", desc:"Glamorous promenades, azure seas, Michelin dining and yacht culture.", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800&q=80", price:"$4,199", nights:"7 nights", type:"Luxury", rating:"4.9" },
-  { region:"Bali, Indonesia", name:"UBUD HIGHLANDS", desc:"Rice terraces, jungle spa retreats, and Balinese temple ceremonies.", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", price:"$1,499", nights:"5 nights", type:"Cultural", rating:"4.8" }
+  { region:"Maldives", name:"NORTH MALÉ ATOLL", desc:"Overwater bungalows, crystal lagoons, and world-class diving reefs await.", img:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80", nights:"7 nights", type:"Beach", rating:"4.9" },
+  { region:"Switzerland", name:"GRINDELWALD PEAKS", desc:"Iconic alpine village below the North Face with glaciers and cable cars.", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80", nights:"6 nights", type:"Mountain", rating:"4.8" },
+  { region:"Japan", name:"KYOTO IMPERIAL", desc:"Cherry blossom temples, kaiseki dining, and centuries of living culture.", img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80", nights:"8 nights", type:"Cultural", rating:"5.0" },
+  { region:"Morocco", name:"SAHARA MERZOUGA", desc:"Camel treks at sunset, luxury desert camps under a billion stars.", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", nights:"5 nights", type:"Adventure", rating:"4.7" },
+  { region:"French Riviera", name:"CÔTE D'AZUR", desc:"Glamorous promenades, azure seas, Michelin dining and yacht culture.", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=800&q=80", nights:"7 nights", type:"Luxury", rating:"4.9" },
+  { region:"Bali, Indonesia", name:"UBUD HIGHLANDS", desc:"Rice terraces, jungle spa retreats, and Balinese temple ceremonies.", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", nights:"5 nights", type:"Cultural", rating:"4.8" }
 ];
 
-const offers = [
-  { name:"SANTORINI SUNSET", discount:"40% OFF", price:"$1,299", old:"$2,190", details:"7 Nights · Couples Package", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80" },
-  { name:"BALI PARADISE", discount:"35% OFF", price:"$899", old:"$1,380", details:"5 Nights · Villa Stay", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" },
-  { name:"TOKYO EXPLORER", discount:"25% OFF", price:"$2,199", old:"$2,930", details:"10 Nights · City Tour", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80" },
-  { name:"SWISS ALPS LODGE", discount:"30% OFF", price:"$2,499", old:"$3,560", details:"8 Nights · Ski Package", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80" },
-  { name:"AMALFI COAST", discount:"20% OFF", price:"$1,799", old:"$2,240", details:"6 Nights · Coastal Drive", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=80" }
-];
-
+/* UPDATE 1: destItems — no price field */
 const destItems = [
-  { name:"PARIS", country:"France", img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80", price:"$1,890", stat:"248 packages" },
-  { name:"BALI", country:"Indonesia", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", price:"$899", stat:"186 packages" },
-  { name:"TOKYO", country:"Japan", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80", price:"$2,100", stat:"142 packages" },
-  { name:"SANTORINI", country:"Greece", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80", price:"$1,650", stat:"95 packages" },
-  { name:"MARRAKECH", country:"Morocco", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", price:"$890", stat:"78 packages" },
-  { name:"NEW YORK", country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80", price:"$1,420", stat:"116 packages" }
+  { name:"PARIS", country:"France", img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80", stat:"248 packages", rating:"4.9" },
+  { name:"BALI", country:"Indonesia", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", stat:"186 packages", rating:"4.8" },
+  { name:"TOKYO", country:"Japan", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80", stat:"142 packages", rating:"4.9" },
+  { name:"SANTORINI", country:"Greece", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80", stat:"95 packages", rating:"5.0" },
+  { name:"MARRAKECH", country:"Morocco", img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80", stat:"78 packages", rating:"4.7" },
+  { name:"NEW YORK", country:"United States", img:"https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80", stat:"116 packages", rating:"4.8" }
 ];
 
-// FIX 5: Food data with beautiful SVG 3D dish renders
+/* UPDATE 1: offers — no discount or price */
+const offers = [
+  { name:"SANTORINI SUNSET", details:"7 Nights · Couples Package", img:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80" },
+  { name:"BALI PARADISE", details:"5 Nights · Villa Stay", img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" },
+  { name:"TOKYO EXPLORER", details:"10 Nights · City Tour", img:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80" },
+  { name:"SWISS ALPS LODGE", details:"8 Nights · Ski Package", img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80" },
+  { name:"AMALFI COAST", details:"6 Nights · Coastal Drive", img:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=80" }
+];
+
+/* UPDATE 5: food 3D cards use real photos only, no SVG overlay */
 const foods3d = [
-  {
-    origin: "Japan · Tokyo",
-    name: "RAMEN",
-    desc: "Rich tonkotsu broth, chashu pork, soft-boiled egg & bamboo shoots",
-    bgImg: "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80",
-    svgColor: "#e8b96a",
-    bowlColor: "#2a1a0a",
-    steamColor: "rgba(255,220,180,0.5)",
-    emoji: "🍜"
-  },
-  {
-    origin: "Italy · Naples",
-    name: "PIZZA NAPOLETANA",
-    desc: "Wood-fired sourdough crust, San Marzano tomato, fresh buffalo mozzarella",
-    bgImg: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80",
-    svgColor: "#e05a2b",
-    bowlColor: "#8b2500",
-    steamColor: "rgba(255,180,150,0.4)",
-    emoji: "🍕"
-  },
-  {
-    origin: "Morocco · Marrakech",
-    name: "TAGINE",
-    desc: "Slow-cooked lamb with preserved lemon, olives, saffron & aromatic spices",
-    bgImg: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&q=80",
-    svgColor: "#c98a2a",
-    bowlColor: "#5a2a00",
-    steamColor: "rgba(255,200,100,0.5)",
-    emoji: "🫕"
-  },
-  {
-    origin: "Indonesia · Bali",
-    name: "NASI GORENG",
-    desc: "Wok-fried rice with shrimp paste, kecap manis, prawn crackers & fried egg",
-    bgImg: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80",
-    svgColor: "#c4622d",
-    bowlColor: "#3a1500",
-    steamColor: "rgba(255,160,80,0.4)",
-    emoji: "🍳"
-  }
+  { origin:"Japan · Tokyo", name:"RAMEN", desc:"Rich tonkotsu broth, chashu pork, soft-boiled egg & bamboo shoots",
+    photo:"https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80" },
+  { origin:"Italy · Naples", name:"PIZZA NAPOLETANA", desc:"Wood-fired sourdough crust, San Marzano tomato, buffalo mozzarella",
+    photo:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80" },
+  { origin:"Morocco · Marrakech", name:"TAGINE", desc:"Slow-cooked lamb with preserved lemon, olives, saffron & spices",
+    photo:"https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&q=80" },
+  { origin:"Indonesia · Bali", name:"NASI GORENG", desc:"Wok-fried rice with shrimp paste, kecap manis & fried egg",
+    photo:"https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" }
 ];
 
 const foodsWide = [
-  {
-    origin: "France · Paris",
-    name: "BOEUF BOURGUIGNON",
-    desc: "Classic French braised beef slow-cooked in Burgundy wine with mushrooms, pearl onions, and lardons.",
-    img: "https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600&q=80",
-    tags: ["Slow-cooked", "Wine braised", "Heritage recipe"]
-  },
-  {
-    origin: "India · Mumbai",
-    name: "BUTTER CHICKEN",
-    desc: "Tender chicken tikka in rich tomato-cream curry, fragrant with garam masala and fresh ginger.",
-    img: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80",
-    tags: ["Spiced", "Creamy", "North Indian"]
-  },
-  {
-    origin: "Mexico · Oaxaca",
-    name: "MOLE NEGRO",
-    desc: "Complex dark mole sauce with over 30 ingredients including chillies, chocolate, spices, and turkey.",
-    img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80",
-    tags: ["Complex", "Chocolate-infused", "Traditional"]
-  },
-  {
-    origin: "Spain · Seville",
-    name: "PAELLA VALENCIANA",
-    desc: "Saffron-scented Bomba rice with rabbit, chicken, green beans, and the essential socarrat crust.",
-    img: "https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=600&q=80",
-    tags: ["Saffron", "Socarrat crust", "Wood-fired"]
-  }
+  { origin:"France · Paris", name:"BOEUF BOURGUIGNON", desc:"Classic French braised beef slow-cooked in Burgundy wine with mushrooms, pearl onions, and lardons.", img:"https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600&q=80", tags:["Slow-cooked","Wine braised","Heritage recipe"] },
+  { origin:"India · Mumbai", name:"BUTTER CHICKEN", desc:"Tender chicken tikka in rich tomato-cream curry, fragrant with garam masala and fresh ginger.", img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80", tags:["Spiced","Creamy","North Indian"] },
+  { origin:"Mexico · Oaxaca", name:"MOLE NEGRO", desc:"Complex dark mole sauce with over 30 ingredients including chillies, chocolate and turkey.", img:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80", tags:["Complex","Chocolate-infused","Traditional"] },
+  { origin:"Spain · Valencia", name:"PAELLA VALENCIANA", desc:"Saffron-scented Bomba rice with rabbit, chicken, green beans, and the essential socarrat crust.", img:"https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=600&q=80", tags:["Saffron","Socarrat crust","Wood-fired"] }
 ];
 
-// ===== NAV =====
-let currentPage = 'home';
+/* ===== UPDATE 2: Scroll-based navigation ===== */
+const sections = ['home','holidays','destinations','food','offers','contacts'];
 
-function navigateTo(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  // Scroll to top when switching pages
-  document.getElementById('page-' + page).scrollTop = 0;
-  currentPage = page;
-
-  if (page === 'holidays') renderHolidays();
-  if (page === 'destinations') renderDestinations();
-  if (page === 'food') renderFood();
-  if (page === 'offers') renderOffers();
+function scrollToSection(id) {
+  const el = document.getElementById('sec-' + id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ===== HOME SLIDER =====
+// Update active nav link on scroll
+const navH = document.getElementById('mainNav').offsetHeight;
+window.addEventListener('scroll', () => {
+  let current = 'home';
+  sections.forEach(id => {
+    const el = document.getElementById('sec-' + id);
+    if (el && window.scrollY >= el.offsetTop - navH - 40) current = id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.dataset.sec === current);
+  });
+}, { passive: true });
+
+/* ===== HOME SLIDER ===== */
 const TOTAL = destinations.length;
 let current = 0;
 let autoTimer = null;
@@ -1482,7 +936,6 @@ function update(animate = true) {
   if (animate) { titleEl.classList.remove('fade-in'); void titleEl.offsetWidth; titleEl.classList.add('fade-in'); }
   document.getElementById('slideNum').textContent = current + 1;
   document.getElementById('progressFill').style.width = ((current + 1) / TOTAL * 100) + '%';
-
   const cardsRow = document.getElementById('cardsRow');
   cardsRow.innerHTML = '';
   for (let i = 1; i <= 4; i++) {
@@ -1495,32 +948,26 @@ function update(animate = true) {
     cardsRow.appendChild(card);
   }
 }
-
 function goNext() { current = (current + 1) % TOTAL; update(); }
 function goPrev() { current = (current - 1 + TOTAL) % TOTAL; update(); }
 function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(goNext, 5500); }
-
 document.getElementById('btnNext').addEventListener('click', () => { goNext(); resetAuto(); });
 document.getElementById('btnPrev').addEventListener('click', () => { goPrev(); resetAuto(); });
-
 update(false);
 resetAuto();
 
-// ===== FIX 3: RENDER HOLIDAYS with hero display update =====
+/* ===== UPDATE 3: HOLIDAYS — all features working + hero changes on click ===== */
+let allHolidayCards = [];
 function renderHolidays() {
   const grid = document.getElementById('holidayGrid');
-  if (grid.innerHTML.trim()) {
-    // Re-attach filter tabs
-    attachFilterTabs();
-    return;
-  }
-
+  if (grid.innerHTML.trim()) return;
+  allHolidayCards = [];
   holidays.forEach((h, i) => {
     const card = document.createElement('div');
     card.className = 'holiday-card slide-in-up d' + (i + 1);
+    card.dataset.type = h.type;
     card.innerHTML = `
-      <div class="hcard-img-wrap">
-        <div class="hcard-img" style="background-image:url('${h.img}');"></div>
+      <div class="hcard-img-wrap"><div class="hcard-img" style="background-image:url('${h.img}');"></div>
         <div class="hcard-badge">${h.type}</div>
         <div class="hcard-save"><i class="ti ti-heart"></i></div>
       </div>
@@ -1529,88 +976,74 @@ function renderHolidays() {
         <div class="hcard-name">${h.name}</div>
         <div class="hcard-desc">${h.desc}</div>
         <div class="hcard-footer">
-          <div>
-            <div class="hcard-price-label">From</div>
-            <div class="hcard-price">${h.price} <span>/ person</span></div>
+          <div class="hcard-meta">
+            <div class="hcard-meta-item"><i class="ti ti-moon"></i>${h.nights}</div>
+            <div class="hcard-meta-item"><i class="ti ti-star-filled" style="color:#c9a84c;"></i>${h.rating}</div>
           </div>
-          <div>
-            <div class="hcard-meta">
-              <div class="hcard-meta-item"><i class="ti ti-moon"></i>${h.nights}</div>
-              <div class="hcard-meta-item"><i class="ti ti-star-filled" style="color:#c9a84c;"></i>${h.rating}</div>
-            </div>
-            <button class="btn-gold-sm" style="margin-top:10px;">BOOK NOW</button>
-          </div>
+          <button class="btn-gold-sm">EXPLORE</button>
         </div>
       </div>`;
-
-    // FIX 3: Click updates the hero display above
+    /* UPDATE 3: clicking card updates hero display */
     card.addEventListener('click', () => {
       document.querySelectorAll('.holiday-card').forEach(c => c.classList.remove('h-active'));
       card.classList.add('h-active');
       document.getElementById('holidaysHeroBg').style.backgroundImage = `url('${h.img.replace('w=800','w=1600')}')`;
       document.getElementById('holidaysHeroTitle').innerHTML = h.name.replace(' ','<br>');
       document.getElementById('holidayActiveLabel').textContent = h.region;
-      // Scroll to top so user sees the hero change
-      document.getElementById('page-holidays').scrollTo({ top: 64, behavior: 'smooth' });
+      document.getElementById('sec-holidays').scrollIntoView({ behavior:'smooth' });
     });
-
+    /* Save button toggle */
+    card.querySelector('.hcard-save').addEventListener('click', e => {
+      e.stopPropagation();
+      const icon = e.currentTarget.querySelector('i');
+      icon.classList.toggle('ti-heart'); icon.classList.toggle('ti-heart-filled');
+      e.currentTarget.style.background = icon.classList.contains('ti-heart-filled') ? 'var(--gold)' : '';
+    });
+    allHolidayCards.push(card);
     grid.appendChild(card);
   });
 
-  attachFilterTabs();
-}
-
-function attachFilterTabs() {
-  document.querySelectorAll('.filter-tab').forEach(t => {
-    t.onclick = function() {
-      document.querySelectorAll('.filter-tab').forEach(x => x.classList.remove('active'));
+  /* Filter tabs */
+  document.querySelectorAll('#holidayFilterRow .filter-tab').forEach(t => {
+    t.addEventListener('click', function() {
+      document.querySelectorAll('#holidayFilterRow .filter-tab').forEach(x => x.classList.remove('active'));
       this.classList.add('active');
-    };
+      const filter = this.dataset.filter;
+      allHolidayCards.forEach(c => {
+        c.style.display = (filter === 'ALL' || c.dataset.type === filter) ? '' : 'none';
+      });
+    });
   });
 }
 
-// ===== FIX 4: RENDER DESTINATIONS with left panel display update =====
+/* ===== UPDATE 3: DESTINATIONS — sidebar click updates main display ===== */
 function renderDestinations() {
   const sidebar = document.getElementById('destSidebar');
-  if (sidebar.children.length > 1) {
-    attachRegionBtns();
-    return;
-  }
-
+  if (sidebar.children.length > 1) { attachRegionBtns(); return; }
   destItems.forEach((d, i) => {
     const item = document.createElement('div');
-    item.className = 'dest-item slide-in-up d' + Math.min(i + 1, 6);
+    item.className = 'dest-item slide-in-up d' + Math.min(i+1,6);
     if (i === 0) item.classList.add('selected');
     item.innerHTML = `
       <div class="dest-item-img" style="background-image:url('${d.img}');"></div>
       <div class="dest-item-body">
         <div class="dest-item-name">${d.name}</div>
         <div class="dest-item-country">${d.country}</div>
-        <div class="dest-item-row">
-          <div class="dest-item-stat">${d.stat}</div>
-          <div class="dest-item-price">${d.price}</div>
-        </div>
+        <div class="dest-item-stat">${d.stat}</div>
       </div>`;
-
-    // FIX 4: clicking updates the main display on the left
     item.addEventListener('click', () => {
       document.querySelectorAll('.dest-item').forEach(x => x.classList.remove('selected'));
       item.classList.add('selected');
-      // Update background image on left panel
       document.getElementById('destDisplayBg').style.backgroundImage = `url('${d.img.replace('w=800','w=1200')}')`;
-      // Update info card
       document.getElementById('destActiveName').textContent = d.name;
       document.getElementById('destActiveCountry').textContent = d.country;
-      document.getElementById('destActivePrice').textContent = d.price;
       document.getElementById('destActiveStat').textContent = d.stat.split(' ')[0];
+      document.getElementById('destActiveRating').textContent = d.rating + ' ★';
     });
-
     sidebar.appendChild(item);
   });
-
   attachRegionBtns();
 }
-
 function attachRegionBtns() {
   document.querySelectorAll('.dest-region-btn').forEach(b => {
     b.onclick = function() {
@@ -1620,267 +1053,106 @@ function attachRegionBtns() {
   });
 }
 
-// ===== FIX 5: RENDER FOOD with 3D dish SVG =====
+/* ===== UPDATE 5: FOOD — pure photo cards, no SVG icons ===== */
 function renderFood() {
-  const grid3d = document.getElementById('food3dGrid');
-  const gridWide = document.getElementById('foodWideGrid');
-  if (grid3d.innerHTML.trim()) return;
+  const g3 = document.getElementById('food3dGrid');
+  const gw = document.getElementById('foodWideGrid');
+  if (g3.innerHTML.trim()) return;
 
-  // 3D dish SVGs using canvas-rendered plates
   foods3d.forEach((f, i) => {
     const card = document.createElement('div');
-    card.className = 'food-3d-card slide-in-up d' + (i + 1);
+    card.className = 'food-3d-card slide-in-up d' + (i+1);
     card.innerHTML = `
-      <div class="food-3d-bg" style="background-image:url('${f.bgImg}');"></div>
-      <div class="food-3d-gradient"></div>
-      <div class="food-3d-plate-wrap">
-        <div style="position:relative; display:flex; align-items:center; justify-content:center;">
-          <div class="food-3d-steam">
-            <div class="steam-line"></div>
-            <div class="steam-line"></div>
-            <div class="steam-line"></div>
-          </div>
-          <div class="food-3d-plate">
-            ${buildDishSVG(f)}
-          </div>
-          <div class="food-3d-shadow"></div>
-        </div>
+      <div class="food-photo" style="background-image:url('${f.photo}');"></div>
+      <div class="food-photo-overlay"></div>
+      <div class="food-3d-steam">
+        <div class="steam-line"></div>
+        <div class="steam-line"></div>
+        <div class="steam-line"></div>
       </div>
       <div class="food-3d-info">
         <div class="food-3d-origin">${f.origin}</div>
         <div class="food-3d-name">${f.name}</div>
         <div class="food-3d-desc">${f.desc}</div>
       </div>`;
-    grid3d.appendChild(card);
+    g3.appendChild(card);
   });
 
-  // Wide food cards
   foodsWide.forEach((f, i) => {
     const card = document.createElement('div');
-    card.className = 'food-wide-card slide-in-up d' + (i + 1);
+    card.className = 'food-wide-card slide-in-up d' + (i+1);
     card.innerHTML = `
-      <div class="fwcard-img-wrap">
-        <div class="fwcard-img" style="background-image:url('${f.img}');"></div>
-      </div>
+      <div class="fwcard-img-wrap"><div class="fwcard-img" style="background-image:url('${f.img}');"></div></div>
       <div class="fwcard-body">
         <div class="fwcard-origin">${f.origin}</div>
         <div class="fwcard-name">${f.name}</div>
         <div class="fwcard-desc">${f.desc}</div>
         <div class="fwcard-tags">${f.tags.map(t=>`<span class="fwcard-tag">${t}</span>`).join('')}</div>
       </div>`;
-    gridWide.appendChild(card);
+    gw.appendChild(card);
   });
 
-  // Food filter tabs
   document.querySelectorAll('#foodFilterRow .filter-tab').forEach(t => {
-    t.onclick = function() {
+    t.addEventListener('click', function() {
       document.querySelectorAll('#foodFilterRow .filter-tab').forEach(x => x.classList.remove('active'));
       this.classList.add('active');
-    };
+    });
   });
 }
 
-function buildDishSVG(f) {
-  const idx = foods3d.indexOf(f);
-  if (idx === 0) return buildRamenSVG();
-  if (idx === 1) return buildPizzaSVG();
-  if (idx === 2) return buildTagineSVG();
-  if (idx === 3) return buildNasiGorengSVG();
-  return `<text style="font-size:80px;line-height:1;">${f.emoji}</text>`;
-}
-
-function buildRamenSVG() {
-  return `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
-    <!-- Shadow/depth -->
-    <ellipse cx="80" cy="148" rx="68" ry="10" fill="rgba(0,0,0,0.4)"/>
-    <!-- Bowl body 3D -->
-    <ellipse cx="80" cy="110" rx="68" ry="18" fill="#1a0d04"/>
-    <path d="M12 90 Q12 140 80 145 Q148 140 148 90 Z" fill="#2e1608"/>
-    <path d="M12 90 Q12 135 80 140 Q148 135 148 90 Z" fill="#3d1e0a"/>
-    <!-- Bowl rim 3D -->
-    <ellipse cx="80" cy="90" rx="68" ry="16" fill="#4a2510"/>
-    <ellipse cx="80" cy="88" rx="64" ry="13" fill="#5c2e12"/>
-    <!-- Broth surface -->
-    <ellipse cx="80" cy="88" rx="60" ry="11" fill="#8B4513"/>
-    <ellipse cx="80" cy="87" rx="58" ry="10" fill="#c17a3a"/>
-    <!-- Noodle swirl -->
-    <path d="M50 82 Q65 76 80 82 Q95 88 110 82" stroke="#f5d5a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M45 86 Q62 80 80 86 Q98 92 115 86" stroke="#f0c880" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    <path d="M52 90 Q68 84 82 90 Q96 96 108 90" stroke="#f5d5a0" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <!-- Chashu pork slices -->
-    <ellipse cx="60" cy="78" rx="14" ry="8" fill="#8b2020" transform="rotate(-15 60 78)"/>
-    <ellipse cx="60" cy="78" rx="10" ry="5.5" fill="#c05050" transform="rotate(-15 60 78)"/>
-    <ellipse cx="60" cy="78" rx="5" ry="2.5" fill="#8b2020" transform="rotate(-15 60 78)"/>
-    <!-- Soft boiled egg -->
-    <ellipse cx="102" cy="76" rx="11" ry="9" fill="#f5e88e"/>
-    <ellipse cx="102" cy="76" rx="6" ry="5" fill="#f9a825"/>
-    <!-- Nori sheet -->
-    <rect x="74" y="66" width="6" height="18" rx="1" fill="#1a3a1a" transform="rotate(5 77 75)"/>
-    <!-- Spring onion -->
-    <line x1="55" y1="70" x2="58" y2="85" stroke="#5ab55a" stroke-width="2" stroke-linecap="round"/>
-    <line x1="62" y1="68" x2="64" y2="83" stroke="#4aa04a" stroke-width="1.5" stroke-linecap="round"/>
-    <!-- Chopsticks -->
-    <line x1="30" y1="60" x2="85" y2="95" stroke="#c8956c" stroke-width="3.5" stroke-linecap="round"/>
-    <line x1="35" y1="56" x2="90" y2="91" stroke="#b07850" stroke-width="3" stroke-linecap="round"/>
-  </svg>`;
-}
-
-function buildPizzaSVG() {
-  return `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
-    <!-- Shadow -->
-    <ellipse cx="80" cy="150" rx="65" ry="8" fill="rgba(0,0,0,0.35)"/>
-    <!-- Pizza base 3D side -->
-    <ellipse cx="80" cy="115" rx="62" ry="12" fill="#8b4a1a"/>
-    <path d="M18 100 Q18 118 80 122 Q142 118 142 100 Z" fill="#a05820"/>
-    <!-- Crust ring bottom -->
-    <ellipse cx="80" cy="100" rx="62" ry="12" fill="#c97a30"/>
-    <!-- Pizza top surface -->
-    <ellipse cx="80" cy="98" rx="60" ry="11" fill="#d4512a"/>
-    <!-- Tomato sauce layer -->
-    <ellipse cx="80" cy="97" rx="54" ry="9" fill="#c0392b"/>
-    <!-- Cheese melted -->
-    <ellipse cx="80" cy="96" rx="50" ry="8" fill="#f5e082"/>
-    <!-- Cheese blobs -->
-    <ellipse cx="68" cy="93" rx="14" ry="6" fill="#f9e88a" opacity="0.9"/>
-    <ellipse cx="94" cy="91" rx="12" ry="5" fill="#f7e070" opacity="0.9"/>
-    <ellipse cx="80" cy="89" rx="10" ry="5" fill="#fef08a" opacity="0.8"/>
-    <!-- Tomato slices -->
-    <circle cx="62" cy="92" r="8" fill="#e74c3c" opacity="0.85"/>
-    <circle cx="62" cy="92" r="5" fill="#c0392b" opacity="0.7"/>
-    <circle cx="98" cy="90" r="7" fill="#e74c3c" opacity="0.8"/>
-    <circle cx="98" cy="90" r="4" fill="#c0392b" opacity="0.7"/>
-    <!-- Basil leaves -->
-    <ellipse cx="75" cy="86" rx="8" ry="4" fill="#27ae60" transform="rotate(-20 75 86)"/>
-    <ellipse cx="88" cy="96" rx="7" ry="3.5" fill="#2ecc71" transform="rotate(15 88 96)"/>
-    <!-- Mozzarella blobs -->
-    <circle cx="72" cy="100" r="5" fill="rgba(255,255,255,0.7)"/>
-    <circle cx="87" cy="98" r="4" fill="rgba(255,255,255,0.65)"/>
-    <circle cx="80" cy="104" r="4.5" fill="rgba(255,255,255,0.6)"/>
-    <!-- Crust texture -->
-    <ellipse cx="80" cy="100" rx="60" ry="11" fill="none" stroke="#a05820" stroke-width="1.5" opacity="0.5"/>
-  </svg>`;
-}
-
-function buildTagineSVG() {
-  return `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
-    <!-- Shadow -->
-    <ellipse cx="80" cy="152" rx="58" ry="7" fill="rgba(0,0,0,0.35)"/>
-    <!-- Base plate -->
-    <ellipse cx="80" cy="130" rx="58" ry="10" fill="#5a2800"/>
-    <path d="M22 118 Q22 132 80 136 Q138 132 138 118 Z" fill="#6e3310"/>
-    <ellipse cx="80" cy="118" rx="58" ry="10" fill="#8b4a20"/>
-    <!-- Tagine body (cone shape) -->
-    <path d="M30 118 Q30 90 80 88 Q130 90 130 118 Z" fill="#c47a3a"/>
-    <path d="M32 118 Q32 92 80 90 Q128 92 128 118 Z" fill="#d4883d"/>
-    <!-- Tagine cone top -->
-    <path d="M55 88 Q80 45 105 88 Z" fill="#c47a3a"/>
-    <path d="M57 88 Q80 48 103 88 Z" fill="#d4883d"/>
-    <!-- Cone highlight -->
-    <path d="M68 75 Q80 50 92 75 Q80 68 68 75 Z" fill="rgba(255,200,100,0.2)"/>
-    <!-- Knob on top -->
-    <circle cx="80" cy="44" r="7" fill="#a06020"/>
-    <circle cx="80" cy="42" r="5" fill="#c07830"/>
-    <!-- Tagine rim decoration -->
-    <ellipse cx="80" cy="90" rx="50" ry="8" fill="#b06828"/>
-    <ellipse cx="80" cy="89" rx="46" ry="6" fill="#c47a3a"/>
-    <!-- Inside dish visible at bottom edge -->
-    <ellipse cx="80" cy="117" rx="50" ry="8" fill="#8b3a10"/>
-    <!-- Food colors peeking -->
-    <path d="M46 115 Q80 108 114 115 Q80 120 46 115 Z" fill="#c87030" opacity="0.7"/>
-    <!-- Spice decorations on cone -->
-    <circle cx="65" cy="100" r="2.5" fill="#e8a030" opacity="0.7"/>
-    <circle cx="80" cy="98" r="2" fill="#d4502a" opacity="0.6"/>
-    <circle cx="95" cy="100" r="2.5" fill="#e8a030" opacity="0.7"/>
-    <circle cx="72" cy="108" r="2" fill="#d4502a" opacity="0.6"/>
-    <circle cx="88" cy="108" r="2" fill="#e8a030" opacity="0.6"/>
-  </svg>`;
-}
-
-function buildNasiGorengSVG() {
-  return `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="160" height="160">
-    <!-- Shadow -->
-    <ellipse cx="80" cy="148" rx="62" ry="9" fill="rgba(0,0,0,0.35)"/>
-    <!-- Plate 3D bottom -->
-    <ellipse cx="80" cy="120" rx="62" ry="11" fill="#2a1f14"/>
-    <path d="M18 105 Q18 122 80 126 Q142 122 142 105 Z" fill="#3a2a1a"/>
-    <!-- Plate rim 3D -->
-    <ellipse cx="80" cy="105" rx="62" ry="11" fill="#f5f0e8"/>
-    <ellipse cx="80" cy="103" rx="58" ry="9" fill="#ede8e0"/>
-    <!-- Plate surface -->
-    <ellipse cx="80" cy="103" rx="52" ry="8" fill="#f9f5ee"/>
-    <!-- Fried rice mound -->
-    <ellipse cx="80" cy="100" rx="44" ry="9" fill="#c4812a"/>
-    <path d="M36 100 Q36 80 80 77 Q124 80 124 100 Z" fill="#d4922a"/>
-    <ellipse cx="80" cy="100" rx="44" ry="9" fill="none" stroke="#b87020" stroke-width="0.5"/>
-    <!-- Rice texture dots -->
-    <circle cx="65" cy="90" r="1.5" fill="#e8c060" opacity="0.8"/>
-    <circle cx="72" cy="85" r="1.5" fill="#dbb050" opacity="0.8"/>
-    <circle cx="80" cy="83" r="1.5" fill="#e8c060" opacity="0.8"/>
-    <circle cx="88" cy="86" r="1.5" fill="#dbb050" opacity="0.8"/>
-    <circle cx="95" cy="91" r="1.5" fill="#e8c060" opacity="0.8"/>
-    <circle cx="70" cy="94" r="1.5" fill="#dbb050" opacity="0.7"/>
-    <circle cx="85" cy="93" r="1.5" fill="#e8c060" opacity="0.7"/>
-    <circle cx="60" cy="96" r="1.5" fill="#dbb050" opacity="0.7"/>
-    <circle cx="100" cy="96" r="1.5" fill="#e8c060" opacity="0.7"/>
-    <!-- Fried egg on top -->
-    <ellipse cx="80" cy="83" rx="18" ry="11" fill="#f5e8a0" transform="rotate(-10 80 83)"/>
-    <ellipse cx="80" cy="83" rx="9" ry="7" fill="#f9a825" transform="rotate(-10 80 83)"/>
-    <!-- Shrimp -->
-    <path d="M48 92 Q44 82 52 80 Q56 82 54 90 Z" fill="#e87070"/>
-    <path d="M112 90 Q116 80 108 78 Q104 80 106 88 Z" fill="#e87070"/>
-    <!-- Spring onions -->
-    <line x1="68" y1="78" x2="72" y2="92" stroke="#5ab55a" stroke-width="2" stroke-linecap="round"/>
-    <line x1="88" y1="77" x2="92" y2="91" stroke="#4aa04a" stroke-width="1.5" stroke-linecap="round"/>
-    <!-- Krupuk (cracker) -->
-    <path d="M115 85 Q125 78 130 88 Q122 96 115 85 Z" fill="#f5e0a0" opacity="0.9"/>
-    <path d="M116 86 Q124 80 128 88 Q121 94 116 86 Z" fill="#faeaaa" opacity="0.8"/>
-    <!-- Chili slices -->
-    <ellipse cx="58" cy="98" rx="5" ry="3" fill="#e03030" transform="rotate(-30 58 98)"/>
-    <ellipse cx="102" cy="99" rx="5" ry="3" fill="#e03030" transform="rotate(30 102 99)"/>
-  </svg>`;
-}
-
-// ===== RENDER OFFERS =====
+/* ===== RENDER OFFERS (no prices/discounts) ===== */
 function renderOffers() {
   const grid = document.getElementById('offersGrid');
   if (grid.innerHTML.trim()) return;
   offers.forEach((o, i) => {
     const card = document.createElement('div');
-    card.className = 'offer-card slide-in-up d' + Math.min(i + 1, 5);
+    card.className = 'offer-card slide-in-up d' + Math.min(i+1,5);
     card.innerHTML = `
       <div class="offer-bg" style="background-image:url('${o.img}');"></div>
       <div class="offer-overlay"></div>
       <div class="offer-content">
-        <div class="offer-discount">${o.discount}</div>
         <div class="offer-name">${o.name}</div>
         <div class="offer-details">${o.details}</div>
-        <div class="offer-price"><del>${o.old}</del>${o.price}</div>
       </div>`;
     grid.appendChild(card);
   });
 }
 
-// ===== COUNTDOWN =====
-let saleEnd = new Date();
-saleEnd.setDate(saleEnd.getDate() + 2);
-saleEnd.setHours(saleEnd.getHours() + 14);
-saleEnd.setMinutes(saleEnd.getMinutes() + 37);
-saleEnd.setSeconds(saleEnd.getSeconds() + 22);
+/* ===== UPDATE 4: Realtime Clock (WIB = UTC+7) ===== */
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-function updateCountdown() {
-  const diff = saleEnd - new Date();
-  if (diff <= 0) return;
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-  document.getElementById('cdDays').textContent = String(d).padStart(2,'0');
-  document.getElementById('cdHours').textContent = String(h).padStart(2,'0');
-  document.getElementById('cdMins').textContent = String(m).padStart(2,'0');
-  document.getElementById('cdSecs').textContent = String(s).padStart(2,'0');
+function updateClock() {
+  const now = new Date();
+  const wib = new Date(now.getTime() + (7 * 60 * 60 * 1000 - now.getTimezoneOffset() * 60 * 1000));
+  const h = String(wib.getHours()).padStart(2,'0');
+  const m = String(wib.getMinutes()).padStart(2,'0');
+  const s = String(wib.getSeconds()).padStart(2,'0');
+  document.getElementById('clkHour').textContent = h;
+  document.getElementById('clkMin').textContent = m;
+  document.getElementById('clkSec').textContent = s;
+  document.getElementById('clkDate').textContent =
+    DAYS[wib.getDay()] + ', ' + wib.getDate() + ' ' + MONTHS[wib.getMonth()] + ' ' + wib.getFullYear();
 }
-setInterval(updateCountdown, 1000);
-updateCountdown();
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ===== INTERSECTION OBSERVER — lazy render + active nav ===== */
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const id = entry.target.id.replace('sec-','');
+    if (id === 'holidays') renderHolidays();
+    if (id === 'destinations') renderDestinations();
+    if (id === 'food') renderFood();
+    if (id === 'offers') renderOffers();
+  });
+}, { threshold: 0.08 });
+
+sections.forEach(id => {
+  const el = document.getElementById('sec-' + id);
+  if (el) sectionObserver.observe(el);
+});
 </script>
 </body>
 </html>
