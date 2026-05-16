@@ -1105,8 +1105,49 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
 }
 
 /* ══════════════════════════════════════════
-   HOME CLEAN VIEW — hide bottom controls temporarily
+   NAV TOP PROGRESS BAR (auto-slide timer)
 ══════════════════════════════════════════ */
+#navProgressBar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: 2px;
+  background: transparent;
+  pointer-events: none;
+}
+#navProgressFill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px rgba(201,168,76,0.6);
+  transition: width linear;
+}
+
+/* Clean view timer bar — replaces normal bar during clean view, fades out */
+#navCleanTimer {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 601;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+#navCleanTimer.active { opacity: 1; }
+#navCleanTimerFill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  border-radius: 2px;
+  animation: none;
+}
+#navCleanTimer.active #navCleanTimerFill {
+  animation: cleanTimerDrain 5s linear forwards;
+}
+@keyframes cleanTimerDrain {
+  0%   { width: 100%; opacity: 1; background: linear-gradient(90deg, rgba(255,255,255,0.55), rgba(201,168,76,0.8), rgba(255,255,255,0.55)); }
+  80%  { opacity: 0.7; }
+  100% { width: 0%;   opacity: 0; }
+}
+
+/* HOME CLEAN VIEW — hide bottom controls temporarily */
 .hero-bot,
 .slide-num,
 .scroll-hint {
@@ -1126,6 +1167,14 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
   pointer-events: none;
 }
 
+/* Hero title clickable style */
+#heroTitle {
+  cursor: pointer;
+}
+#heroTitle:hover {
+  text-shadow: 0 2px 30px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.35);
+}
+
 /* ══════════════════════════════════════════
    TOUCH TARGETS
 ══════════════════════════════════════════ */
@@ -1138,6 +1187,11 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
 </style>
 </head>
 <body>
+
+<!-- ═══ NAV TOP PROGRESS BAR (auto-slide timer) ═══ -->
+<div id="navProgressBar"><div id="navProgressFill"></div></div>
+<!-- ═══ NAV CLEAN VIEW TIMER BAR ═══ -->
+<div id="navCleanTimer"><div id="navCleanTimerFill"></div></div>
 
 <!-- ═══ FIXED NAV ═══ -->
 <nav id="mainNav">
@@ -1683,34 +1737,71 @@ updateNav();
 /* ════════════════════════════════════
    SCROLL TO SECTION
 ════════════════════════════════════ */
-let _cleanViewTimer = null;
-function triggerCleanView() {
-  const homeWrap = document.querySelector('.home-wrap');
-  if (!homeWrap) return;
-  // Clear any existing timer
-  if (_cleanViewTimer) { clearTimeout(_cleanViewTimer); _cleanViewTimer = null; }
-  // Apply clean view
-  homeWrap.classList.add('home-clean-view');
-  // Remove after 5 seconds
-  _cleanViewTimer = setTimeout(() => {
-    homeWrap.classList.remove('home-clean-view');
-    _cleanViewTimer = null;
-  }, 5000);
-}
-
 function goTo(id) {
   const el = document.getElementById('sec-'+id);
   if (!el) return;
   const navH = document.getElementById('mainNav').offsetHeight;
   window.scrollTo({ top: el.offsetTop - (id==='home'?0:navH), behavior:'smooth' });
-  if (id === 'home') triggerCleanView();
 }
 
 /* ════════════════════════════════════
-   HOME SLIDER
+   HOME SLIDER + NAV PROGRESS BAR + CLEAN VIEW
 ════════════════════════════════════ */
 let cur = 0, autoT = null;
 const TOTAL = DESTS.length;
+const AUTO_DURATION = 10000; // 10 detik
+
+// Nav progress bar elements
+const navProgFill = document.getElementById('navProgressFill');
+const navCleanTimer = document.getElementById('navCleanTimer');
+const navCleanFill = document.getElementById('navCleanTimerFill');
+
+// Animate nav progress bar from 0→100% over AUTO_DURATION
+let _navProgAnim = null;
+function startNavProgress() {
+  if (navProgFill) {
+    navProgFill.style.transition = 'none';
+    navProgFill.style.width = '0%';
+    void navProgFill.offsetWidth; // reflow
+    navProgFill.style.transition = `width ${AUTO_DURATION}ms linear`;
+    navProgFill.style.width = '100%';
+  }
+}
+function resetNavProgress() {
+  if (navProgFill) {
+    navProgFill.style.transition = 'none';
+    navProgFill.style.width = '0%';
+  }
+}
+
+// Clean view state
+let _cleanViewTimer = null;
+function triggerCleanView() {
+  const homeWrap = document.querySelector('.home-wrap');
+  if (!homeWrap) return;
+  if (_cleanViewTimer) { clearTimeout(_cleanViewTimer); _cleanViewTimer = null; }
+
+  // Hide bottom controls
+  homeWrap.classList.add('home-clean-view');
+
+  // Pause nav progress bar, hide it
+  resetNavProgress();
+
+  // Show clean timer bar animation above nav
+  navCleanTimer.classList.remove('active');
+  void navCleanTimer.offsetWidth; // reflow to restart animation
+  navCleanTimer.classList.add('active');
+
+  _cleanViewTimer = setTimeout(() => {
+    // Restore
+    homeWrap.classList.remove('home-clean-view');
+    navCleanTimer.classList.remove('active');
+    _cleanViewTimer = null;
+    // Resume auto progress bar
+    startNavProgress();
+    resetAuto();
+  }, 5000);
+}
 
 function renderSlider(animate) {
   const d = DESTS[cur];
@@ -1733,7 +1824,28 @@ function renderSlider(animate) {
     row.appendChild(c);
   }
 }
-function resetAuto(){ clearInterval(autoT); autoT=setInterval(()=>{ cur=(cur+1)%TOTAL; renderSlider(true); },10000); }
+
+function resetAuto(){
+  clearInterval(autoT);
+  startNavProgress();
+  autoT = setInterval(()=>{
+    cur=(cur+1)%TOTAL;
+    renderSlider(true);
+    startNavProgress();
+  }, AUTO_DURATION);
+}
+
+// Hero title click → clean view
+document.getElementById('heroTitle').addEventListener('click', () => {
+  // Only trigger if we're on the home section
+  const homeEl = document.getElementById('sec-home');
+  const rect = homeEl.getBoundingClientRect();
+  if (rect.top > -window.innerHeight && rect.bottom > 0) {
+    clearInterval(autoT); // pause auto during clean view
+    triggerCleanView();
+  }
+});
+
 document.getElementById('btnNext').addEventListener('click',()=>{ cur=(cur+1)%TOTAL; renderSlider(true); resetAuto(); });
 document.getElementById('btnPrev').addEventListener('click',()=>{ cur=(cur-1+TOTAL)%TOTAL; renderSlider(true); resetAuto(); });
 renderSlider(false);
