@@ -1171,8 +1171,28 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
   body.light .con-right { border-top-color: rgba(26,18,8,0.08); }
   .frow { grid-template-columns: 1fr 1fr; }
 
-  /* Footer */
-  .foot-simple { padding: 16px; font-size: 10px; }
+  /* Footer — mobile: copyright kiri, viewer+likes kanan, tidak ada absolute positioning */
+  .foot-main {
+    padding: 14px 16px;
+    gap: 10px;
+    position: relative;
+  }
+  #footSpacer { display: none; }
+  .foot-center {
+    position: static;
+    transform: none;
+    gap: 12px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .foot-copy { flex-shrink: 1; min-width: 0; }
+  .foot-copy span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Hide "Globe Express" label text on very small screens, keep icon */
+  .foot-stat i { font-size: 13px; }
+  .foot-likes i { font-size: 13px; }
+  /* Hide labels (viewers / likes text) on mobile to save space */
+  #ft-viewers-lbl, #ft-likes-lbl { display: none; }
+  .foot-like-val { min-width: 22px; }
 
   .plabel { font-size: 8px; }
 }
@@ -1197,6 +1217,10 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
   .fwimg-w { height: 110px; }
 
   .frow { grid-template-columns: 1fr; } /* stack name fields on tiny screens */
+
+  /* Extra small: hide viewer count, keep only likes on right */
+  .foot-viewers { display: none; }
+  .foot-sep { display: none; }
 }
 
 /* ══════════════════════════════════════════
@@ -1713,8 +1737,8 @@ body.light .ocard-det { color: rgba(255,255,255,0.74); }
       </button>
     </div>
 
-    <!-- Kanan: kosong untuk balance -->
-    <div style="flex-shrink:0;width:120px;"></div>
+    <!-- Kanan: kosong untuk balance (desktop only) -->
+    <div id="footSpacer" style="flex-shrink:0;width:120px;"></div>
   </div>
 </footer>
 
