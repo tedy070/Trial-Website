@@ -1173,19 +1173,21 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
 
   /* Footer — mobile: copyright kiri lebih kecil, viewer+likes kanan */
   .foot-main {
-    padding: 12px 14px;
+    padding: 11px 14px;
     gap: 8px;
     position: relative;
   }
   #footSpacer { display: none; }
   .foot-copy {
     flex-shrink: 1; min-width: 0;
-    font-size: 9px; gap: 4px;
+    font-size: 9px; gap: 3px;
+    flex-wrap: nowrap;
   }
-  .foot-copy i { font-size: 10px; }
-  .foot-copy span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  /* Sembunyikan nama brand di copyright, sisakan © + tahun saja */
-  #ft-copy { display: none; }
+  .foot-copy i { font-size: 10px; flex-shrink: 0; }
+  /* Sembunyikan nama brand, tampilkan © tahun + hak cipta */
+  .ft-brand { display: none; }
+  .ft-rights { white-space: nowrap; font-size: 9px; }
+  #footYear  { font-size: 9px; flex-shrink: 0; }
 
   .foot-center {
     position: static;
@@ -1194,14 +1196,13 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
     margin-left: auto;
     flex-shrink: 0;
   }
-  .foot-stat { font-size: 10px; gap: 5px; }
+  .foot-stat  { font-size: 10px; gap: 5px; }
   .foot-stat i { font-size: 13px; }
   .foot-likes { font-size: 10px; gap: 5px; }
   .foot-likes i { font-size: 13px; }
-  /* Tetap tampilkan label viewers/likes di mobile */
-  #ft-viewers-lbl { display: inline; font-size: 9px; }
-  #ft-likes-lbl   { display: inline; font-size: 9px; }
-  .foot-like-val, .foot-viewer-val { min-width: 20px; }
+  #ft-viewers-lbl { display: inline; font-size: 9px; letter-spacing: 0; }
+  #ft-likes-lbl   { display: inline; font-size: 9px; letter-spacing: 0; }
+  .foot-like-val, .foot-viewer-val { min-width: 18px; font-size: 10px; }
   .foot-sep { width: 2px; height: 2px; }
 
   .plabel { font-size: 8px; }
@@ -1226,13 +1227,15 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
   .fg2 { gap: 8px; padding: 12px 12px 40px; }
   .fwimg-w { height: 110px; }
 
-  .frow { grid-template-columns: 1fr; } /* stack name fields on tiny screens */
+  .frow { grid-template-columns: 1fr; }
 
-  /* Extra small: semua tetap tampil, sedikit lebih kecil */
+  /* Extra small — semua footer tetap tampil, sedikit lebih kecil */
   .foot-main { padding: 10px 12px; gap: 6px; }
-  .foot-copy { font-size: 8.5px; }
-  .foot-stat, .foot-likes { font-size: 9.5px; }
-  #ft-viewers-lbl, #ft-likes-lbl { font-size: 8.5px; }
+  .foot-copy, #footYear, .ft-rights { font-size: 8px; }
+  .foot-copy i { font-size: 9px; }
+  .foot-stat, .foot-likes { font-size: 9px; }
+  .foot-like-val, .foot-viewer-val { font-size: 9px; }
+  #ft-viewers-lbl, #ft-likes-lbl { font-size: 8px; }
 }
 
 /* ══════════════════════════════════════════
@@ -1731,7 +1734,8 @@ body.light .ocard-det { color: rgba(255,255,255,0.74); }
     <div class="foot-copy">
       <i class="ti ti-copyright"></i>
       <span id="footYear"></span>
-      <span id="ft-copy"></span>
+      <span id="ft-copy-brand" class="ft-brand"></span>
+      <span id="ft-copy-rights" class="ft-rights"></span>
     </div>
 
     <!-- Tengah: Viewers + Likes -->
@@ -1879,6 +1883,8 @@ const T = {
     ftMenu:"Menu", ftContact:"Kontak", ftFollow:"Ikuti Kami",
     ftHome:"Beranda", ftHolidays:"Liburan", ftDest:"Destinasi", ftFood:"Kuliner", ftOffers:"Penawaran", ftContacts:"Kontak",
     ftCopy:"Globe Express. Hak Cipta Dilindungi Undang-Undang.",
+    ftCopyBrand:"Globe Express",
+    ftCopyRights:"Hak Cipta Dilindungi.",
     ftPrivacy:"Kebijakan Privasi", ftTerms:"Syarat & Ketentuan", ftSitemap:"Peta Situs"
   },
   en: {
@@ -1918,6 +1924,8 @@ const T = {
     ftMenu:"Menu", ftContact:"Contact", ftFollow:"Follow Us",
     ftHome:"Home", ftHolidays:"Holidays", ftDest:"Destinations", ftFood:"Food", ftOffers:"Offers", ftContacts:"Contacts",
     ftCopy:"Globe Express. All Rights Reserved.",
+    ftCopyBrand:"Globe Express",
+    ftCopyRights:"All Rights Reserved.",
     ftPrivacy:"Privacy Policy", ftTerms:"Terms & Conditions", ftSitemap:"Sitemap"
   }
 };
@@ -2011,7 +2019,8 @@ function applyLang(l) {
   setText('c-send-t',    t.cSend);
 
   // Footer
-  setText('ft-copy', t.ftCopy);
+  setText('ft-copy-brand',  t.ftCopyBrand);
+  setText('ft-copy-rights', t.ftCopyRights);
   // Lang globe label (both nav and drawer)
   const langLbl = document.getElementById('langLbl');
   if (langLbl) langLbl.textContent = l.toUpperCase();
