@@ -1171,28 +1171,38 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
   body.light .con-right { border-top-color: rgba(26,18,8,0.08); }
   .frow { grid-template-columns: 1fr 1fr; }
 
-  /* Footer — mobile: copyright kiri, viewer+likes kanan, tidak ada absolute positioning */
+  /* Footer — mobile: copyright kiri lebih kecil, viewer+likes kanan */
   .foot-main {
-    padding: 14px 16px;
-    gap: 10px;
+    padding: 12px 14px;
+    gap: 8px;
     position: relative;
   }
   #footSpacer { display: none; }
+  .foot-copy {
+    flex-shrink: 1; min-width: 0;
+    font-size: 9px; gap: 4px;
+  }
+  .foot-copy i { font-size: 10px; }
+  .foot-copy span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Sembunyikan nama brand di copyright, sisakan © + tahun saja */
+  #ft-copy { display: none; }
+
   .foot-center {
     position: static;
     transform: none;
-    gap: 12px;
+    gap: 10px;
     margin-left: auto;
     flex-shrink: 0;
   }
-  .foot-copy { flex-shrink: 1; min-width: 0; }
-  .foot-copy span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  /* Hide "Globe Express" label text on very small screens, keep icon */
+  .foot-stat { font-size: 10px; gap: 5px; }
   .foot-stat i { font-size: 13px; }
+  .foot-likes { font-size: 10px; gap: 5px; }
   .foot-likes i { font-size: 13px; }
-  /* Hide labels (viewers / likes text) on mobile to save space */
-  #ft-viewers-lbl, #ft-likes-lbl { display: none; }
-  .foot-like-val { min-width: 22px; }
+  /* Tetap tampilkan label viewers/likes di mobile */
+  #ft-viewers-lbl { display: inline; font-size: 9px; }
+  #ft-likes-lbl   { display: inline; font-size: 9px; }
+  .foot-like-val, .foot-viewer-val { min-width: 20px; }
+  .foot-sep { width: 2px; height: 2px; }
 
   .plabel { font-size: 8px; }
 }
@@ -1218,9 +1228,11 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
 
   .frow { grid-template-columns: 1fr; } /* stack name fields on tiny screens */
 
-  /* Extra small: hide viewer count, keep only likes on right */
-  .foot-viewers { display: none; }
-  .foot-sep { display: none; }
+  /* Extra small: semua tetap tampil, sedikit lebih kecil */
+  .foot-main { padding: 10px 12px; gap: 6px; }
+  .foot-copy { font-size: 8.5px; }
+  .foot-stat, .foot-likes { font-size: 9.5px; }
+  #ft-viewers-lbl, #ft-likes-lbl { font-size: 8.5px; }
 }
 
 /* ══════════════════════════════════════════
@@ -2398,9 +2410,13 @@ document.getElementById('footYear').textContent = new Date().getFullYear();
       if (userLiked) {
         btn.classList.add('liked');
         ico.className = 'ti ti-heart-filled';
+        btn.style.cursor = 'default';
+        btn.title = 'Sudah disukai';
       } else {
         btn.classList.remove('liked');
         ico.className = 'ti ti-heart';
+        btn.style.cursor = 'pointer';
+        btn.title = 'Like this page';
       }
     }
   }
@@ -2447,26 +2463,23 @@ document.getElementById('footYear').textContent = new Date().getFullYear();
         updateLikeUI(snap.val() || 0);
       });
 
-      /* ── Like button ── */
+      /* ── Like button — one way only, tidak bisa unlike ── */
       document.getElementById('footLikeBtn').addEventListener('click', function() {
-        if (userLiked) {
-          /* Unlike */
-          userLiked = false;
-          localStorage.setItem(LIKED_KEY, '0');
-          likesRef.transaction(v => Math.max(0, (v || 0) - 1));
-        } else {
-          /* Like */
-          userLiked = true;
-          localStorage.setItem(LIKED_KEY, '1');
-          likesRef.transaction(v => (v || 0) + 1);
-          spawnParticle(this);
-        }
-        /* Optimistic UI — realtime listener akan konfirmasi */
+        if (userLiked) return; /* sudah liked — tidak melakukan apa-apa */
+
+        /* Like */
+        userLiked = true;
+        localStorage.setItem(LIKED_KEY, '1');
+        likesRef.transaction(v => (v || 0) + 1);
+        spawnParticle(this);
+
+        /* Update UI langsung (optimistic) */
         const btn = document.getElementById('footLikeBtn');
         const ico = document.getElementById('footLikeIcon');
         if (btn && ico) {
-          if (userLiked) { btn.classList.add('liked'); ico.className = 'ti ti-heart-filled'; }
-          else           { btn.classList.remove('liked'); ico.className = 'ti ti-heart'; }
+          btn.classList.add('liked');
+          ico.className = 'ti ti-heart-filled';
+          btn.style.cursor = 'default';
         }
       });
 
