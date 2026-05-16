@@ -86,8 +86,9 @@ body.light {
   backdrop-filter: blur(20px);
 }
 body.light #mainNav.solid {
-  background: rgba(240,236,228,0.90);
-  border-bottom-color: rgba(26,18,8,0.10);
+  background: rgba(18,15,11,0.88);
+  border-bottom-color: rgba(201,168,76,0.18);
+  backdrop-filter: blur(20px);
 }
 
 /* Logo */
@@ -97,7 +98,7 @@ body.light #mainNav.solid {
   text-decoration: none; flex-shrink: 0;
   transition: color 0.3s;
 }
-body.light .nav-logo { color: #1a1208; }
+body.light .nav-logo { color: #fff; }
 .nav-logo-ring {
   width: 32px; height: 32px; border-radius: 50%;
   border: 1.5px solid var(--gold);
@@ -118,9 +119,9 @@ body.light .nav-logo { color: #1a1208; }
   content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
   height: 1.5px; background: var(--gold); border-radius: 1px;
 }
-body.light .nav-links a { color: rgba(26,18,8,0.60); }
+body.light .nav-links a { color: rgba(255,255,255,0.82); }
 body.light .nav-links a:hover,
-body.light .nav-links a.active { color: #1a1208; }
+body.light .nav-links a.active { color: #fff; }
 
 /* Actions */
 .nav-actions { display: flex; align-items: center; gap: 10px; }
@@ -141,9 +142,9 @@ body.light .nav-links a.active { color: #1a1208; }
 .btn-dm .ic-sun  { opacity: 0; transform: scale(0.4) rotate(90deg); }
 body.light .btn-dm .ic-moon { opacity: 0; transform: scale(0.4) rotate(-90deg); }
 body.light .btn-dm .ic-sun  { opacity: 1; transform: scale(1) rotate(0deg); }
-body.light .btn-dm { border-color: rgba(26,18,8,0.18); background: rgba(26,18,8,0.06); }
-body.light .btn-dm i { color: rgba(26,18,8,0.70); }
-body.light .btn-dm:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+body.light .btn-dm { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.10); }
+body.light .btn-dm i { color: rgba(255,255,255,0.85); }
+body.light .btn-dm:hover { border-color: var(--gold); background: rgba(201,168,76,0.20); }
 
 /* Language pills — now individual round buttons */
 /* Single globe language toggle */
@@ -157,8 +158,8 @@ body.light .btn-dm:hover { border-color: var(--gold); background: rgba(201,168,7
   transition: border-color 0.25s, background 0.25s;
 }
 .lang-globe:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
-body.light .lang-globe { border-color: rgba(26,18,8,0.18); background: rgba(26,18,8,0.06); }
-body.light .lang-globe:hover { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+body.light .lang-globe { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.10); }
+body.light .lang-globe:hover { border-color: var(--gold); background: rgba(201,168,76,0.20); }
 
 /* Globe SVG lines */
 .lang-globe-icon {
@@ -179,7 +180,7 @@ body.light .lang-globe-icon { opacity: 0.35; }
   transition: color 0.25s;
   line-height: 1;
 }
-body.light .lang-globe-lbl { color: rgba(26,18,8,0.80); text-shadow: none; }
+body.light .lang-globe-lbl { color: rgba(255,255,255,0.90); text-shadow: 0 0 8px rgba(0,0,0,0.5); }
 .lang-globe:hover .lang-globe-lbl { color: var(--gold); }
 
 /* ══════════════════════════════════════════
@@ -293,7 +294,7 @@ body.light .ftab:hover { border-color: rgba(26,18,8,0.38); color: #1a1208; }
 
 .cards-row { display: flex; gap: 10px; align-items: flex-end; flex: 1; }
 .hcard {
-  width: 145px; height: 185px; border-radius: 12px; overflow: hidden; position: relative;
+  width: 122px; height: 185px; border-radius: 12px; overflow: hidden; position: relative;
   cursor: pointer; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.14);
   transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s;
 }
@@ -1171,18 +1172,16 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
 
 /* HOME CLEAN VIEW — hide bottom controls temporarily */
 .hero-bot,
-.slide-num,
 .scroll-hint {
   transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.slide-num {
+  transition: opacity 0.5s ease;
 }
 .home-clean-view .hero-bot {
   opacity: 0;
   pointer-events: none;
   transform: translateY(20px);
-}
-.home-clean-view .slide-num {
-  opacity: 0;
-  pointer-events: none;
 }
 .home-clean-view .scroll-hint {
   opacity: 0;
@@ -1574,21 +1573,33 @@ body.light .ocard-det { color: rgba(255,255,255,0.74); }
    DATA
 ════════════════════════════════════ */
 const DESTS = [
-  { region:"Switzerland Alps", l1:"SAINT",    l2:"ANTÖNIEN",
+  { region:"Switzerland Alps",    l1:"SAINT",      l2:"ANTÖNIEN",
     heroBg:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80" },
-  { region:"Japan Alps",       l1:"NAGANO",   l2:"PREFECTURE",
+  { region:"Japan Alps",          l1:"NAGANO",     l2:"PREFECTURE",
     heroBg:"https://images.unsplash.com/photo-1480796927426-f609979314bd?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1480796927426-f609979314bd?w=400&q=80" },
-  { region:"Sahara · Morocco", l1:"MARRAKECH",l2:"MERZOUGA",
+  { region:"Sahara · Morocco",    l1:"MARRAKECH",  l2:"MERZOUGA",
     heroBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80" },
-  { region:"Sierra Nevada · USA", l1:"YOSEMITE", l2:"NATIONAL PARK",
+  { region:"Sierra Nevada · USA", l1:"YOSEMITE",   l2:"NATIONAL PARK",
     heroBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80",
     cardBg:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80" },
-  { region:"Tarifa · Spain",   l1:"LOS LANCES", l2:"BEACH",
+  { region:"Tarifa · Spain",      l1:"LOS LANCES", l2:"BEACH",
     heroBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80",
-    cardBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" }
+    cardBg:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" },
+  { region:"Bali · Indonesia",    l1:"UBUD",       l2:"HIGHLANDS",
+    heroBg:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" },
+  { region:"French Riviera",      l1:"CÔTE",       l2:"D'AZUR",
+    heroBg:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=400&q=80" },
+  { region:"Santorini · Greece",  l1:"OIA",        l2:"VILLAGE",
+    heroBg:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400&q=80" },
+  { region:"Maldives · Indian Ocean", l1:"NORTH MALÉ", l2:"ATOLL",
+    heroBg:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1600&q=80",
+    cardBg:"https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=400&q=80" }
 ];
 
 const HOLIDAYS = [
@@ -1928,7 +1939,7 @@ function renderSlider(animate) {
 
   const row = document.getElementById('cardsRow');
   row.innerHTML = '';
-  for(let i=1;i<=4;i++){
+  for(let i=1;i<=6;i++){
     const idx=(cur+i)%TOTAL, d2=DESTS[idx];
     const c = document.createElement('div');
     c.className='hcard';
