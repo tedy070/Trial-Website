@@ -736,22 +736,23 @@ body.light .fgrp select option { background: #ddd5c8; color: #1a1208; }
    FOOTER — single copyright line
 ══════════════════════════════════════════ */
 footer {
-  background: #040404;
+  background: var(--dark2);
   border-top: 0.5px solid rgba(201,168,76,0.18);
   position: relative;
+  transition: background 0.4s;
 }
 footer::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.35;
 }
-body.light footer { background: #1a1208; }
 
 .foot-simple {
   display: flex; align-items: center; justify-content: flex-start; gap: 6px;
   padding: 20px 48px;
-  font-size: 11px; color: rgba(255,255,255,0.35);
+  font-size: 11px; color: var(--w50);
+  transition: color 0.4s;
 }
-body.light .foot-simple { color: rgba(26,18,8,0.35); }
+body.light .foot-simple { color: rgba(26,18,8,0.40); }
 .foot-simple i { font-size: 13px; }
 
 /* ══════════════════════════════════════════
@@ -1174,6 +1175,97 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
 #heroTitle:hover {
   text-shadow: 0 2px 30px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.35);
 }
+
+/* ══════════════════════════════════════════
+   LIGHT MODE — teks di atas foto card tetap terlihat
+══════════════════════════════════════════ */
+
+/* 1. HOME — hero title, region tag, desc */
+body.light .hero-title {
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.90), 0 0 60px rgba(0,0,0,0.65);
+}
+body.light .loc-tag span {
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.80);
+}
+body.light .hero-desc {
+  color: rgba(255,255,255,0.84);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.70);
+}
+body.light .hero-ov {
+  background: linear-gradient(105deg, rgba(0,0,0,0.82) 30%, rgba(0,0,0,0.30) 70%);
+}
+body.light .slide-num { color: rgba(255,255,255,0.50); }
+body.light .slide-num b { color: #fff; }
+
+/* 2. HOLIDAYS — hero banner atas */
+body.light .hhero-ov {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.94) 100%);
+}
+body.light .hhero-txt h1 {
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.88);
+}
+
+/* 3. DESTINATIONS — panel kiri atas foto */
+body.light .dest-img { filter: brightness(0.32); }
+body.light .dest-info {
+  background: linear-gradient(105deg, rgba(0,0,0,0.86) 35%, rgba(0,0,0,0.34) 100%);
+}
+body.light .dest-info h1 {
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.75);
+}
+body.light .dest-info p { color: rgba(255,255,255,0.80); }
+body.light .dci-name {
+  color: #fff;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.65);
+}
+body.light .dci-lbl { color: rgba(255,255,255,0.65); }
+/* sidebar destination item */
+body.light .ditem-img::after {
+  background: linear-gradient(to top, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.44) 55%, rgba(0,0,0,0.20) 100%);
+}
+body.light .ditem-name {
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.80);
+}
+body.light .ditem-stat { color: rgba(255,255,255,0.72); }
+
+/* 4. FOOD — food hero banner + horizontal scroll cards (fcard) */
+body.light .food-hero-ov {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0.96) 100%);
+}
+body.light .food-hero-txt h1 {
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.88);
+}
+body.light .fcard-photo { filter: brightness(0.58); }
+body.light .fcard-name {
+  color: #fff;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.80);
+}
+body.light .fcard-desc { color: rgba(255,255,255,0.80); }
+
+/* 5. OFFERS — deal banner + semua ocard */
+body.light .deal-ov {
+  background: linear-gradient(90deg, rgba(0,0,0,0.88) 30%, rgba(0,0,0,0.20) 80%);
+}
+body.light .deal-title {
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0,0,0,0.85);
+}
+body.light .deal-sub { color: rgba(255,255,255,0.84); }
+body.light .ocard-bg { filter: brightness(0.48); }
+body.light .ocard-ov {
+  background: linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.22) 60%);
+}
+body.light .ocard-name {
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.88);
+}
+body.light .ocard-det { color: rgba(255,255,255,0.74); }
 
 /* ══════════════════════════════════════════
    TOUCH TARGETS
