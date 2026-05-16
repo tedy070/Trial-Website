@@ -767,14 +767,86 @@ footer::before {
   background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.35;
 }
 
-.foot-simple {
-  display: flex; align-items: center; justify-content: flex-start; gap: 6px;
-  padding: 20px 48px;
-  font-size: 11px; color: var(--w50);
-  transition: color 0.4s;
+.foot-main {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  gap: 16px;
 }
-body.light .foot-simple { color: rgba(26,18,8,0.40); }
-.foot-simple i { font-size: 13px; }
+
+/* Copyright — left */
+.foot-copy {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--w50);
+  transition: color 0.4s; flex-shrink: 0;
+}
+body.light .foot-copy { color: rgba(26,18,8,0.40); }
+.foot-copy i { font-size: 13px; }
+
+/* Center — viewer + likes */
+.foot-center {
+  display: flex; align-items: center; gap: 20px;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.foot-stat {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11px; color: var(--w50); transition: color 0.3s;
+  user-select: none;
+}
+body.light .foot-stat { color: rgba(26,18,8,0.45); }
+.foot-stat i { font-size: 15px; }
+
+/* Viewer count */
+.foot-viewers { cursor: default; }
+.foot-viewers i { color: rgba(201,168,76,0.70); }
+.foot-viewer-val { font-weight: 700; color: var(--w70); transition: color 0.3s; }
+body.light .foot-viewer-val { color: rgba(26,18,8,0.65); }
+
+/* Separator dot */
+.foot-sep {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: rgba(201,168,76,0.40);
+}
+
+/* Like button */
+.foot-likes {
+  cursor: pointer; border: none; background: none; padding: 0;
+  display: flex; align-items: center; gap: 7px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 600; color: var(--w50);
+  transition: color 0.25s; position: relative;
+}
+body.light .foot-likes { color: rgba(26,18,8,0.45); }
+.foot-likes:hover { color: #ff6b8a; }
+.foot-likes i {
+  font-size: 15px; color: rgba(255,255,255,0.35);
+  transition: color 0.25s, transform 0.25s;
+}
+body.light .foot-likes i { color: rgba(26,18,8,0.28); }
+.foot-likes:hover i { color: #ff6b8a; transform: scale(1.2); }
+.foot-likes.liked i { color: #ff4d6d; animation: likePop 0.4s cubic-bezier(0.23,1,0.32,1); }
+.foot-likes.liked { color: #ff4d6d; }
+.foot-like-val { font-weight: 700; min-width: 28px; }
+
+/* Like pop animation */
+@keyframes likePop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.45); }
+  70%  { transform: scale(0.88); }
+  100% { transform: scale(1); }
+}
+
+/* Floating +1 particle */
+.like-particle {
+  position: fixed; pointer-events: none; z-index: 9999;
+  font-size: 13px; font-weight: 800; color: #ff4d6d;
+  font-family: 'Montserrat', sans-serif;
+  animation: particleRise 0.8s ease-out forwards;
+  text-shadow: 0 1px 6px rgba(255,77,109,0.5);
+}
+@keyframes particleRise {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-48px) scale(0.7); }
+}
 
 /* ══════════════════════════════════════════
    ANIMATIONS
@@ -1193,35 +1265,56 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
   transition: left 0.7s cubic-bezier(0.23,1,0.32,1),
               top 0.7s cubic-bezier(0.23,1,0.32,1),
               transform 0.7s cubic-bezier(0.23,1,0.32,1),
-              max-width 0.7s cubic-bezier(0.23,1,0.32,1),
-              text-align 0.3s ease;
+              max-width 0.7s cubic-bezier(0.23,1,0.32,1);
 }
 
-/* Clean view: hero text moves to center */
+/* Clean view: hero text moves to dead center */
 .home-clean-view .hero-txt {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  max-width: 700px;
+  max-width: 720px;
+  width: 720px;
   text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Center the loc-tag line & decorative bar */
+/* loc-tag: centered, no left-bar */
 .home-clean-view .hero-txt .loc-tag {
   justify-content: center;
+  align-self: center;
 }
-.home-clean-view .hero-txt .loc-tag::before {
-  display: none;
+.home-clean-view .hero-txt .loc-tag::before { display: none; }
+
+/* hero-title: full width centered */
+.home-clean-view .hero-txt .hero-title {
+  text-align: center;
+  width: 100%;
+}
+
+/* desc: centered, wider max-width */
+.home-clean-view .hero-txt .hero-desc {
+  text-align: center;
+  max-width: 440px;
+  align-self: center;
+}
+
+/* actions row: centered */
+.home-clean-view .hero-txt .hero-actions {
+  justify-content: center;
+  align-self: center;
 }
 
 /* Strengthen center overlay during clean view */
 .home-clean-view .hero-ov {
-  background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.22) 100%),
-              linear-gradient(105deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.20) 100%);
+  background: radial-gradient(ellipse 75% 75% at 50% 50%, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.20) 100%),
+              linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.25) 100%);
 }
 body.light .home-clean-view .hero-ov {
-  background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.30) 100%),
-              linear-gradient(105deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.28) 100%);
+  background: radial-gradient(ellipse 75% 75% at 50% 50%, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.28) 100%),
+              linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.28) 100%);
 }
 
 /* Hero title clickable style */
@@ -1597,10 +1690,31 @@ body.light .ocard-det { color: rgba(255,255,255,0.74); }
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="foot-simple">
-    <i class="ti ti-copyright"></i>
-    <span id="footYear"></span>
-    <span id="ft-copy"></span>
+  <div class="foot-main">
+    <!-- Copyright kiri -->
+    <div class="foot-copy">
+      <i class="ti ti-copyright"></i>
+      <span id="footYear"></span>
+      <span id="ft-copy"></span>
+    </div>
+
+    <!-- Tengah: Viewers + Likes -->
+    <div class="foot-center">
+      <div class="foot-stat foot-viewers">
+        <i class="ti ti-eye"></i>
+        <span class="foot-viewer-val" id="footViewers">—</span>
+        <span id="ft-viewers-lbl" style="font-size:10px;letter-spacing:0.5px;">viewers</span>
+      </div>
+      <div class="foot-sep"></div>
+      <button class="foot-likes" id="footLikeBtn" title="Like this page">
+        <i class="ti ti-heart" id="footLikeIcon"></i>
+        <span class="foot-like-val" id="footLikeCount">—</span>
+        <span id="ft-likes-lbl" style="font-size:10px;letter-spacing:0.5px;">likes</span>
+      </button>
+    </div>
+
+    <!-- Kanan: kosong untuk balance -->
+    <div style="flex-shrink:0;width:120px;"></div>
   </div>
 </footer>
 
@@ -2217,6 +2331,88 @@ document.getElementById('btnLang').addEventListener('click', () => {
    FOOTER YEAR & INIT
 ════════════════════════════════════ */
 document.getElementById('footYear').textContent = new Date().getFullYear();
+
+/* ════════════════════════════════════
+   FOOTER — VIEWER COUNT & LIKES
+════════════════════════════════════ */
+(function() {
+  const KEY_VIEWS = 'ge_views';
+  const KEY_LIKES = 'ge_likes';
+  const KEY_LIKED = 'ge_user_liked';
+
+  // Read stored values (fallback to seeded base so it never starts at 0)
+  const BASE_VIEWS = 21847;
+  const BASE_LIKES = 3412;
+  let views = parseInt(localStorage.getItem(KEY_VIEWS) || '0') || BASE_VIEWS;
+  let likes = parseInt(localStorage.getItem(KEY_LIKES) || '0') || BASE_LIKES;
+  let userLiked = localStorage.getItem(KEY_LIKED) === '1';
+
+  // Increment view count on each page load
+  views += 1;
+  localStorage.setItem(KEY_VIEWS, views);
+
+  function formatNum(n) {
+    if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return n.toString();
+  }
+
+  function updateUI() {
+    const vEl = document.getElementById('footViewers');
+    const lEl = document.getElementById('footLikeCount');
+    const btn = document.getElementById('footLikeBtn');
+    const ico = document.getElementById('footLikeIcon');
+    if (vEl) vEl.textContent = formatNum(views);
+    if (lEl) lEl.textContent = formatNum(likes);
+    if (btn && ico) {
+      if (userLiked) {
+        btn.classList.add('liked');
+        ico.className = 'ti ti-heart-filled';
+      } else {
+        btn.classList.remove('liked');
+        ico.className = 'ti ti-heart';
+      }
+    }
+  }
+
+  // Simulate live viewer drift (±3 every few seconds)
+  function driftViewers() {
+    const delta = Math.floor(Math.random() * 7) - 3;
+    views = Math.max(BASE_VIEWS - 50, views + delta);
+    localStorage.setItem(KEY_VIEWS, views);
+    const vEl = document.getElementById('footViewers');
+    if (vEl) vEl.textContent = formatNum(views);
+  }
+  setInterval(driftViewers, 4000 + Math.random() * 3000);
+
+  // Like button logic
+  document.getElementById('footLikeBtn').addEventListener('click', function(e) {
+    if (userLiked) {
+      // Unlike
+      userLiked = false;
+      likes = Math.max(0, likes - 1);
+      localStorage.setItem(KEY_LIKED, '0');
+    } else {
+      // Like
+      userLiked = true;
+      likes += 1;
+      localStorage.setItem(KEY_LIKED, '1');
+      // Spawn +1 particle
+      const r = this.getBoundingClientRect();
+      const p = document.createElement('span');
+      p.className = 'like-particle';
+      p.textContent = '+1';
+      p.style.left = (r.left + r.width / 2 - 10) + 'px';
+      p.style.top  = (r.top - 8) + 'px';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 900);
+    }
+    localStorage.setItem(KEY_LIKES, likes);
+    updateUI();
+  });
+
+  updateUI();
+})();
 
 /* ════════════════════════════════════
    HAMBURGER MENU
