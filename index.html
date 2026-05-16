@@ -1105,6 +1105,28 @@ body.light .drawer-actions { border-top-color: rgba(26,18,8,0.07); }
 }
 
 /* ══════════════════════════════════════════
+   HOME CLEAN VIEW — hide bottom controls temporarily
+══════════════════════════════════════════ */
+.hero-bot,
+.slide-num,
+.scroll-hint {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.home-clean-view .hero-bot {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+}
+.home-clean-view .slide-num {
+  opacity: 0;
+  pointer-events: none;
+}
+.home-clean-view .scroll-hint {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════
    TOUCH TARGETS
 ══════════════════════════════════════════ */
 @media (hover: none) and (pointer: coarse) {
@@ -1661,11 +1683,27 @@ updateNav();
 /* ════════════════════════════════════
    SCROLL TO SECTION
 ════════════════════════════════════ */
+let _cleanViewTimer = null;
+function triggerCleanView() {
+  const homeWrap = document.querySelector('.home-wrap');
+  if (!homeWrap) return;
+  // Clear any existing timer
+  if (_cleanViewTimer) { clearTimeout(_cleanViewTimer); _cleanViewTimer = null; }
+  // Apply clean view
+  homeWrap.classList.add('home-clean-view');
+  // Remove after 5 seconds
+  _cleanViewTimer = setTimeout(() => {
+    homeWrap.classList.remove('home-clean-view');
+    _cleanViewTimer = null;
+  }, 5000);
+}
+
 function goTo(id) {
   const el = document.getElementById('sec-'+id);
   if (!el) return;
   const navH = document.getElementById('mainNav').offsetHeight;
   window.scrollTo({ top: el.offsetTop - (id==='home'?0:navH), behavior:'smooth' });
+  if (id === 'home') triggerCleanView();
 }
 
 /* ════════════════════════════════════
@@ -1695,7 +1733,7 @@ function renderSlider(animate) {
     row.appendChild(c);
   }
 }
-function resetAuto(){ clearInterval(autoT); autoT=setInterval(()=>{ cur=(cur+1)%TOTAL; renderSlider(true); },5500); }
+function resetAuto(){ clearInterval(autoT); autoT=setInterval(()=>{ cur=(cur+1)%TOTAL; renderSlider(true); },10000); }
 document.getElementById('btnNext').addEventListener('click',()=>{ cur=(cur+1)%TOTAL; renderSlider(true); resetAuto(); });
 document.getElementById('btnPrev').addEventListener('click',()=>{ cur=(cur-1+TOTAL)%TOTAL; renderSlider(true); resetAuto(); });
 renderSlider(false);
