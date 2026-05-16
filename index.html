@@ -2357,36 +2357,42 @@ document.getElementById('btnLang').addEventListener('click', () => {
 document.getElementById('footYear').textContent = new Date().getFullYear();
 
 /* ════════════════════════════════════
-   FOOTER — VIEWER COUNT & LIKES
+   FIREBASE RTDB — VIEWER COUNT & LIKES
+   Node: /travel  (shared config dengan portofolio)
 ════════════════════════════════════ */
 (function() {
-  const KEY_VIEWS = 'ge_views';
-  const KEY_LIKES = 'ge_likes';
-  const KEY_LIKED = 'ge_user_liked';
+  /* ── Firebase Config ── */
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAduAPndadw0YzdmfWKd1t75cJDXz7Z0uo",
+    authDomain:        "portofolio-tedi-ke2.firebaseapp.com",
+    databaseURL:       "https://portofolio-tedi-ke2-default-rtdb.firebaseio.com",
+    projectId:         "portofolio-tedi-ke2",
+    storageBucket:     "portofolio-tedi-ke2.firebasestorage.app",
+    messagingSenderId: "793425879228",
+    appId:             "1:793425879228:web:c19b16529d0baf187b70b9",
+    measurementId:     "G-P2SMC9F9QE"
+  };
 
-  // Read stored values (fallback to seeded base so it never starts at 0)
-  const BASE_VIEWS = 21847;
-  const BASE_LIKES = 3412;
-  let views = parseInt(localStorage.getItem(KEY_VIEWS) || '0') || BASE_VIEWS;
-  let likes = parseInt(localStorage.getItem(KEY_LIKES) || '0') || BASE_LIKES;
-  let userLiked = localStorage.getItem(KEY_LIKED) === '1';
+  /* ── Load Firebase SDK (compat v10) dari CDN ── */
+  function loadScript(src, cb) {
+    const s = document.createElement('script');
+    s.src = src; s.onload = cb; document.head.appendChild(s);
+  }
 
-  // Increment view count on each page load
-  views += 1;
-  localStorage.setItem(KEY_VIEWS, views);
+  const LIKED_KEY = 'ge_travel_liked'; // localStorage hanya untuk status liked user ini
+  let userLiked = localStorage.getItem(LIKED_KEY) === '1';
 
   function formatNum(n) {
+    if (!n && n !== 0) return '—';
     if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
     if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
     return n.toString();
   }
 
-  function updateUI() {
-    const vEl = document.getElementById('footViewers');
+  function updateLikeUI(likes) {
     const lEl = document.getElementById('footLikeCount');
     const btn = document.getElementById('footLikeBtn');
     const ico = document.getElementById('footLikeIcon');
-    if (vEl) vEl.textContent = formatNum(views);
     if (lEl) lEl.textContent = formatNum(likes);
     if (btn && ico) {
       if (userLiked) {
@@ -2399,43 +2405,74 @@ document.getElementById('footYear').textContent = new Date().getFullYear();
     }
   }
 
-  // Simulate live viewer drift (±3 every few seconds)
-  function driftViewers() {
-    const delta = Math.floor(Math.random() * 7) - 3;
-    views = Math.max(BASE_VIEWS - 50, views + delta);
-    localStorage.setItem(KEY_VIEWS, views);
-    const vEl = document.getElementById('footViewers');
-    if (vEl) vEl.textContent = formatNum(views);
+  function spawnParticle(btn) {
+    const r = btn.getBoundingClientRect();
+    const p = document.createElement('span');
+    p.className = 'like-particle';
+    p.textContent = '+1';
+    p.style.left = (r.left + r.width / 2 - 10) + 'px';
+    p.style.top  = (r.top - 8) + 'px';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 900);
   }
-  setInterval(driftViewers, 4000 + Math.random() * 3000);
 
-  // Like button logic
-  document.getElementById('footLikeBtn').addEventListener('click', function(e) {
-    if (userLiked) {
-      // Unlike
-      userLiked = false;
-      likes = Math.max(0, likes - 1);
-      localStorage.setItem(KEY_LIKED, '0');
-    } else {
-      // Like
-      userLiked = true;
-      likes += 1;
-      localStorage.setItem(KEY_LIKED, '1');
-      // Spawn +1 particle
-      const r = this.getBoundingClientRect();
-      const p = document.createElement('span');
-      p.className = 'like-particle';
-      p.textContent = '+1';
-      p.style.left = (r.left + r.width / 2 - 10) + 'px';
-      p.style.top  = (r.top - 8) + 'px';
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 900);
-    }
-    localStorage.setItem(KEY_LIKES, likes);
-    updateUI();
-  });
+  /* ── Init after Firebase App + Database SDKs load ── */
+  loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js', () => {
+    loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js', () => {
 
-  updateUI();
+      /* Prevent duplicate init if SDK already initialised */
+      let app;
+      try {
+        app = firebase.app('globe-express');
+      } catch(e) {
+        app = firebase.initializeApp(firebaseConfig, 'globe-express');
+      }
+      const db = firebase.database(app);
+
+      /* ── Refs (node /travel — terpisah dari /portfolio) ── */
+      const viewersRef = db.ref('travel/viewers');
+      const likesRef   = db.ref('travel/likes');
+
+      /* ── Increment viewer on load (transactional = aman concurrent) ── */
+      viewersRef.transaction(v => (v || 0) + 1);
+
+      /* ── Listen realtime: viewers ── */
+      viewersRef.on('value', snap => {
+        const vEl = document.getElementById('footViewers');
+        if (vEl) vEl.textContent = formatNum(snap.val() || 0);
+      });
+
+      /* ── Listen realtime: likes ── */
+      likesRef.on('value', snap => {
+        updateLikeUI(snap.val() || 0);
+      });
+
+      /* ── Like button ── */
+      document.getElementById('footLikeBtn').addEventListener('click', function() {
+        if (userLiked) {
+          /* Unlike */
+          userLiked = false;
+          localStorage.setItem(LIKED_KEY, '0');
+          likesRef.transaction(v => Math.max(0, (v || 0) - 1));
+        } else {
+          /* Like */
+          userLiked = true;
+          localStorage.setItem(LIKED_KEY, '1');
+          likesRef.transaction(v => (v || 0) + 1);
+          spawnParticle(this);
+        }
+        /* Optimistic UI — realtime listener akan konfirmasi */
+        const btn = document.getElementById('footLikeBtn');
+        const ico = document.getElementById('footLikeIcon');
+        if (btn && ico) {
+          if (userLiked) { btn.classList.add('liked'); ico.className = 'ti ti-heart-filled'; }
+          else           { btn.classList.remove('liked'); ico.className = 'ti ti-heart'; }
+        }
+      });
+
+    }); // database compat loaded
+  }); // app compat loaded
+
 })();
 
 /* ════════════════════════════════════
